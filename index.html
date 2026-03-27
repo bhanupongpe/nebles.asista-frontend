@@ -799,13 +799,16 @@ function openBookingModal() {
             console.log("🔥 [Public Mode] ผู้เข้าชมจาก Social Network");
         }
 
-        if (cidParam && cidParam !== "Guest" && viewedBy !== 'Public') {
-            fetch(gasApiUrl, { 
-                method: 'POST', 
-                mode: 'no-cors',
-                body: JSON.stringify({ action: "view_catalog", cid: cidParam, actorType: viewedBy }) 
-            }).catch(err => console.log("Silent Log Error:", err)); 
-        }
+        // 🚨 [แก้ใหม่] ถ่วงเวลาส่ง Log ไป 3 วินาที! เพื่อไม่ให้มันไปแย่งคิว GET ดึงข้อมูลหน้าเว็บ!
+        setTimeout(() => {
+            if (cidParam && cidParam !== "Guest" && viewedBy !== 'Public') {
+                fetch(gasApiUrl, { 
+                    method: 'POST', 
+                    mode: 'no-cors',
+                    body: JSON.stringify({ action: "view_catalog", cid: cidParam, actorType: viewedBy }) 
+                }).catch(err => console.log("Silent Log Error:", err)); 
+            }
+        }, 3000);
     });
   </script>
 </body>
