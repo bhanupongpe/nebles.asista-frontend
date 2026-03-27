@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nebles | Recommended for You</title>
+  <link rel="preconnect" href="https://script.google.com">
+  <link rel="preconnect" href="https://drive.google.com">
+  <script>
+    // 🚀 [อัปเกรด] ยิง API ขอข้อมูลล่วงหน้าทันทีที่อ่านเจอ Head! (เซฟเวลา 0.3 - 0.5s)
+    const earlyGasApiUrl = "https://script.google.com/macros/s/AKfycbxbg_c1iJFrHDsRW_wFzpk1ikQx_6kSkVkCWY9Oxcyu7UgOv8uO2LyM3OkoGtHU7doQ/exec";
+    const earlyParams = new URLSearchParams(window.location.search);
+    const earlyCid = earlyParams.get('cid');
+    if (earlyCid && earlyCid !== "Guest") {
+       window.earlyDataPromise = fetch(`${earlyGasApiUrl}?v=2&cid=${encodeURIComponent(earlyCid)}`).then(res => res.json()).catch(err => null);
+    }
+  </script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <style>
+    body { background-color: #ffffff; font-family: 'Inter', sans-serif; color: #222222; padding-bottom: 90px; }
+    .container { max-width: 540px; position: relative; min-height: 100vh; display: flex; flex-direction: column; padding-left: 24px; padding-right: 24px; }
+    .header-logo { position: absolute; top: 15px; right: 24px; height: 70px; width: auto; z-index: 100; }
+    .header-section { padding-top: 80px; margin-bottom: 4px; text-align: left; }
+    .req-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; color: #222; }
+    .req-subtitle { font-size: 0.95rem; color: #717171; line-height: 1.5; margin-bottom: 0 !important; }
+
+    .property-card { background: #fff; border-radius: 16px; overflow: hidden; margin-bottom: 32px; box-shadow: 0 6px 20px rgba(0,0,0,0.06); border: 1px solid #f0f0f0; transition: all 0.2s; position: relative; }
+    .property-card.selected-card { box-shadow: 0 0 0 2px #222222, 0 8px 25px rgba(0,0,0,0.1); transform: translateY(-3px); }
+    
+    .card-img-wrapper { height: 280px; position: relative; }
+    .carousel-item img { width: 100%; height: 280px; object-fit: cover; }
+    
+    .match-badge { position: absolute; top: 16px; left: 16px; z-index: 10; background: transparent; color: #ffffff; padding: 0; border: none; font-weight: 600; font-size: 0.95rem; text-shadow: 0 2px 6px rgba(0,0,0,0.7); display: flex; align-items: center; gap: 6px; }
+    .match-badge i { color: #FF385C; text-shadow: 0 2px 4px rgba(0,0,0,0.4); }
+    .pet-badge { position: absolute; top: 44px; left: 16px; z-index: 10; background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.4); color: #222222; padding: 4px 12px; border-radius: 50px; font-weight: 600; font-size: 0.8rem; display: flex; align-items: center; gap: 4px; }
+    
+    .btn-select { position: absolute; top: 16px; right: 16px; z-index: 20; background: transparent; border: none; font-size: 1.6rem; color: rgba(255, 255, 255, 0.8); text-shadow: 0 2px 8px rgba(0,0,0,0.5); cursor: pointer; transition: 0.2s; padding: 0; }
+    .property-card.selected-card .btn-select { color: #FF385C; text-shadow: 0 2px 8px rgba(255, 56, 92, 0.4); } 
+    
+    .floating-bar { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: rgba(26, 26, 26, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 12px 20px; border-radius: 50px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: space-between; gap: 20px; width: max-content; max-width: 90%; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 1000; }
+    .floating-bar.show { bottom: 25px; }
+    .floating-text { color: #fff; font-weight: 600; font-size: 0.95rem; margin: 0; }
+    
+    .btn-booking { background-color: #FF385C !important; color: #ffffff !important; border: none; padding: 10px 24px; border-radius: 30px; font-weight: 600; font-size: 0.95rem; transition: background-color 0.2s ease; cursor: pointer; }
+
+    .action-btn-group { display: flex; gap: 6px; }
+    .btn-action-sm { font-size: 0.75rem; text-decoration: none; color: #4b5563; background: #f3f4f6; padding: 6px 12px; border-radius: 20px; border: none; display: flex; align-items: center; gap: 4px; font-weight: 600; transition: 0.2s; cursor: pointer; }
+    
+    .card-body-premium { padding: 20px; }
+    .project-name { font-size: 1.2rem; font-weight: 600; margin-bottom: 6px; color: #222; }
+    .location-text { font-size: 0.95rem; color: #717171; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+    
+    .price-wrap { display: flex; align-items:baseline; gap: 6px; margin-bottom: 12px; }
+    .price-amt { font-size: 1.35rem; font-weight: 700; color: #222; }
+    .price-label { font-size: 0.95rem; color: #717171; }
+    
+    .specs-inline { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; color: #717171; margin-bottom: 16px; flex-wrap: wrap; }
+    .spec-dot { font-size: 10px; color: #d1d5db; }
+    
+    .amenities-row { display: flex; gap: 16px; font-size: 0.85rem; color: #717171; border-top: 1px solid #ebebeb; padding-top: 16px; }
+    .amenities-row span { display: flex; align-items: center; gap: 6px; }
+
+    .lang-switcher { position: absolute; top: 25px; left: 24px; z-index: 100; }
+    .lang-switcher select { background: rgba(255,255,255,0.9); border: 1px solid #ebebeb; border-radius: 20px; padding: 4px 12px; font-size: 0.85rem; font-weight: 600; outline: none; box-shadow: 0 2px 10px rgba(0,0,0,0.05); cursor: pointer; }
+    
+    .requested-strip { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(255, 56, 92, 0.9); backdrop-filter: blur(4px); padding: 8px 16px; z-index: 30; }
+    .requested-strip-text { color: #ffffff; font-size: 0.8rem; font-weight: 600; line-height: 1.3; text-align: left; }
+
+    .footer-text { text-align: center; font-size: 0.85rem; color: #6c757d; margin-top: auto; padding-top: 40px; }
+    #final-req-text { font-size: 0.95rem; font-weight: 500; color: #4b5563; word-spacing: 2px; letter-spacing: 0.3px; margin-top: 4px; margin-bottom: 24px; }
+    
+    .typing-cursor::after { content: '█'; font-size: 0.9rem; margin-left: 6px; color: #222; animation: blink-cursor 0.8s step-end infinite; }
+    @keyframes blink-cursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    .modal-content { border-radius: 20px; border: none; }
+    .btn-channel { background-color: #ffffff !important; color: #222222 !important; border: 1px solid #d1d5db !important; padding: 12px !important; border-radius: 12px !important; font-weight: 600 !important; display: flex !important; align-items: center !important; justify-content: center !important; gap: 8px !important; width: 100% !important; cursor: pointer !important; }
+
+    /* Rented Style */
+    .unavailable-card img { filter: grayscale(100%); opacity: 0.8; }
+    .unavailable-badge { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.75); color: #fff; padding: 10px 24px; border-radius: 8px; font-weight: 700; z-index: 40; }
+  
+    .btn-card-booking { background-color: #FF385C; color: #ffffff; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: 600; font-size: 0.95rem; margin-top: 16px; transition: 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-card-booking:hover { background-color: #E31C5F; color: #ffffff; }
+    .btn-card-booking:disabled { background-color: #e5e7eb; color: #9ca3af; cursor: not-allowed; }
+
+    /* 🚨 [อัปเกรด] CSS สำหรับการเฟดเปลี่ยนหน้าจอแบบผู้ดี */
+    .fade-element { opacity: 1; transition: opacity 0.5s ease-in-out, transform 0.5s ease-out; }
+    .fade-out { opacity: 0; transform: translateY(-10px); pointer-events: none; }
+    .fade-in { animation: smoothReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    @keyframes smoothReveal { 0% { opacity: 0; transform: translateY(15px); } 100% { opacity: 1; transform: translateY(0); } }
+
+    /* ปรับ Skeleton ให้นุ่มขึ้น ไม่กระพริบตาแตก */
+    .skeleton { background: linear-gradient(110deg, #f3f4f6 8%, #f9fafb 18%, #f3f4f6 33%); background-size: 200% 100%; animation: 2s shine linear infinite; border-radius: 8px; }
+    @keyframes shine { to { background-position-x: -200%; } }
+    .skeleton-card { background: #fff; border-radius: 16px; margin-bottom: 24px; overflow: hidden; height: 380px; border: 1px solid #f0f0f0; }
+    .skeleton-img { width: 100%; height: 280px; border-radius: 0; }
+    .skeleton-text { height: 16px; width: 80%; margin: 20px 20px 10px; }
+    .skeleton-text-sm { height: 12px; width: 50%; margin: 0 20px 20px; }
+  </style>
+</head>
+<body>
+
+  <div class="container py-3">
+    <img src="https://nebles.needhome.co/_next/image?url=%2Fimages%2Flogo.png&w=256&q=75" class="header-logo" alt="Nebles" fetchpriority="high">
+    
+    <div class="header-section">
+      <h2 class="req-title">Recommended for You</h2>
+      <p class="req-subtitle">Nebles is selecting the best units for you</p>
+    </div>
+
+    <div id="loading-container" class="text-center" style="padding: 40px 0;">
+      <p id="loading-msg-state" style="font-size: 1.1rem; color: #222; font-weight: 600; margin-bottom: 24px;" class="typing-cursor">AI is scanning properties..</p>
+      
+      <!-- 🚨 [อัปเกรด] แสดง Skeleton Placeholder 2 ใบจำลองการโหลด -->
+      <div id="skeleton-loader" style="text-align: left;">
+          <div class="skeleton-card">
+              <div class="skeleton skeleton-img"></div>
+              <div class="skeleton skeleton-text"></div>
+              <div class="skeleton skeleton-text-sm"></div>
+          </div>
+          <div class="skeleton-card">
+              <div class="skeleton skeleton-img"></div>
+              <div class="skeleton skeleton-text" style="width: 60%;"></div>
+              <div class="skeleton skeleton-text-sm" style="width: 40%;"></div>
+          </div>
+      </div>
+      
+    </div>
+
+    <div id="req-summary" style="display:none; text-align: left;">
+      <p id="final-req-text"></p>
+    </div>
+
+    <div id="property-container" style="display: none;"></div>
+    
+    <div id="load-more-container" class="text-center mt-2 mb-4" style="display: none;">
+      <button class="btn btn-outline-dark fw-bold px-4 rounded-pill" onclick="loadMore()">Load More Properties <i class="bi bi-chevron-down"></i></button>
+    </div>
+
+    <div class="footer-text">© 2026 Nebles Powered by NeedHome</div>
+  </div>
+
+  <div id="floating-bar" class="floating-bar">
+    <p id="selected-count" class="floating-text">0 Selected</p>
+    <button class="btn-booking" onclick="openBookingModal()">
+      Request Booking <i class="bi bi-arrow-right"></i>
+    </button>
+  </div>
+
+<div class="lang-switcher">
+  <select id="lang-select" onchange="changeLanguageAndCurrency(this.value)">
+    <option value="TH">🇹🇭 THB</option>
+    <option value="EN">🇺🇸 USD</option>
+    <option value="CN">🇨🇳 CNY</option>
+  </select>
+</div>
+
+  <div class="modal fade" id="bookingModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content px-2 pb-2">
+        <div class="modal-header border-0 pb-0 justify-content-end">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center pt-0 pb-4 px-4" id="modal-dynamic-body"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const gasApiUrl = "https://script.google.com/macros/s/AKfycbxbg_c1iJFrHDsRW_wFzpk1ikQx_6kSkVkCWY9Oxcyu7UgOv8uO2LyM3OkoGtHU7doQ/exec";
+    const cid = urlParams.get('cid') || ""; 
+    const rawReq = urlParams.get('req') || ""; 
+
+    let loadedProperties = [];
+    let selectedIndices = new Set();
+    let displayLimit = 5; 
+    let reqMonths = 12; 
+    let userContactMethod = ""; 
+    let userLineId = "";
+    let userWhatsapp = "";
+    let alreadyRequestedIds = []; 
+
+// ==========================================
+// 🌐 1. ระบบแปลภาษาแปลให้ครบ (i18n Dictionary)
+// ==========================================
+const i18n = {
+    TH: { title: "ห้องที่คัดสรรมาให้สำหรับคุณ", subtitle: "Nebles กำลังคัดเลือกห้องที่ดีที่สุดสำหรับคุณ", loading: "AI กำลังค้นหาห้องที่ตรงกับคุณจริงๆ..", match: "ตรงสเปค", rented: "ปล่อยเช่าแล้ว", petFriendly: "รับสัตว์เลี้ยง", map: "แผนที่", chat: "แชท", size: "ขนาด", floor: "ชั้น", sqm: "ตร.ม.", month: "เดือน", loadMore: "ดูห้องเพิ่มเติม", selected: "ห้องที่เลือก", requestBooking: "ยืนยันความสนใจ", priceFor: "สำหรับสัญญา", priceInfo: "ราคาสำหรับสัญญา", bookingCheck: "กำลังตรวจสอบห้องพักที่คุณจอง<br>เจ้าหน้าที่จะติดต่อกลับโดยเร็วที่สุด" },
+    EN: { title: "Recommended for You", subtitle: "Nebles is selecting the best units for you", loading: "AI is finding homes that actually fit you..", match: "Match", rented: "RENTED OUT", petFriendly: "Pet Friendly", map: "Map", chat: "Chat", size: "Size", floor: "Fl", sqm: "sqm", month: "month", loadMore: "Load More Properties", selected: "Selected", requestBooking: "Request Booking", priceFor: "For", priceInfo: "Price for", bookingCheck: "Final check on your booked.<br>Please wait for our staff to contact you soon." },
+    CN: {
+        title: "为您推荐",
+        subtitle: "Nebles 正在为您挑选最佳房源",
+        loading: "AI 正在寻找真正适合您的房源..",
+        match: "匹配度",
+        rented: "已出租",
+        petFriendly: "允许宠物",
+        map: "地图",
+        chat: "聊天",
+        size: "面积",
+        floor: "楼层",
+        sqm: "平方米",
+        month: "月",
+        loadMore: "加载更多房源",
+        selected: "已选择",
+        requestBooking: "请求预订",
+        priceFor: "租期为",
+        priceInfo: "价格及租期：",
+	      bookingCheck: "正在确认您的预订。<br>工作人员会尽快与您联系。"
+    }
+};
+
+let currentLang = "EN"; 
+let exchangeRates = { THB: 1, USD: 0.028, CNY: 0.20 }; 
+const currencySymbols = { TH: "฿", EN: "$", CN: "¥" };
+
+async function fetchExchangeRates() {
+    try {
+        const res = await fetch('https://api.exchangerate-api.com/v4/latest/THB');
+        const data = await res.json();
+        exchangeRates.USD = data.rates.USD;
+        exchangeRates.CNY = data.rates.CNY;
+        console.log("💰 อัปเดตเรทเงินสำเร็จ:", exchangeRates);
+    } catch (e) {
+        console.log("⚠️ ดึงเรทเงินพัง! ใช้เรทสำรอง", e);
+    }
+}
+
+function changeLanguageAndCurrency(langCode) {
+    currentLang = langCode;
+    const t = i18n[currentLang];
+    document.querySelector('.req-title').innerText = t.title;
+    document.querySelector('.req-subtitle').innerText = t.subtitle;
+    document.querySelector('.typing-cursor').innerText = t.loading;
+    document.querySelector('#load-more-container button').innerHTML = `${t.loadMore} <i class="bi bi-chevron-down"></i>`;
+    document.querySelector('.btn-booking').innerHTML = `${t.requestBooking} <i class="bi bi-arrow-right"></i>`;
+    updateFloatingBar(); 
+    if (loadedProperties.length > 0) renderProperties();
+}
+
+function parseInitialReq() {
+    let matchContract = rawReq.match(/(\d+)\s*month/i); 
+    if (matchContract) reqMonths = parseInt(matchContract[1].trim()) || 12;
+}
+
+// 🚨 [อัปเกรด] ฟังก์ชันเปิดตัวแบบ Premium Reveal
+function revealContent(textToType) {
+    const loadingContainer = document.getElementById('loading-container');
+    const propertyContainer = document.getElementById('property-container');
+    const summaryContainer = document.getElementById('req-summary');
+    const typeArea = document.getElementById('loading-msg-state');
+
+    typeArea.innerHTML = textToType; 
+    typeArea.classList.remove('typing-cursor');
+
+    // 1. สั่งให้หน้า Loading ค่อยๆ จางหายไป (Fade out)
+    loadingContainer.classList.add('fade-element', 'fade-out');
+
+    // 2. รอให้มันจางจนสุด (0.5 วิ) แล้วค่อยเอาของจริงขึ้นมาโชว์
+    setTimeout(() => {
+        loadingContainer.style.display = 'none';
+        
+        summaryContainer.style.display = 'block';
+        propertyContainer.style.display = 'block';
+        
+        // ใส่คลาส Fade-in ให้ตารางค่อยๆ ลอยขึ้นมาแบบสมูทๆ
+        summaryContainer.classList.add('fade-in');
+        propertyContainer.classList.add('fade-in');
+        
+        renderProperties();
+    }, 500); 
+}
+
+function fetchData() {
+    if (!cid) { showNoResult(); return Promise.resolve(); }
+    
+    // 🚀 [อัปเกรด] หยิบ Promise ที่เราแอบยิงไว้ใน <head> มาใช้เลย!!
+    const fetchReq = window.earlyDataPromise 
+        ? window.earlyDataPromise 
+        : fetch(`${gasApiUrl}?v=2&cid=${encodeURIComponent(cid)}`).then(res => res.json());
+
+    return fetchReq.then(result => {
+        window.earlyDataPromise = null; // เคลียร์ทิ้ง
+        
+        if(!result || result.status !== 'success' || !result.data || result.data.length === 0) { 
+            showNoResult(result ? result.request : null); 
+            return; 
+        }
+        
+        let userLangFromDB = (result.lang || result.userLang || "EN").toUpperCase(); 
+        if (!['TH', 'EN', 'CN'].includes(userLangFromDB)) userLangFromDB = "EN";
+
+        currentLang = userLangFromDB; 
+        document.getElementById('lang-select').value = currentLang;
+              
+        userContactMethod = result.contactMethod || ""; 
+        userLineUid = result.lineUid || "";
+        userLineId = result.lineId || "";      
+        userWhatsapp = result.whatsapp || "";  
+        alreadyRequestedIds = result.requestedIds ? result.requestedIds.split(',').map(id => String(id).trim()) : [];
+        
+        if (result.request) {
+            let r = result.request; let reqParts = []; 
+            let zoneTxt = r.zones ? r.zones : "Bangkok"; reqParts.push(`@${zoneTxt}`);
+            let bMin = parseInt(r.budgetMin) || 0; let bMax = parseInt(r.budgetMax) || 0;
+            if (bMin > 0 && bMax > 0) {
+                let minTxt = (bMin >= 1000 && bMin % 1000 === 0) ? (bMin/1000) + 'k' : bMin.toLocaleString();
+                let maxTxt = (bMax >= 1000 && bMax % 1000 === 0) ? (bMax/1000) + 'k' : bMax.toLocaleString();
+                reqParts.push(`Budget ฿${minTxt} - ${maxTxt}`);
+            } else if (bMax > 0) {
+                let maxTxt = (bMax >= 1000 && bMax % 1000 === 0) ? (bMax/1000) + 'k' : bMax.toLocaleString();
+                reqParts.push(`Budget ฿${maxTxt}`);
+            }
+            reqMonths = parseInt(r.contract) || reqMonths; reqParts.push(`${reqMonths} Months`);
+            document.getElementById('final-req-text').innerText = reqParts.join(' | ');
+        } else {
+            document.getElementById('final-req-text').innerText = `@Bangkok | ${reqMonths} Months`;
+        }
+
+        let interestedIds = result.interestedIds ? result.interestedIds.split(',').map(id => String(id).trim()) : [];
+        if (interestedIds.length > 0) {
+            result.data.sort((a, b) => {
+            const aInt = interestedIds.includes(String(a.id));
+            const bInt = interestedIds.includes(String(b.id));
+            if (aInt && !bInt) return -1;
+            if (!aInt && bInt) return 1; 
+            return 0;
+            });
+        }
+        loadedProperties = result.data; 
+
+        if (typeof selectedIndices !== 'undefined') {
+            selectedIndices.clear();
+            loadedProperties.forEach((p, idx) => {
+                if (interestedIds.includes(String(p.id))) { selectedIndices.add(idx); }
+            });
+        }
+
+        if (typeof changeLanguageAndCurrency === "function") {
+            changeLanguageAndCurrency(currentLang);
+        }
+
+        revealContent(document.getElementById('final-req-text').innerText);
+    })
+    .catch(err => {
+        console.error("🔥 FETCH ERROR: ", err);
+        showNoResult(); 
+    });
+}
+
+function showNoResult(requestData) {
+    document.getElementById('loading-container').style.display = 'none';
+    document.getElementById('property-container').style.display = 'block';
+    
+    let chatMessage = encodeURIComponent(`Hi Nebles, I need help finding a property. [Ref:${cid}]`);
+    
+    if (requestData) {
+        let details = [];
+        if (requestData.zones && requestData.zones !== "-") details.push(`📍 Zone: ${requestData.zones}`);
+        let bMin = parseInt(requestData.budgetMin) || 0;
+        let bMax = parseInt(requestData.budgetMax) || 0;
+        if (bMin > 0 && bMax > 0) details.push(`💰 Budget: ฿${bMin.toLocaleString()} - ฿${bMax.toLocaleString()}`);
+        else if (bMax > 0) details.push(`💰 Budget: Max ฿${bMax.toLocaleString()}`);
+        
+        let contract = parseInt(requestData.contract) || reqMonths || 12;
+        details.push(`📝 Contract: ${contract} Months`);
+        
+        if (requestData.unitType && requestData.unitType !== "-") details.push(`🛏️ Type: ${requestData.unitType}`);
+        if (requestData.size && requestData.size !== "-") details.push(`📐 Size: ${requestData.size} sqm`);
+        if (requestData.pet && requestData.pet !== "-" && requestData.pet.toLowerCase() !== "no") {
+            details.push(`🐕 Pet: ${requestData.pet}`);
+        }
+
+        let rawMsg = `Hi Nebles, I'm looking for a property with these criteria:\n\n${details.join('\n')}\n\nCould you please help me find one? [Ref:${cid}]`;
+        chatMessage = encodeURIComponent(rawMsg);
+    }
+
+    document.getElementById('property-container').innerHTML = `
+    <div style="background: #fff; border-radius: 20px; padding: 40px 24px; text-align: center; border: 1px solid #f0f0f0; box-shadow: 0 10px 30px rgba(0,0,0,0.04); margin-top: 20px;">
+        <div style="width: 70px; height: 70px; background: #fff0f2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px auto;">
+        <i class="bi bi-search" style="font-size: 2rem; color: #FF385C;"></i>
+        </div>
+        <h3 style="font-weight: 700; color: #222; margin-bottom: 12px; font-size: 1.4rem;">No Properties Found</h3>
+        <p style="color: #717171; font-size: 0.95rem; line-height: 1.6; margin-bottom: 32px;">
+        It seems that the properties matching your criteria have just been rented out or are currently unavailable.<br><br>
+        <span style="color: #222; font-weight: 600;">Let our experts help you find a new one!</span>
+        </p>
+        
+        <a href="https://line.me/R/oaMessage/@needhome_th/?${chatMessage}" target="_blank" 
+            style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background-color: #00c300; color: #ffffff; padding: 14px 24px; border-radius: 12px; font-weight: 600; font-size: 1.05rem; text-decoration: none; transition: 0.2s; box-shadow: 0 4px 15px rgba(0, 195, 0, 0.2);">
+        <i class="bi bi-line" style="font-size: 1.2rem;"></i> Chat with Nebles
+        </a>
+        <div style="margin-top: 16px; font-size: 0.8rem; color: #9ca3af;">We typically reply within 5 minutes</div>
+    </div>`;
+}
+
+function getNewSelectedIndices() {
+    return Array.from(selectedIndices).filter(idx => {
+    let p = loadedProperties[idx];
+    let pid = String(p.id || p.submissionId);
+    return !alreadyRequestedIds.includes(pid) && !(p.status && p.status.toLowerCase() === "unavailable");
+    });
+}
+
+function renderProperties() {
+    let html = '';
+    const itemsToShow = loadedProperties.slice(0, displayLimit);
+    const t = i18n[currentLang]; 
+    
+    let curRate = 1;
+    let curSymbol = "฿";
+    if (currentLang === "EN") { curRate = exchangeRates.USD; curSymbol = "$"; }
+    else if (currentLang === "CN") { curRate = exchangeRates.CNY; curSymbol = "¥"; }
+    
+    itemsToShow.forEach((prop, i) => {
+        const isSelected = selectedIndices.has(i);
+        const isUnavailable = (prop.status && prop.status.toLowerCase() === "unavailable");
+        const propId = String(prop.id || prop.submissionId).trim();
+        const isRequested = alreadyRequestedIds.includes(propId);
+        
+        let imagesHtml = '';
+        if(prop.imageIds && prop.imageIds.length > 0) {
+            prop.imageIds.slice(0, 5).forEach((img, j) => {
+                // 🚨 [อัปเกรด] ลดขนาดรูปเป็น w600 เร็วขึ้น 3 เท่า!
+                imagesHtml += `<div class="carousel-item ${j === 0 ? 'active' : ''} h-100"><img src="https://drive.google.com/thumbnail?id=${img}&sz=w600" loading="lazy"></div>`;
+            });
+        } else {
+            imagesHtml = `<div class="carousel-item active h-100"><div class="d-flex align-items-center justify-content-center h-100 bg-light text-muted">No Image</div></div>`;
+        }
+        
+        let carouselControls = (prop.imageIds && prop.imageIds.length > 1) ? `<button class="carousel-control-prev" type="button" data-bs-target="#carousel-${i}" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button><button class="carousel-control-next" type="button" data-bs-target="#carousel-${i}" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>` : '';
+
+        let stationName = "N/A";
+        if (prop.bts1 && prop.bts1 !== "No Rail Nearby" && prop.bts1 !== "-" && prop.bts1 !== "WAITING...") {
+            stationName = prop.bts1.includes('-') ? prop.bts1.substring(prop.bts1.indexOf('-') + 1).trim() : prop.bts1;
+        }
+
+        let mapUrl = (prop.placeId && prop.placeId !== "") 
+            ? `http://googleusercontent.com/maps.google.com/?q=${encodeURIComponent(prop.project)}&query_place_id=${prop.placeId}` 
+            : `http://googleusercontent.com/maps.google.com/?q=${encodeURIComponent(prop.project)}`;
+
+        let mapBtn = `<a href="${mapUrl}" target="_blank" class="btn-action-sm"><i class="bi bi-map"></i> ${t.map}</a>`;
+        let chatBtn = isUnavailable 
+          ? `<button class="btn-action-sm" disabled><i class="bi bi-x-circle"></i> ${t.rented}</button>` 
+          : `<button onclick="openSingleChatModal(${i})" class="btn-action-sm"><i class="bi bi-chat-dots"></i> ${t.chat}</button>`;
+
+        let selectBtnHtml = isRequested || isUnavailable ? '' : `<button class="btn-select" onclick="toggleSelect(${i})"><i class="bi ${isSelected ? 'bi-heart-fill' : 'bi-heart'}"></i></button>`;
+        
+        let requestedStripHtml = isRequested && !isUnavailable ? `
+          <div class="requested-strip">
+            <div class="requested-strip-text">${t.bookingCheck}</div>
+          </div>` : '';
+
+        let unavailableBadge = isUnavailable ? `<div class="unavailable-badge">${t.rented}</div>` : '';
+
+        let petBadgeHtml = '';
+        if (prop.petPolicy && String(prop.petPolicy).trim() === "Pet Friendly") {
+             petBadgeHtml = `<div class="pet-badge"><i class="bi bi-suit-heart-fill"></i> ${t.petFriendly}</div>`;
+        }
+
+        let pShort = prop.prices && prop.prices.short ? parseFloat(prop.prices.short) : 0;
+        let pMid = prop.prices && prop.prices.mid ? parseFloat(prop.prices.mid) : 0;
+        let pLong = prop.prices && prop.prices.long ? parseFloat(prop.prices.long) : 0;
+
+        let finalPriceTHB = 0; let isExactTier = true; let termLabel = "";
+
+        if (reqMonths <= 3) {
+            if (pShort > 0) { finalPriceTHB = pShort; isExactTier = true; termLabel = "1-5 Months"; }
+            else if (pMid > 0) { finalPriceTHB = pMid; isExactTier = false; termLabel = "6-11 Months"; }
+            else if (pLong > 0) { finalPriceTHB = pLong; isExactTier = false; termLabel = "1 Year+"; }
+        } 
+        else if (reqMonths <= 5) {
+            if (pShort > 0) { finalPriceTHB = pShort; isExactTier = true; termLabel = "1-5 Months"; }
+            else if (pMid > 0) { finalPriceTHB = pMid; isExactTier = false; termLabel = "6-11 Months"; }
+            else if (pLong > 0) { finalPriceTHB = pLong; isExactTier = false; termLabel = "1 Year+"; }
+        } 
+        else if (reqMonths <= 11) {
+            if (pMid > 0) { finalPriceTHB = pMid; isExactTier = true; termLabel = "6-11 Months"; }
+            else if (pLong > 0) { finalPriceTHB = pLong; isExactTier = false; termLabel = "1 Year+"; }
+            else if (pShort > 0) { finalPriceTHB = pShort; isExactTier = false; termLabel = "1-5 Months"; }
+        } 
+        else {
+            if (pLong > 0) { finalPriceTHB = pLong; isExactTier = true; termLabel = "1 Year+"; }
+            else if (pMid > 0) { finalPriceTHB = pMid; isExactTier = false; termLabel = "6-11 Months"; }
+            else if (pShort > 0) { finalPriceTHB = pShort; isExactTier = false; termLabel = "1-5 Months"; }
+        }
+
+        if (finalPriceTHB === 0) {
+            finalPriceTHB = pLong > 0 ? pLong : (pMid > 0 ? pMid : pShort);
+            isExactTier = false; termLabel = "Available Term";
+        }
+
+        let convertedPriceHtml = "";
+        if (currentLang !== "TH") {
+            let convertedPrice = Math.round(finalPriceTHB * curRate);
+            convertedPriceHtml = `<span style="font-size: 0.85rem; color: #717171; font-weight: 500; margin-left: 6px;">(~ ${curSymbol}${convertedPrice.toLocaleString()})</span>`;
+        }
+
+        let priceDisplayHtml = "";
+        if (isExactTier === false) {
+          priceDisplayHtml = `
+            <div class="price-wrap" style="display: flex; flex-direction: column; align-items: flex-start; gap: 0; margin-bottom: 12px;">
+              <div style="display: flex; align-items: baseline; gap: 6px;">
+                <span class="price-amt">฿${parseInt(finalPriceTHB).toLocaleString()}</span>
+                <span class="price-label">/ ${t.month}</span>
+                ${convertedPriceHtml} 
+              </div>
+              <div style="font-size: 0.75rem; color: #E31C5F; font-weight: 500; line-height: 1.3; margin-top: 4px; background: #fff0f2; padding: 6px 10px; border-radius: 6px; border: 1px solid #ffd1d9;">
+                <i class="bi bi-info-circle me-1"></i> ${t.priceInfo} ${termLabel}
+              </div>
+            </div>`;
+        } else {
+          priceDisplayHtml = `
+            <div class="price-wrap" style="display: flex; align-items: baseline; gap: 6px; margin-bottom: 12px;">
+              <span class="price-amt">฿${parseInt(finalPriceTHB).toLocaleString()}</span>
+              <span class="price-label">/ ${t.month} <span style="font-size: 0.8rem; color: #9ca3af; font-weight: 500;">(${t.priceFor} ${termLabel})</span></span>
+              ${convertedPriceHtml}
+            </div>`;
+        }
+
+        let cardBookingBtnHtml = "";
+        if (isUnavailable) {
+            cardBookingBtnHtml = `<button class="btn-card-booking" disabled style="background-color: #f3f4f6; color: #9ca3af;"><i class="bi bi-x-circle"></i> ${t.rented}</button>`;
+        } else if (isRequested) {
+            cardBookingBtnHtml = `<button class="btn-card-booking" disabled style="background-color: #fff0f2; color: #FF385C; border: 1px solid #ffd1d9; opacity: 0.75; cursor: not-allowed;"><i class="bi bi-check2-circle"></i> Requested</button>`;
+        } else {
+            cardBookingBtnHtml = `<button class="btn-card-booking" onclick="bookSingleRoom(${i})"><i class="bi bi-calendar-check"></i> ${t.requestBooking}</button>`;
+        }
+
+        html += `
+          <div class="property-card ${isSelected ? 'selected-card' : ''} ${isUnavailable ? 'unavailable-card' : ''}">
+            <div class="card-img-wrapper">
+              ${requestedStripHtml} ${unavailableBadge}
+              ${petBadgeHtml}
+              <div class="match-badge"><i class="bi bi-stars"></i> ${t.match} ${prop.score}%</div>
+              ${selectBtnHtml}
+              <div id="carousel-${i}" class="carousel slide h-100" data-bs-ride="false">
+                <div class="carousel-inner h-100">${imagesHtml}</div>
+                ${carouselControls}
+              </div>
+            </div>
+            <div class="card-body-premium">
+              <div class="project-header" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px;">
+                <div style="font-size: 1.2rem; font-weight: 600; line-height: 1.3; color: #222;">${prop.project || "Unknown Project"}</div>
+                <div class="action-btn-group" style="display: flex; gap: 8px;">${chatBtn}${mapBtn}</div>
+              </div>
+              <div class="location-text"><i class="bi bi-geo-alt"></i> ${prop.zone || "-"}</div>
+              
+              ${priceDisplayHtml}
+              
+              <div class="specs-inline">
+                <span>${prop.unitType || "Studio"}</span><i class="bi bi-circle-fill spec-dot"></i>
+                <span>${t.size} ${prop.size} ${t.sqm}</span><i class="bi bi-circle-fill spec-dot"></i>
+                <span>${t.floor}: ${prop.floor}</span>
+              </div>
+              <div class="amenities-row">
+                <span><i class="bi bi-train-front"></i> ${stationName} (${prop.dist1}m)</span>
+              </div>
+              
+              ${cardBookingBtnHtml}
+            </div>
+        </div>`;
+    });
+
+    document.getElementById('property-container').innerHTML = html;
+    document.getElementById('load-more-container').style.display = loadedProperties.length > displayLimit ? 'block' : 'none';
+    updateFloatingBar();
+}
+
+function updateFloatingBar() {
+  const bar = document.getElementById('floating-bar');
+  let newSelectionCount = getNewSelectedIndices().length;
+  const t = i18n[currentLang]; 
+
+  if (newSelectionCount > 0) {
+    document.getElementById('selected-count').innerText = `${newSelectionCount} ${t.selected}`;
+    bar.classList.add('show');
+  } else { 
+    bar.classList.remove('show'); 
+  }
+}
+
+function loadMore() { 
+    displayLimit += 5; 
+    renderProperties(); 
+}
+
+function toggleSelect(index) { 
+    if (selectedIndices.has(index)) selectedIndices.delete(index); 
+    else selectedIndices.add(index); 
+    renderProperties(); 
+}
+
+function bookSingleRoom(index) { 
+    selectedIndices.add(index); 
+    renderProperties(); 
+    openBookingModal(); 
+}
+
+    let currentActionType = ""; 
+    let currentChatRoomId = "";
+    let currentChatProject = "";
+
+    function processActionFlow() {
+      var bookingModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('bookingModal'));
+      let method = userContactMethod ? userContactMethod.trim().toLowerCase() : "";
+
+      if (method !== 'line' && method !== 'whatsapp') {
+        showChooseState();
+        bookingModal.show();
+      } 
+      else {
+        let channel = (method === 'line') ? 'Line' : 'WhatsApp';
+        
+        if (channel === 'Line') {
+          if (typeof userLineUid !== 'undefined' && userLineUid && userLineUid !== '-') {
+             showLoadingState();
+             bookingModal.show();
+             setTimeout(() => { redirectToApp('Line'); }, 1500);
+          } 
+          else if (!userLineId || userLineId === '-') {
+             showInputState('Line', 'Line ID');
+             bookingModal.show();
+          } 
+          else {
+             showLoadingState();
+             bookingModal.show();
+             setTimeout(() => { redirectToApp('Line'); }, 1500);
+          }
+        } 
+        else if (channel === 'WhatsApp') {
+          if (!userWhatsapp || userWhatsapp === '-') {
+            showInputState('WhatsApp', 'WhatsApp Number');
+            bookingModal.show();
+          } else {
+            showLoadingState();
+            bookingModal.show();
+            setTimeout(() => { redirectToApp('WhatsApp'); }, 1500);
+          }
+        }
+      }
+    }
+
+function openSingleChatModal(index) {
+  let prop = loadedProperties[index];
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('by') === 'Public') {
+      let msg = encodeURIComponent(`สวัสดีครับ สนใจห้อง ${prop.project} (รหัส: ${prop.id || prop.submissionId}) รบกวนเช็คให้หน่อยครับ`);
+      window.location.href = `https://line.me/R/oaMessage/@needhome_th/?${msg}`;
+      return; 
+  }
+
+  currentChatRoomId = prop.id || prop.submissionId;
+  currentChatProject = prop.project;
+  currentActionType = "chat";
+  processActionFlow(); 
+}
+
+function openBookingModal() {
+  if(getNewSelectedIndices().length === 0) return;
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('by') === 'Public') {
+      let rooms = getNewSelectedIndices().map(i => `- ${loadedProperties[i].project} (รหัส: ${loadedProperties[i].id || loadedProperties[i].submissionId})`).join("\n");
+      let msg = encodeURIComponent(`Hi Nebles, I am interested in:\n${rooms}\n\n`);
+      window.location.href = `https://line.me/R/oaMessage/@needhome_th/?${msg}`;
+      return; 
+  }
+
+  currentActionType = "booking";
+  processActionFlow(); 
+}
+
+    function showLoadingState() {
+      document.getElementById('modal-dynamic-body').innerHTML = `<div class="py-4"><div class="spinner-border mb-3" role="status" style="color: #FF385C;"></div><h5 class="fw-bold">Processing...</h5></div>`;
+    }
+
+    function showSuccessState(channel) {
+      document.getElementById('modal-dynamic-body').innerHTML = `
+        <div class="py-3">
+          <div style="width: 60px; height: 60px; background: #fff0f2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto;"><i class="bi bi-check-lg" style="font-size: 2rem; color: #FF385C;"></i></div>
+          <h4 class="fw-bold">Success!</h4>
+          <p class="text-muted">We are checking the availability for you.</p>
+          <button id="btn-close-window" class="btn-channel mt-4" onclick="closeWindow()">Close Window</button>
+        </div>`;
+    }
+
+    function showChooseState() {
+      document.getElementById('modal-dynamic-body').innerHTML = `
+        <h4 class="fw-bold">Contact Method</h4>
+        <p class="text-muted">How would you like to contact us?</p>
+        <button class="btn-channel mb-3" onclick="checkContactInfo('Line')"><i class="bi bi-line" style="color:#00c300;"></i> Contact via Line</button>
+        <button class="btn-channel" onclick="checkContactInfo('WhatsApp')"><i class="bi bi-whatsapp" style="color:#25d366;"></i> Contact via WhatsApp</button>`;
+    }
+
+    function checkContactInfo(channel) {
+      if (channel === 'Line' && !userLineId) showInputState(channel, 'Line ID');
+      else if (channel === 'WhatsApp' && !userWhatsapp) showInputState(channel, 'WhatsApp Number');
+      else showFallbackWarning(channel);
+    }
+
+    function showInputState(channel, placeholderTxt) {
+      document.getElementById('modal-dynamic-body').innerHTML = `
+        <h4 class="fw-bold">Contact Info Required</h4>
+        <p class="text-muted">Please provide your ${channel} to proceed.</p>
+        <input type="text" id="contact-input-value" class="form-control mb-3 p-2" style="border-radius:10px; border:1px solid #d1d5db;" placeholder="Enter your ${placeholderTxt}">
+        <button class="btn-booking w-100" onclick="saveContactAndProceed('${channel}')">Save & Next <i class="bi bi-arrow-right"></i></button>`;
+    }
+
+    function saveContactAndProceed(channel) {
+      let inputVal = document.getElementById('contact-input-value').value.trim();
+      if (!inputVal) { alert("Please enter your details."); return; }
+      if (channel === 'Line') userLineId = inputVal;
+      if (channel === 'WhatsApp') userWhatsapp = inputVal;
+      showFallbackWarning(channel);
+    }
+
+    function showFallbackWarning(channel) {
+      document.getElementById('modal-dynamic-body').innerHTML = `
+        <h4 class="fw-bold">Almost there!</h4>
+        <p class="text-muted">Click next to send us a message.</p>
+        <button class="btn-booking w-100" onclick="redirectToApp('${channel}')">Next <i class="bi bi-arrow-right"></i></button>`;
+    }
+
+    function redirectToApp(channel) {
+      let btn = document.querySelector('.btn-booking');
+      if(btn) { btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Connecting...'; btn.disabled = true; }
+
+      let rooms = "";
+      let apiPromise;
+      if (currentActionType === "chat") {
+        rooms = currentChatProject;
+        apiPromise = sendInterestToGAS(channel, currentChatRoomId); 
+      } else {
+        rooms = getNewSelectedIndices().map(i => loadedProperties[i].project).join(", ");
+        apiPromise = sendBookingToGAS(channel); 
+      }
+      
+      let rawMsg = `Hi Nebles, I am interested in:\n${rooms}\n\n[Ref:${cid}]`;
+      let msg = encodeURIComponent(rawMsg);
+      
+      let redirectUrl = channel.toLowerCase() === 'line' 
+        ? `https://line.me/R/oaMessage/@needhome_th/?${msg}` 
+        : `https://wa.me/66962435566?text=${msg}`;
+
+      apiPromise
+        .then(() => { window.location.href = redirectUrl; })
+        .catch(err => { window.location.href = redirectUrl; });
+
+      setTimeout(() => { window.location.href = redirectUrl; }, 1500);
+    }
+
+    function sendInterestToGAS(channel, roomId) {
+      let contactIdVal = channel === 'Line' ? userLineId : userWhatsapp;
+      return fetch(gasApiUrl, { 
+        method: 'POST', mode: 'no-cors',
+        body: JSON.stringify({ action: "updateInterest", cid: cid, channel: channel, contactId: contactIdVal, roomId: roomId }) 
+      });
+    }
+
+    function sendBookingToGAS(channel) {
+      let ids = getNewSelectedIndices().map(i => loadedProperties[i].id || loadedProperties[i].submissionId).join(", ");
+      let contactIdVal = channel === 'Line' ? userLineId : userWhatsapp;
+      return fetch(gasApiUrl, { 
+        method: 'POST', mode: 'no-cors',
+        body: JSON.stringify({ action: "updateBooking", cid: cid, channel: channel, contactId: contactIdVal, requestedIds: ids }) 
+      });
+    }
+
+    function closeWindow() {
+      window.close(); 
+      document.getElementById('btn-close-window').style.display = 'none';
+      document.getElementById('modal-dynamic-body').innerHTML += `<p class="mt-3 text-muted">Please tap the 'X' to return to chat.</p>`;
+    }
+
+    // ==========================================
+    // 🚀 เริ่มทำงานทันทีที่โครง HTML โหลดเสร็จ (ไม่ต้องรอรูปหรือฟอนต์!)
+    // ==========================================
+    document.addEventListener('DOMContentLoaded', () => {
+        parseInitialReq(); 
+
+        // 🚨 ลั่นไกดึงข้อมูลห้องจาก GAS ทันที! (ไม่รอสิ่งใดทั้งสิ้น)
+        const fetchPropertiesPromise = fetchData(); 
+
+        // ลั่นไกดึงเรทเงินคู่ขนานกันไปเลย (ไม่ให้ขวางทางกัน)
+        fetchExchangeRates();
+
+        // ส่วนของการส่ง Log ว่ามีคนเปิดดู
+        const urlParams = new URLSearchParams(window.location.search);
+        const cidParam = urlParams.get('cid');
+        const byParam = urlParams.get('by');
+
+        let viewedBy = 'Customer';
+        if (byParam === 'admin') viewedBy = 'Admin';
+        else if (byParam === 'Public') viewedBy = 'Public';
+
+        if (viewedBy === 'Public') {
+            console.log("🔥 [Public Mode] ผู้เข้าชมจาก Social Network");
+        }
+
+        if (cidParam && cidParam !== "Guest" && viewedBy !== 'Public') {
+            fetch(gasApiUrl, { 
+                method: 'POST', 
+                mode: 'no-cors',
+                body: JSON.stringify({ action: "view_catalog", cid: cidParam, actorType: viewedBy }) 
+            }).catch(err => console.log("Silent Log Error:", err)); 
+        }
+    });
+  </script>
+</body>
+</html>
