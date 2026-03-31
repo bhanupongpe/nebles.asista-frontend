@@ -756,10 +756,9 @@ function openBookingModal() {
       return fetch(gasApiUrl, { 
         method: 'POST', 
         mode: 'no-cors',
-        keepalive: true, // 🛡️ ไอเทมลับ! บังคับส่งให้เสร็จแม้เปลี่ยนหน้าเว็บ
-        headers: { "Content-Type": "text/plain;charset=utf-8" }, // 📝 บังคับ Format ให้ GAS อ่านออก
+        // 🚨 เอา keepalive ออกไปเลย มือถือแมร่งงอแง!
         body: JSON.stringify({ action: "updateInterest", cid: cid, channel: channel, contactId: contactIdVal, roomId: roomId }) 
-      });
+      }).catch(err => alert("📱 ส่งข้อมูลไป GAS ไม่ผ่าน: " + err.message)); // 👈 ดักแจ้งเตือนเผื่อมือถือบล็อก
     }
 
     function sendBookingToGAS(channel) {
@@ -768,10 +767,9 @@ function openBookingModal() {
       return fetch(gasApiUrl, { 
         method: 'POST', 
         mode: 'no-cors',
-        keepalive: true, // 🛡️ ไอเทมลับ!
-        headers: { "Content-Type": "text/plain;charset=utf-8" }, 
+        // 🚨 เอา keepalive ออก!
         body: JSON.stringify({ action: "updateBooking", cid: cid, channel: channel, contactId: contactIdVal, requestedIds: ids }) 
-      });
+      }).catch(err => alert("📱 ส่งข้อมูลไป GAS ไม่ผ่าน: " + err.message)); // 👈 ดักแจ้งเตือน
     }
 
     function closeWindow() {
