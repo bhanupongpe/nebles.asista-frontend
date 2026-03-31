@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Nebles | Find Your Home</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  
+  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; color: #222; }
+    .app-container { max-width: 480px; margin: 0 auto; background: #fff; min-height: 100vh; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
+    
+    /* Header */
+    .header { padding: 20px 24px 10px; display: flex; justify-content: space-between; align-items: center; }
+    .logo { height: 35px; }
+    .user-profile { width: 35px; height: 35px; border-radius: 50%; background: #e9ecef; object-fit: cover; }
+
+    /* Hero / AI Search */
+    .hero-section { padding: 20px 24px; }
+    .hero-title { font-size: 1.8rem; font-weight: 700; line-height: 1.2; margin-bottom: 16px; }
+    .ai-search-box { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.04); position: relative; }
+    .ai-search-box textarea { width: 100%; border: none; outline: none; resize: none; font-size: 1rem; color: #4b5563; min-height: 80px; }
+    .ai-search-box textarea::placeholder { color: #9ca3af; }
+    .btn-search { background: #FF385C; color: #fff; border: none; border-radius: 50px; padding: 10px 24px; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
+    .btn-search:active { transform: scale(0.98); background: #E31C5F; }
+
+    /* Featured Rooms (Horizontal Scroll) */
+    .section-title { font-size: 1.2rem; font-weight: 700; margin: 24px 24px 16px; }
+    .scroll-container { display: flex; overflow-x: auto; padding: 0 24px 24px; gap: 16px; scroll-snap-type: x mandatory; scrollbar-width: none; }
+    .scroll-container::-webkit-scrollbar { display: none; }
+    .room-card { min-width: 260px; scroll-snap-align: start; background: #fff; border-radius: 16px; overflow: hidden; border: 1px solid #f0f0f0; }
+    .room-img { width: 100%; height: 160px; object-fit: cover; }
+    .room-info { padding: 12px; }
+    .room-title { font-weight: 600; font-size: 1rem; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .room-price { color: #FF385C; font-weight: 700; font-size: 1.1rem; }
+    .room-desc { font-size: 0.8rem; color: #717171; display: flex; gap: 8px; margin-top: 4px; }
+    
+    /* Loading Overlay */
+    .loading-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 1000; display: none; flex-direction: column; align-items: center; justify-content: center; border-radius: 16px; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  
+  <div class="header">
+    <img src="https://nebles.needhome.co/_next/image?url=%2Fimages%2Flogo.png&w=256&q=75" class="logo" alt="Nebles">
+    <img src="https://via.placeholder.com/150" id="user-profile-img" class="user-profile" alt="User" style="display:none;">
+  </div>
+
+  <div class="hero-section">
+    <h1 class="hero-title">Where do you<br>want to live? 🏠</h1>
+    
+    <div class="ai-search-box">
+      <textarea id="ai-input" placeholder="บอกความต้องการของคุณ เช่น...\n'หาคอนโดใกล้ BTS อ่อนนุช เลี้ยงแมวได้ งบไม่เกิน 15,000 บาท เข้าอยู่เดือนหน้า'"></textarea>
+      <button class="btn-search" id="btn-submit" onclick="submitAiSearch()">
+        <i class="bi bi-magic"></i> ให้ AI ช่วยหาห้อง
+      </button>
+
+      <div class="loading-overlay" id="loading-layer">
+        <div class="spinner-border mb-2" style="color: #FF385C;" role="status"></div>
+        <div class="fw-bold" style="color: #222;">AI กำลังค้นหาห้อง...</div>
+        <div class="small text-muted mt-1">รอสักครู่ ประมาณ 3-5 วินาที</div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="section-title">🔥 Hot Deals (Featured)</h3>
+  <div class="scroll-container" id="featured-rooms">
+    <div class="room-card" onclick="alert('เดี๋ยวทำลิงก์เด้งไปหน้าห้องนี้')">
+      <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=500&q=80" class="room-img">
+      <div class="room-info">
+        <div class="room-title">Ideo Mobi Sukhumvit</div>
+        <div class="room-price">฿ 15,000 <span style="font-size:0.75rem; color:#717171; font-weight:normal;">/mo</span></div>
+        <div class="room-desc"><span>1 Bed</span>•<span>32 sqm</span>•<span>🐈 Pet Friendly</span></div>
+      </div>
+    </div>
+
+    <div class="room-card">
+      <img src="https://images.unsplash.com/photo-1502672260266-1c1de2422008?w=500&q=80" class="room-img">
+      <div class="room-info">
+        <div class="room-title">Life Asoke Hype</div>
+        <div class="room-price">฿ 18,500 <span style="font-size:0.75rem; color:#717171; font-weight:normal;">/mo</span></div>
+        <div class="room-desc"><span>Studio</span>•<span>26 sqm</span>•<span>🚆 300m to MRT</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // 🚨 1. ใส่ LIFF ID ของมึงตรงนี้
+  const LIFF_ID = "YOUR_LIFF_ID_HERE"; 
+  
+  // 🚨 2. ใส่ URL ของหน้าแคตตาล็อก (หน้าที่เพิ่งแก้กันไป)
+  const CATALOG_URL = "https://script.google.com/macros/s/xxxx/exec"; 
+  
+  // 🚨 3. ใส่ URL ของ GAS API ที่ใช้รับข้อมูล
+  const GAS_API_URL = "https://script.google.com/macros/s/AKfycbya2rWPhgYN7e9rmBuLffXjrJnRnFdmkRkL84Dib8NilKQAfXxmEmGwFfaq5aVkPW4q/exec"; 
+  const SECRET_KEY = "รหัสลับADMINของมึง";
+
+  let userLineUid = "";
+  let userLineName = "";
+
+  // ==========================================
+  // 🚀 เริ่มต้น LIFF (ดึงข้อมูล LINE ลูกค้า)
+  // ==========================================
+  async function initializeLiff() {
+    try {
+      await liff.init({ liffId: LIFF_ID });
+      if (liff.isLoggedIn()) {
+        const profile = await liff.getProfile();
+        userLineUid = profile.userId;
+        userLineName = profile.displayName;
+        
+        // โชว์รูปโปรไฟล์มุมขวาบนให้ดูพรีเมียม
+        if(profile.pictureUrl) {
+           document.getElementById('user-profile-img').src = profile.pictureUrl;
+           document.getElementById('user-profile-img').style.display = 'block';
+        }
+      } else {
+        liff.login(); // บังคับล็อกอินถ้าเปิดในเบราว์เซอร์
+      }
+    } catch (err) {
+      console.error("LIFF Init Error:", err);
+    }
+  }
+  
+  initializeLiff();
+
+  // ==========================================
+  // 🤖 กดปุ่มให้ AI ช่วยหา (ส่งข้อมูลไป GAS)
+  // ==========================================
+  function submitAiSearch() {
+    const rawText = document.getElementById('ai-input').value.trim();
+    if (!rawText) { alert("กรุณาพิมพ์ความต้องการของคุณก่อนครับ 😊"); return; }
+
+    // เปิดหน้าจอโหลด
+    document.getElementById('loading-layer').style.display = 'flex';
+
+    // เตรียมแพ็กเกจส่งไปหา GAS
+    const payload = {
+      action: "liff_ai_match", // 👈 เดี๋ยวเราต้องไปเขียนดักแอคชันนี้ที่หลังบ้าน
+      secret: SECRET_KEY,
+      rawReq: rawText,
+      lineUid: userLineUid || "U_TEST_GUEST",
+      lineName: userLineName || "Guest User"
+    };
+
+    fetch(GAS_API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "success" && data.cid) {
+        // 🎉 สำเร็จ! ได้รหัส CUS-ID มาแล้ว เด้งพาไปหน้าแคตตาล็อกเลย!!
+        window.location.href = `${CATALOG_URL}?v=2&cid=${data.cid}`;
+      } else {
+        alert("❌ เกิดข้อผิดพลาด: " + (data.message || "ไม่สามารถสร้างรายการได้"));
+        document.getElementById('loading-layer').style.display = 'none';
+      }
+    })
+    .catch(err => {
+      console.error("Error:", err);
+      alert("❌ ระบบขัดข้อง กรุณาลองใหม่อีกครั้ง");
+      document.getElementById('loading-layer').style.display = 'none';
+    });
+  }
+</script>
+
+</body>
+</html>
