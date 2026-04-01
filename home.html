@@ -1,178 +1,405 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Nebles | Find Your Home</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+  <title>Nebles | Smart AI Search</title>
   
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL,GRAD,opsz@300,0,0,24&display=swap" rel="stylesheet">
   <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { brand: '#FF385C', dark: '#222222', muted: '#717171', light: '#EBEBEB', bg: '#F7F7F9' }, fontFamily: { sans: ['Inter', 'Prompt', 'sans-serif'], } } }
+    }
+  </script>
+
   <style>
-    body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; color: #222; }
-    .app-container { max-width: 480px; margin: 0 auto; background: #fff; min-height: 100vh; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
+    body { -webkit-tap-highlight-color: transparent; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+    /* ซ่อน Scrollbar แต่ยังเลื่อนได้ */
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     
-    /* Header */
-    .header { padding: 20px 24px 10px; display: flex; justify-content: space-between; align-items: center; }
-    .logo { height: 35px; }
-    .user-profile { width: 35px; height: 35px; border-radius: 50%; background: #e9ecef; object-fit: cover; }
-
-    /* Hero / AI Search */
-    .hero-section { padding: 20px 24px; }
-    .hero-title { font-size: 1.8rem; font-weight: 700; line-height: 1.2; margin-bottom: 16px; }
-    .ai-search-box { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.04); position: relative; }
-    .ai-search-box textarea { width: 100%; border: none; outline: none; resize: none; font-size: 1rem; color: #4b5563; min-height: 80px; }
-    .ai-search-box textarea::placeholder { color: #9ca3af; }
-    .btn-search { background: #FF385C; color: #fff; border: none; border-radius: 50px; padding: 10px 24px; font-weight: 600; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
-    .btn-search:active { transform: scale(0.98); background: #E31C5F; }
-
-    /* Featured Rooms (Horizontal Scroll) */
-    .section-title { font-size: 1.2rem; font-weight: 700; margin: 24px 24px 16px; }
-    .scroll-container { display: flex; overflow-x: auto; padding: 0 24px 24px; gap: 16px; scroll-snap-type: x mandatory; scrollbar-width: none; }
-    .scroll-container::-webkit-scrollbar { display: none; }
-    .room-card { min-width: 260px; scroll-snap-align: start; background: #fff; border-radius: 16px; overflow: hidden; border: 1px solid #f0f0f0; }
-    .room-img { width: 100%; height: 160px; object-fit: cover; }
-    .room-info { padding: 12px; }
-    .room-title { font-weight: 600; font-size: 1rem; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .room-price { color: #FF385C; font-weight: 700; font-size: 1.1rem; }
-    .room-desc { font-size: 0.8rem; color: #717171; display: flex; gap: 8px; margin-top: 4px; }
-    
-    /* Loading Overlay */
-    .loading-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 1000; display: none; flex-direction: column; align-items: center; justify-content: center; border-radius: 16px; }
+    .spinner { border: 3px solid #EBEBEB; border-top-color: #FF385C; border-radius: 50%; width: 36px; height: 36px; animation: spin 1s linear infinite; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
   </style>
 </head>
-<body>
 
-<div class="app-container">
-  
-  <div class="header">
-    <img src="https://nebles.needhome.co/_next/image?url=%2Fimages%2Flogo.png&w=256&q=75" class="logo" alt="Nebles">
-    <img src="https://via.placeholder.com/150" id="user-profile-img" class="user-profile" alt="User" style="display:none;">
-  </div>
+<body class="bg-white text-dark min-h-screen pb-24 selection:bg-brand selection:text-white">
 
-  <div class="hero-section">
-    <h1 class="hero-title">Where do you<br>want to live? 🏠</h1>
-    
-    <div class="ai-search-box">
-      <textarea id="ai-input" placeholder="บอกความต้องการของคุณ เช่น...\n'หาคอนโดใกล้ BTS อ่อนนุช เลี้ยงแมวได้ งบไม่เกิน 15,000 บาท เข้าอยู่เดือนหน้า'"></textarea>
-      <button class="btn-search" id="btn-submit" onclick="submitAiSearch()">
-        <i class="bi bi-magic"></i> ให้ AI ช่วยหาห้อง
-      </button>
-
-      <div class="loading-overlay" id="loading-layer">
-        <div class="spinner-border mb-2" style="color: #FF385C;" role="status"></div>
-        <div class="fw-bold" style="color: #222;">AI กำลังค้นหาห้อง...</div>
-        <div class="small text-muted mt-1">รอสักครู่ ประมาณ 3-5 วินาที</div>
-      </div>
+  <header class="bg-white border-b border-light sticky top-0 w-full z-40 px-6 py-4 flex justify-between items-center">
+    <img src="https://nebles.needhome.co/_next/image?url=%2Fimages%2Flogo.png&w=256&q=75" class="h-6" alt="Nebles">
+    <div class="flex items-center gap-2 px-3 py-1 border border-light rounded-full shadow-sm">
+      <span class="material-symbols-outlined text-dark">menu</span>
+      <span class="material-symbols-outlined text-muted text-2xl" id="user-placeholder">account_circle</span>
     </div>
-  </div>
+  </header>
 
-  <h3 class="section-title">🔥 Hot Deals (Featured)</h3>
-  <div class="scroll-container" id="featured-rooms">
-    <div class="room-card" onclick="alert('เดี๋ยวทำลิงก์เด้งไปหน้าห้องนี้')">
-      <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=500&q=80" class="room-img">
-      <div class="room-info">
-        <div class="room-title">Ideo Mobi Sukhumvit</div>
-        <div class="room-price">฿ 15,000 <span style="font-size:0.75rem; color:#717171; font-weight:normal;">/mo</span></div>
-        <div class="room-desc"><span>1 Bed</span>•<span>32 sqm</span>•<span>🐈 Pet Friendly</span></div>
-      </div>
-    </div>
+  <main class="max-w-xl mx-auto px-6 pt-8 pb-10">
 
-    <div class="room-card">
-      <img src="https://images.unsplash.com/photo-1502672260266-1c1de2422008?w=500&q=80" class="room-img">
-      <div class="room-info">
-        <div class="room-title">Life Asoke Hype</div>
-        <div class="room-price">฿ 18,500 <span style="font-size:0.75rem; color:#717171; font-weight:normal;">/mo</span></div>
-        <div class="room-desc"><span>Studio</span>•<span>26 sqm</span>•<span>🚆 300m to MRT</span></div>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<script>
-  // 🚨 1. ใส่ LIFF ID ของมึงตรงนี้
-  const LIFF_ID = "YOUR_LIFF_ID_HERE"; 
-  
-  // 🚨 2. ใส่ URL ของหน้าแคตตาล็อก (หน้าที่เพิ่งแก้กันไป)
-  const CATALOG_URL = "https://script.google.com/macros/s/xxxx/exec"; 
-  
-  // 🚨 3. ใส่ URL ของ GAS API ที่ใช้รับข้อมูล
-  const GAS_API_URL = "https://script.google.com/macros/s/AKfycbya2rWPhgYN7e9rmBuLffXjrJnRnFdmkRkL84Dib8NilKQAfXxmEmGwFfaq5aVkPW4q/exec"; 
-  const SECRET_KEY = "รหัสลับADMINของมึง";
-
-  let userLineUid = "";
-  let userLineName = "";
-
-  // ==========================================
-  // 🚀 เริ่มต้น LIFF (ดึงข้อมูล LINE ลูกค้า)
-  // ==========================================
-  async function initializeLiff() {
-    try {
-      await liff.init({ liffId: LIFF_ID });
-      if (liff.isLoggedIn()) {
-        const profile = await liff.getProfile();
-        userLineUid = profile.userId;
-        userLineName = profile.displayName;
+    <div id="view-magic" class="block animate-[fadeIn_0.3s_ease-in-out]">
+      <section class="mb-10">
+        <h1 class="text-3xl md:text-4xl font-semibold tracking-tight text-dark mb-2">Find your space</h1>
+        <p class="text-muted text-sm md:text-base">Let our AI match you with the perfect home.</p>
         
-        // โชว์รูปโปรไฟล์มุมขวาบนให้ดูพรีเมียม
-        if(profile.pictureUrl) {
-           document.getElementById('user-profile-img').src = profile.pictureUrl;
-           document.getElementById('user-profile-img').style.display = 'block';
-        }
-      } else {
-        liff.login(); // บังคับล็อกอินถ้าเปิดในเบราว์เซอร์
-      }
-    } catch (err) {
-      console.error("LIFF Init Error:", err);
-    }
-  }
-  
-  initializeLiff();
+        <div class="mt-6 bg-white rounded-2xl shadow-[0_6px_16px_rgba(0,0,0,0.08)] border border-light p-2 relative">
+          <textarea id="ai-input" rows="4" class="w-full bg-transparent border-none focus:ring-0 text-dark text-lg p-4 resize-none placeholder:text-muted placeholder:font-light" placeholder="หาคอนโดเลี้ยงแมว แถวรัชดา งบ 15-20k..."></textarea>
+          
+          <div class="flex justify-end p-2">
+            <button onclick="submitMagicBox()" class="px-5 py-3 bg-brand hover:bg-[#E31C5F] text-white font-semibold rounded-xl flex items-center gap-2 transition-transform active:scale-95">
+              <span class="material-symbols-outlined">auto_awesome</span> Search with AI
+            </button>
+          </div>
+        </div>
+      </section>
 
-  // ==========================================
-  // 🤖 กดปุ่มให้ AI ช่วยหา (ส่งข้อมูลไป GAS)
-  // ==========================================
-  function submitAiSearch() {
-    const rawText = document.getElementById('ai-input').value.trim();
-    if (!rawText) { alert("กรุณาพิมพ์ความต้องการของคุณก่อนครับ 😊"); return; }
+      <section class="mb-10">
+        <h2 class="text-xl font-semibold text-dark mb-4 flex items-center gap-2">🔥 Hot Deals (Featured)</h2>
+        
+        <div class="flex overflow-x-auto gap-4 pb-4 snap-x hide-scrollbar px-1">
+          
+          <div class="min-w-[260px] snap-start bg-white rounded-2xl border border-light overflow-hidden shadow-sm cursor-pointer group" onclick="alert('กำลังไปหน้าห้อง: Ideo Mobi Sukhumvit')">
+            <div class="h-40 overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=500&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            </div>
+            <div class="p-4">
+              <div class="font-semibold text-dark text-base truncate mb-1">Ideo Mobi Sukhumvit</div>
+              <div class="text-brand font-bold text-lg">฿ 15,000 <span class="text-xs font-normal text-muted">/mo</span></div>
+              <div class="text-xs text-muted flex gap-2 mt-2">
+                <span>1 Bed</span>•<span>32 sqm</span>•<span class="text-dark font-medium">🐈 Pet Friendly</span>
+              </div>
+            </div>
+          </div>
 
-    // เปิดหน้าจอโหลด
-    document.getElementById('loading-layer').style.display = 'flex';
+          <div class="min-w-[260px] snap-start bg-white rounded-2xl border border-light overflow-hidden shadow-sm cursor-pointer group" onclick="alert('กำลังไปหน้าห้อง: Life Asoke Hype')">
+            <div class="h-40 overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1502672260266-1c1de2422008?w=500&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            </div>
+            <div class="p-4">
+              <div class="font-semibold text-dark text-base truncate mb-1">Life Asoke Hype</div>
+              <div class="text-brand font-bold text-lg">฿ 18,500 <span class="text-xs font-normal text-muted">/mo</span></div>
+              <div class="text-xs text-muted flex gap-2 mt-2">
+                <span>Studio</span>•<span>26 sqm</span>•<span class="text-dark font-medium">🚆 300m MRT</span>
+              </div>
+            </div>
+          </div>
 
-    // เตรียมแพ็กเกจส่งไปหา GAS
-    const payload = {
-      action: "liff_ai_match", // 👈 เดี๋ยวเราต้องไปเขียนดักแอคชันนี้ที่หลังบ้าน
-      secret: SECRET_KEY,
-      rawReq: rawText,
-      lineUid: userLineUid || "U_TEST_GUEST",
-      lineName: userLineName || "Guest User"
+          <div class="min-w-[260px] snap-start bg-white rounded-2xl border border-light overflow-hidden shadow-sm cursor-pointer group">
+            <div class="h-40 overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=500&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            </div>
+            <div class="p-4">
+              <div class="font-semibold text-dark text-base truncate mb-1">Noble BE19</div>
+              <div class="text-brand font-bold text-lg">฿ 22,000 <span class="text-xs font-normal text-muted">/mo</span></div>
+              <div class="text-xs text-muted flex gap-2 mt-2">
+                <span>1 Bed</span>•<span>35 sqm</span>•<span class="text-dark font-medium">✨ High Floor</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </div>
+
+    <div id="view-wizard" class="hidden animate-[fadeIn_0.3s_ease-in-out]">
+      <div class="flex items-center gap-3 mb-8">
+        <button onclick="switchView('view-magic')" class="w-10 h-10 rounded-full border border-light flex items-center justify-center">
+          <span class="material-symbols-outlined text-dark">chevron_left</span>
+        </button>
+        <h1 class="text-2xl font-semibold text-dark">Refine Details</h1>
+      </div>
+
+      <div class="space-y-8 pb-20" id="dynamic-form-container">
+        
+        <div id="grp-size" class="hidden">
+          <label class="block text-sm font-semibold text-dark mb-2">Minimum Room Size (sqm)</label>
+          <input id="wiz-size" class="w-full border border-light rounded-xl px-4 py-3 text-dark focus:border-dark outline-none" placeholder="e.g. 30" type="number">
+        </div>
+
+        <div id="grp-unit" class="hidden">
+          <label class="block text-sm font-semibold text-dark mb-3">Unit Type</label>
+          <div class="flex flex-wrap gap-2">
+            <label class="cursor-pointer">
+              <input type="radio" name="wiz-unit" value="Studio" class="peer hidden" checked>
+              <div class="px-5 py-2.5 rounded-full border border-light text-dark text-sm font-medium peer-checked:bg-dark peer-checked:text-white transition-all">Studio</div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="wiz-unit" value="1 Bed" class="peer hidden">
+              <div class="px-5 py-2.5 rounded-full border border-light text-dark text-sm font-medium peer-checked:bg-dark peer-checked:text-white transition-all">1 Bed</div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="wiz-unit" value="2 Bed" class="peer hidden">
+              <div class="px-5 py-2.5 rounded-full border border-light text-dark text-sm font-medium peer-checked:bg-dark peer-checked:text-white transition-all">2 Bed</div>
+            </label>
+          </div>
+        </div>
+
+        <div id="grp-contract" class="hidden">
+          <label class="block text-sm font-semibold text-dark mb-3">Contract (Months)</label>
+          <div class="flex flex-wrap gap-2">
+            <label class="cursor-pointer">
+              <input type="radio" name="wiz-contract" value="12" class="peer hidden" checked>
+              <div class="px-5 py-2.5 rounded-full border border-light text-dark text-sm font-medium peer-checked:bg-dark peer-checked:text-white transition-all">12 Months</div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="wiz-contract" value="6" class="peer hidden">
+              <div class="px-5 py-2.5 rounded-full border border-light text-dark text-sm font-medium peer-checked:bg-dark peer-checked:text-white transition-all">6 Months</div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="wiz-contract" value="1-5" class="peer hidden">
+              <div class="px-5 py-2.5 rounded-full border border-light text-dark text-sm font-medium peer-checked:bg-dark peer-checked:text-white transition-all">1-5 Months</div>
+            </label>
+          </div>
+        </div>
+
+        <div id="grp-movein" class="hidden">
+          <label class="block text-sm font-semibold text-dark mb-2">Move In Date</label>
+          <input type="date" id="wiz-movein" class="w-full border border-light rounded-xl px-4 py-3 text-dark focus:border-dark outline-none font-sans">
+        </div>
+
+        <div id="grp-pet" class="hidden">
+          <label class="block text-sm font-semibold text-dark mb-3">Pets Allowed?</label>
+          <div class="flex flex-wrap gap-2">
+            <label class="cursor-pointer">
+              <input type="radio" name="wiz-pet" value="No" class="peer hidden" checked>
+              <div class="px-5 py-2.5 rounded-full border border-light text-dark text-sm font-medium peer-checked:bg-dark peer-checked:text-white transition-all">No</div>
+            </label>
+            <label class="cursor-pointer">
+              <input type="radio" name="wiz-pet" value="Yes" class="peer hidden">
+              <div class="px-5 py-2.5 rounded-full border border-light text-dark text-sm font-medium peer-checked:bg-dark peer-checked:text-white transition-all">Yes, Pet Friendly</div>
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="fixed bottom-0 left-0 w-full p-4 bg-white border-t border-light z-40">
+        <button onclick="submitWizard()" class="w-full max-w-xl mx-auto py-3.5 bg-dark text-white font-semibold text-lg rounded-xl transition-transform active:scale-95">
+          Save & Continue
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <div id="actionModal" class="fixed inset-0 z-[100] bg-dark/60 backdrop-blur-sm hidden flex-col items-center justify-center px-4 transition-opacity">
+    <div class="bg-white p-8 rounded-2xl max-w-sm w-full shadow-2xl text-center">
+      <div class="w-16 h-16 bg-brand/10 rounded-full flex items-center justify-center mx-auto mb-4 text-brand">
+        <span class="material-symbols-outlined text-3xl">check_circle</span>
+      </div>
+      <h3 class="text-xl font-semibold text-dark mb-2">Almost Perfect!</h3>
+      <p class="text-sm text-muted mb-6">เราแกะข้อมูลเบื้องต้นได้แล้ว เพื่อให้ได้ห้องที่ใช่ที่สุด คุณอยากระบุรายละเอียดเพิ่มเติมไหม?</p>
+      
+      <div class="space-y-3">
+        <button onclick="goRefine()" class="w-full py-3.5 bg-brand text-white font-semibold rounded-xl active:scale-95 transition-all">Add Details (แนะนำ)</button>
+        <button onclick="doSkip()" class="w-full py-3.5 bg-light text-dark font-semibold rounded-xl active:scale-95 transition-all">Skip & Use Defaults</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="leadModal" class="fixed inset-0 z-[110] bg-dark/60 backdrop-blur-sm hidden flex-col items-center justify-center px-4 transition-opacity">
+    <div class="bg-white p-8 rounded-2xl max-w-sm w-full shadow-2xl text-left">
+      <h3 class="text-xl font-semibold text-dark mb-1">Stay in touch</h3>
+      <p class="text-sm text-muted mb-6">ให้เราส่งห้องที่ถูกใจ พร้อมสิทธิพิเศษให้คุณทางไหนดี?</p>
+      
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-dark mb-1">Your Name</label>
+          <input type="text" id="lead-name" class="w-full border border-light rounded-xl px-4 py-3 text-dark outline-none focus:border-dark" placeholder="ชื่อของคุณ">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-dark mb-2">Contact Method</label>
+          <div class="flex gap-2">
+            <label class="flex-1 cursor-pointer">
+              <input type="radio" name="contact-method" value="LINE" class="peer hidden" checked>
+              <div class="py-2.5 text-center rounded-xl border border-light text-dark text-sm font-medium peer-checked:bg-[#06C755] peer-checked:text-white peer-checked:border-[#06C755] transition-all">LINE</div>
+            </label>
+            <label class="flex-1 cursor-pointer">
+              <input type="radio" name="contact-method" value="WhatsApp" class="peer hidden">
+              <div class="py-2.5 text-center rounded-xl border border-light text-dark text-sm font-medium peer-checked:bg-[#25D366] peer-checked:text-white peer-checked:border-[#25D366] transition-all">WhatsApp</div>
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-dark mb-1">ID / Phone Number</label>
+          <input type="text" id="lead-contact" class="w-full border border-light rounded-xl px-4 py-3 text-dark outline-none focus:border-dark" placeholder="LINE ID หรือ เบอร์โทร">
+        </div>
+      </div>
+
+      <button onclick="finalSubmitToGas()" class="w-full mt-6 py-3.5 bg-dark text-white font-semibold rounded-xl active:scale-95 transition-all flex justify-center items-center gap-2">
+        Show Matching Rooms <span class="material-symbols-outlined text-lg">arrow_forward</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="loading-layer" class="fixed inset-0 z-[200] bg-white hidden flex-col items-center justify-center">
+    <div class="spinner mb-5"></div>
+    <h4 class="text-lg font-semibold text-dark" id="loading-text">Extracting details...</h4>
+  </div>
+
+  <script>
+    // 🚨 CONFIG
+    const LIFF_ID = "YOUR_LIFF_ID_HERE"; 
+    const CATALOG_URL = "https://nebles.asista.work/index.html"; 
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbya2rWPhgYN7e9rmBuLffXjrJnRnFdmkRkL84Dib8NilKQAfXxmEmGwFfaq5aVkPW4q/exec"; 
+
+    // State
+    let userUid = "GUEST_" + Math.random().toString(36).substr(2, 8).toUpperCase();
+    let userName = "Guest";
+    let aiExtractedData = {}; 
+    
+    // 🚨 ค่า Default
+    const defaultData = {
+      petFriendly: "No",
+      reqSize: 0,
+      unitTypes: "Studio",
+      contract: "12",
+      moveIn: ""
     };
 
-    fetch(GAS_API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(payload)
-    })
-    .then(res => res.json())
-    .then(data => {
-      if (data.status === "success" && data.cid) {
-        // 🎉 สำเร็จ! ได้รหัส CUS-ID มาแล้ว เด้งพาไปหน้าแคตตาล็อกเลย!!
-        window.location.href = `${CATALOG_URL}?v=2&cid=${data.cid}`;
-      } else {
-        alert("❌ เกิดข้อผิดพลาด: " + (data.message || "ไม่สามารถสร้างรายการได้"));
-        document.getElementById('loading-layer').style.display = 'none';
-      }
-    })
-    .catch(err => {
-      console.error("Error:", err);
-      alert("❌ ระบบขัดข้อง กรุณาลองใหม่อีกครั้ง");
-      document.getElementById('loading-layer').style.display = 'none';
-    });
-  }
-</script>
+    // 1. Init
+    async function initApp() {
+      try {
+        await liff.init({ liffId: LIFF_ID });
+        if (liff.isLoggedIn()) {
+          const profile = await liff.getProfile();
+          userUid = profile.userId;
+          userName = profile.displayName;
+          document.getElementById('lead-name').value = userName; 
+        } else if (liff.isInClient()) liff.login();
+      } catch (err) {}
+    }
 
+    // 2. กดปุ่ม AI Search
+    function submitMagicBox() {
+      const text = document.getElementById('ai-input').value.trim();
+      if (!text) return alert("Please tell us what you're looking for.");
+
+      showLoading("Extracting details...");
+      
+      setTimeout(() => {
+        aiExtractedData = {
+          rawReq: text,
+          zones: "Ratchada",
+          budgetMin: 15000,
+          budgetMax: 20000,
+          petFriendly: "Yes",
+          reqSize: null,    
+          unitTypes: null,  
+          contract: null,   
+          moveIn: null      
+        };
+        hideLoading();
+        
+        const hasNull = Object.values(aiExtractedData).some(v => v === null);
+        if (hasNull) {
+          document.getElementById('actionModal').classList.remove('hidden');
+          document.getElementById('actionModal').classList.add('flex');
+        } else {
+          showLeadModal();
+        }
+      }, 1500); 
+    }
+
+    // 3A. ลูกค้ากด "Add Details"
+    function goRefine() {
+      document.getElementById('actionModal').classList.add('hidden'); 
+      switchView('view-wizard'); 
+      
+      document.getElementById('grp-size').style.display = (aiExtractedData.reqSize === null) ? 'block' : 'none';
+      document.getElementById('grp-unit').style.display = (aiExtractedData.unitTypes === null) ? 'block' : 'none';
+      document.getElementById('grp-contract').style.display = (aiExtractedData.contract === null) ? 'block' : 'none';
+      document.getElementById('grp-movein').style.display = (aiExtractedData.moveIn === null) ? 'block' : 'none';
+      document.getElementById('grp-pet').style.display = (aiExtractedData.petFriendly === null) ? 'block' : 'none';
+    }
+
+    // 3B. ลูกค้ากด "Skip"
+    function doSkip() {
+      document.getElementById('actionModal').classList.add('hidden');
+      applyDefaults();  
+      showLeadModal();  
+    }
+
+    // 4. กด Save จากหน้า Wizard
+    function submitWizard() {
+      if (aiExtractedData.reqSize === null) aiExtractedData.reqSize = document.getElementById('wiz-size').value || 0;
+      if (aiExtractedData.unitTypes === null) aiExtractedData.unitTypes = document.querySelector('input[name="wiz-unit"]:checked').value;
+      if (aiExtractedData.contract === null) aiExtractedData.contract = document.querySelector('input[name="wiz-contract"]:checked').value;
+      if (aiExtractedData.moveIn === null) aiExtractedData.moveIn = document.getElementById('wiz-movein').value;
+      if (aiExtractedData.petFriendly === null) aiExtractedData.petFriendly = document.querySelector('input[name="wiz-pet"]:checked').value;
+
+      applyDefaults(); 
+      showLeadModal();
+    }
+
+    function applyDefaults() {
+      for (let key in defaultData) {
+        if (aiExtractedData[key] === null || aiExtractedData[key] === "") {
+          aiExtractedData[key] = defaultData[key];
+        }
+      }
+    }
+
+    // 5. โชว์ Modal ขอช่องทางติดต่อ
+    function showLeadModal() {
+      document.getElementById('leadModal').classList.remove('hidden');
+      document.getElementById('leadModal').classList.add('flex');
+    }
+
+    // 6. กดปุ่ม Final Submit
+    function finalSubmitToGas() {
+      const name = document.getElementById('lead-name').value.trim() || userName;
+      const contactType = document.querySelector('input[name="contact-method"]:checked').value;
+      const contactVal = document.getElementById('lead-contact').value.trim();
+
+      if (!contactVal) return alert("กรุณาระบุช่องทางการติดต่อด้วยครับ 🙏");
+
+      const payload = {
+        action: "liff_ai_match",
+        lineUid: userUid,
+        customerName: name,
+        contactMethod: contactType,
+        contactId: contactVal,
+        aiData: aiExtractedData
+      };
+
+      document.getElementById('leadModal').classList.add('hidden');
+      showLoading("Matching properties...");
+
+      fetch(GAS_API_URL, {
+        method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.status === "success" && data.cid) window.location.href = `${CATALOG_URL}?v=2&cid=${data.cid}`;
+        else { alert("Error: " + data.message); hideLoading(); }
+      }).catch(err => { alert("Connection Error."); hideLoading(); });
+    }
+
+    // UI Utilities
+    function switchView(viewId) {
+      document.getElementById('view-magic').classList.add('hidden');
+      document.getElementById('view-wizard').classList.add('hidden');
+      document.getElementById(viewId).classList.remove('hidden');
+      document.getElementById(viewId).classList.add('block');
+      window.scrollTo(0,0);
+    }
+    function showLoading(text) { 
+      document.getElementById('loading-text').innerText = text;
+      document.getElementById('loading-layer').classList.remove('hidden');
+      document.getElementById('loading-layer').classList.add('flex');
+    }
+    function hideLoading() { 
+      document.getElementById('loading-layer').classList.add('hidden');
+      document.getElementById('loading-layer').classList.remove('flex');
+    }
+
+    initApp();
+  </script>
 </body>
 </html>
