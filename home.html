@@ -9,6 +9,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL,GRAD,opsz@300,0,0,24&display=swap" rel="stylesheet">
   <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <script>
     tailwind.config = {
@@ -25,16 +27,58 @@
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     
     /* Smooth View Transitions */
-    .view-section { display: none; opacity: 0; transition: opacity 0.3s ease; }
+    .view-section { display: none; opacity: 0; transition: opacity 0.3s ease-in-out; }
     .view-section.active { display: block; opacity: 1; animation: fadeIn 0.4s ease forwards; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Carousel Custom Styles */
+    .carousel-item img { width: 100%; height: 280px; object-fit: cover; }
+    .carousel-control-prev, .carousel-control-next { width: 10%; }
+    .carousel-control-prev-icon, .carousel-control-next-icon { width: 1.5rem; height: 1.5rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
+
+    /* Premium Property Card Styles */
+    .property-card { background: #fff; border-radius: 16px; overflow: hidden; margin-bottom: 32px; box-shadow: 0 6px 20px rgba(0,0,0,0.06); border: 1px solid #f0f0f0; transition: all 0.2s; position: relative; }
+    .property-card.selected-card { box-shadow: 0 0 0 2px #222222, 0 8px 25px rgba(0,0,0,0.1); transform: translateY(-3px); }
+    
+    .card-img-wrapper { height: 280px; position: relative; }
+    
+    .match-badge { position: absolute; top: 16px; left: 16px; z-index: 10; background: transparent; color: #ffffff; padding: 0; border: none; font-weight: 600; font-size: 0.95rem; text-shadow: 0 2px 6px rgba(0,0,0,0.7); display: flex; align-items: center; gap: 6px; }
+    .match-badge i { color: #FF385C; text-shadow: 0 2px 4px rgba(0,0,0,0.4); }
+    .pet-badge { position: absolute; top: 44px; left: 16px; z-index: 10; background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.4); color: #222222; padding: 4px 12px; border-radius: 50px; font-weight: 600; font-size: 0.8rem; display: flex; align-items: center; gap: 4px; }
+    
+    .btn-select { position: absolute; top: 16px; right: 16px; z-index: 20; background: transparent; border: none; font-size: 1.6rem; color: rgba(255, 255, 255, 0.8); text-shadow: 0 2px 8px rgba(0,0,0,0.5); cursor: pointer; transition: 0.2s; padding: 0; }
+    .property-card.selected-card .btn-select { color: #FF385C; text-shadow: 0 2px 8px rgba(255, 56, 92, 0.4); } 
+    
+    .floating-bar-premium { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: rgba(26, 26, 26, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 12px 20px; border-radius: 50px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: space-between; gap: 20px; width: max-content; max-width: 90%; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 1000; }
+    .floating-bar-premium.show { bottom: 25px; }
+    
+    .action-btn-group { display: flex; gap: 6px; }
+    .btn-action-sm { font-size: 0.75rem; text-decoration: none; color: #4b5563; background: #f3f4f6; padding: 6px 12px; border-radius: 20px; border: none; display: flex; align-items: center; gap: 4px; font-weight: 600; transition: 0.2s; cursor: pointer; }
+    
+    .card-body-premium { padding: 20px; }
+    .price-wrap { display: flex; align-items:baseline; gap: 6px; margin-bottom: 12px; }
+    .price-amt { font-size: 1.35rem; font-weight: 700; color: #222; }
+    .price-label { font-size: 0.95rem; color: #717171; }
+    
+    .specs-inline { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; color: #717171; margin-bottom: 16px; flex-wrap: wrap; }
+    .spec-dot { font-size: 10px; color: #d1d5db; }
+    
+    .amenities-row { display: flex; gap: 16px; font-size: 0.85rem; color: #717171; border-top: 1px solid #ebebeb; padding-top: 16px; }
+    .amenities-row span { display: flex; align-items: center; gap: 6px; }
+
+    .btn-card-booking { background-color: #FF385C; color: #ffffff; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: 600; font-size: 0.95rem; margin-top: 16px; transition: 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-card-booking:hover { background-color: #E31C5F; color: #ffffff; }
+    .btn-card-booking:disabled { background-color: #e5e7eb; color: #9ca3af; cursor: not-allowed; }
+
+    .lang-switcher-wrap { position: absolute; top: 16px; left: 16px; z-index: 50; }
+    .lang-switcher-wrap select { background: rgba(255,255,255,0.9); border: 1px solid #ebebeb; border-radius: 20px; padding: 4px 12px; font-size: 0.85rem; font-weight: 600; outline: none; box-shadow: 0 2px 10px rgba(0,0,0,0.05); cursor: pointer; }
   </style>
 </head>
 
 <body class="text-dark min-h-screen selection:bg-brand selection:text-white pb-24">
 
   <header class="bg-white/90 backdrop-blur-md border-b border-light sticky top-0 w-full z-40 px-6 py-4 flex justify-between items-center">
-    <img src="https://nebles.needhome.co/_next/image?url=%2Fimages%2Flogo.png&w=256&q=75" class="h-6" alt="Nebles">
+    <img src="https://nebles.needhome.co/_next/image?url=%2Fimages%2Flogo.png&w=256&q=75" class="h-6 cursor-pointer" alt="Nebles" onclick="switchView('view-magic')">
     <div class="flex items-center gap-2 px-3 py-1 border border-light rounded-full shadow-sm cursor-pointer">
       <span class="material-symbols-outlined text-dark">menu</span>
       <span class="material-symbols-outlined text-muted text-2xl" id="user-placeholder">account_circle</span>
@@ -117,21 +161,32 @@
 
     <div id="view-catalog" class="view-section pb-20">
       
-      <div class="mb-6 flex items-start gap-4">
-        <button onclick="switchView('view-magic')" class="w-10 h-10 rounded-full border border-light flex items-center justify-center shrink-0">
-          <span class="material-symbols-outlined text-dark">chevron_left</span>
-        </button>
-        <div>
-          <h2 class="text-2xl font-semibold text-dark leading-tight" id="vip-title">Top Matches for You 👑</h2>
-          <p class="text-sm text-muted mt-1" id="vip-subtitle">We found 10 perfect units based on your criteria.</p>
+      <div class="mb-6 flex items-start gap-4 relative">
+        <div class="lang-switcher-wrap">
+          <select id="lang-select" onchange="changeLanguageAndCurrency(this.value)">
+            <option value="TH">🇹🇭 THB</option>
+            <option value="EN">🇺🇸 USD</option>
+            <option value="CN">🇨🇳 CNY</option>
+          </select>
+        </div>
+        <div class="ml-auto flex flex-col items-end">
+          <button onclick="switchView('view-magic')" class="w-10 h-10 rounded-full border border-light flex items-center justify-center shrink-0 mb-2">
+            <span class="material-symbols-outlined text-dark">chevron_left</span>
+          </button>
+          <div class="text-right">
+            <h2 class="text-2xl font-semibold text-dark leading-tight" id="vip-title">Top Matches for You 👑</h2>
+            <p class="text-sm text-muted mt-1" id="vip-subtitle">We found 10 perfect units based on your criteria.</p>
+          </div>
         </div>
       </div>
 
       <div id="property-container" class="space-y-6"></div>
 
-      <div id="floating-bar" class="fixed bottom-[-100px] left-1/2 -translate-x-1/2 bg-dark/90 backdrop-blur-md px-5 py-3 rounded-full flex items-center gap-4 transition-all duration-300 z-50 shadow-2xl w-max border border-white/10">
-        <span class="text-white font-medium text-sm" id="selected-count">0 Selected</span>
-        <button onclick="requestBooking()" class="bg-brand text-white px-5 py-2 rounded-full font-semibold text-sm">Request Booking</button>
+      <div id="floating-bar" class="floating-bar-premium">
+        <p id="selected-count" class="text-white font-semibold text-[0.95rem] m-0">0 Selected</p>
+        <button onclick="requestBooking()" class="bg-brand text-white px-6 py-2.5 rounded-full font-semibold text-[0.95rem] flex items-center gap-2 active:scale-95 transition-transform">
+          Request Booking <i class="bi bi-arrow-right"></i>
+        </button>
       </div>
     </div>
 
@@ -183,6 +238,34 @@
     let loadedProperties = [];
     let selectedIndices = new Set();
     let currentCid = "";
+
+    // --- i18n & Currency ---
+    const i18n = {
+        TH: { title: "ห้องที่คัดสรรมาให้สำหรับคุณ", subtitle: "Nebles กำลังคัดเลือกห้องที่ดีที่สุดสำหรับคุณ", loading: "AI กำลังค้นหาห้องที่ตรงกับคุณจริงๆ..", match: "ตรงสเปค", rented: "ปล่อยเช่าแล้ว", petFriendly: "รับสัตว์เลี้ยง", map: "แผนที่", chat: "แชท", size: "ขนาด", floor: "ชั้น", sqm: "ตร.ม.", month: "เดือน", loadMore: "ดูห้องเพิ่มเติม", selected: "ห้องที่เลือก", requestBooking: "ยืนยันความสนใจ", priceFor: "สำหรับสัญญา", priceInfo: "ราคาสำหรับสัญญา", bookingCheck: "กำลังตรวจสอบห้องพักที่คุณจอง<br>เจ้าหน้าที่จะติดต่อกลับโดยเร็วที่สุด" },
+        EN: { title: "Recommended for You", subtitle: "Nebles is selecting the best units for you", loading: "AI is finding homes that actually fit you..", match: "Match", rented: "RENTED OUT", petFriendly: "Pet Friendly", map: "Map", chat: "Chat", size: "Size", floor: "Fl", sqm: "sqm", month: "month", loadMore: "Load More Properties", selected: "Selected", requestBooking: "Request Booking", priceFor: "For", priceInfo: "Price for", bookingCheck: "Final check on your booked.<br>Please wait for our staff to contact you soon." },
+        CN: { title: "为您推荐", subtitle: "Nebles 正在为您挑选最佳房源", loading: "AI 正在寻找真正适合您的房源..", match: "匹配度", rented: "已出租", petFriendly: "允许宠物", map: "地图", chat: "聊天", size: "面积", floor: "楼层", sqm: "平方米", month: "月", loadMore: "加载更多房源", selected: "已选择", requestBooking: "请求预订", priceFor: "租期为", priceInfo: "价格及租期：", bookingCheck: "正在确认您的预订。<br>工作人员会尽快与您联系。" }
+    };
+    let currentLang = "EN"; 
+    let exchangeRates = { THB: 1, USD: 0.028, CNY: 0.20 }; 
+    const currencySymbols = { TH: "฿", EN: "$", CN: "¥" };
+
+    async function fetchExchangeRates() {
+        try {
+            const res = await fetch('https://api.exchangerate-api.com/v4/latest/THB');
+            const data = await res.json();
+            exchangeRates.USD = data.rates.USD;
+            exchangeRates.CNY = data.rates.CNY;
+        } catch (e) {}
+    }
+
+    function changeLanguageAndCurrency(langCode) {
+        currentLang = langCode;
+        const t = i18n[currentLang];
+        document.getElementById('vip-title').innerText = t.title;
+        document.getElementById('vip-subtitle').innerText = t.subtitle;
+        updateFloatingBar(); 
+        if (loadedProperties.length > 0) renderCatalog();
+    }
 
     async function initApp() {
       try {
@@ -270,61 +353,161 @@
       });
     }
 
-    // 4. Render แคตตาล็อก (Tailwind)
+    // 4. Render แคตตาล็อก (Premium Layout)
     function renderCatalog() {
       let html = "";
+      const t = i18n[currentLang];
+      
+      let curRate = 1;
+      let curSymbol = "฿";
+      if (currentLang === "EN") { curRate = exchangeRates.USD; curSymbol = "$"; }
+      else if (currentLang === "CN") { curRate = exchangeRates.CNY; curSymbol = "¥"; }
+
       loadedProperties.forEach((p, i) => {
         const isSel = selectedIndices.has(i);
         const isUnavailable = (p.status && p.status.toLowerCase() === "unavailable");
         
-        // --- 1. จัดการรูปภาพ (ดึงจาก imageIds แบบ Google Drive) ---
-        let thumnailUrl = "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&q=80"; // fallback
-        if (p.imageIds && p.imageIds.length > 0) {
-            thumnailUrl = `https://drive.google.com/thumbnail?id=${p.imageIds[0]}&sz=w600`;
+        // --- 1. จัดการรูปภาพ ---
+        let imagesHtml = '';
+        if(p.imageIds && p.imageIds.length > 0) {
+            p.imageIds.slice(0, 5).forEach((img, j) => {
+                imagesHtml += `<div class="carousel-item ${j === 0 ? 'active' : ''} h-full"><img src="https://drive.google.com/thumbnail?id=${img}&sz=w600" class="w-full h-full object-cover"></div>`;
+            });
+        } else {
+            imagesHtml = `<div class="carousel-item active h-full"><div class="flex items-center justify-center h-full bg-light text-muted">No Image</div></div>`;
         }
+        
+        let carouselControls = (p.imageIds && p.imageIds.length > 1) ? `
+          <button class="carousel-control-prev" type="button" data-bs-target="#carousel-${i}" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carousel-${i}" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>` : '';
 
         // --- 2. จัดการราคา (อิงตามสัญญาเช่า) ---
         let reqMonthsStr = aiExtractedData ? parseInt(aiExtractedData.contract) : 12;
         if (isNaN(reqMonthsStr)) reqMonthsStr = 12;
+        
         let pShort = p.prices && p.prices.short ? parseFloat(p.prices.short) : 0;
         let pMid = p.prices && p.prices.mid ? parseFloat(p.prices.mid) : 0;
         let pLong = p.prices && p.prices.long ? parseFloat(p.prices.long) : 0;
-        let finalPrice = 0;
         
-        if (reqMonthsStr <= 5) finalPrice = pShort || pMid || pLong;
-        else if (reqMonthsStr <= 11) finalPrice = pMid || pLong || pShort;
-        else finalPrice = pLong || pMid || pShort;
+        let finalPriceTHB = 0; 
+        let isExactTier = true; 
+        let termLabel = "";
 
-        if (finalPrice === 0) finalPrice = p.price || pLong || pMid || pShort || 0;
+        if (reqMonthsStr <= 5) {
+            if (pShort > 0) { finalPriceTHB = pShort; isExactTier = true; termLabel = "1-5 Months"; }
+            else if (pMid > 0) { finalPriceTHB = pMid; isExactTier = false; termLabel = "6-11 Months"; }
+            else if (pLong > 0) { finalPriceTHB = pLong; isExactTier = false; termLabel = "1 Year+"; }
+        } 
+        else if (reqMonthsStr <= 11) {
+            if (pMid > 0) { finalPriceTHB = pMid; isExactTier = true; termLabel = "6-11 Months"; }
+            else if (pLong > 0) { finalPriceTHB = pLong; isExactTier = false; termLabel = "1 Year+"; }
+            else if (pShort > 0) { finalPriceTHB = pShort; isExactTier = false; termLabel = "1-5 Months"; }
+        } 
+        else {
+            if (pLong > 0) { finalPriceTHB = pLong; isExactTier = true; termLabel = "1 Year+"; }
+            else if (pMid > 0) { finalPriceTHB = pMid; isExactTier = false; termLabel = "6-11 Months"; }
+            else if (pShort > 0) { finalPriceTHB = pShort; isExactTier = false; termLabel = "1-5 Months"; }
+        }
+
+        if (finalPriceTHB === 0) {
+            finalPriceTHB = p.price || pLong || pMid || pShort || 0;
+            isExactTier = false; termLabel = "Available Term";
+        }
+
+        // --- 3. แปลงราคาสำหรับสกุลเงินอื่น ---
+        let convertedPriceHtml = "";
+        if (currentLang !== "TH") {
+            let convertedPrice = Math.round(finalPriceTHB * curRate);
+            convertedPriceHtml = `<span style="font-size: 0.85rem; color: #717171; font-weight: 500; margin-left: 6px;">(~ ${curSymbol}${convertedPrice.toLocaleString()})</span>`;
+        }
+
+        // --- 4. จัดการปุ่มและบัตรต่างๆ ---
+        let petBadgeHtml = '';
+        if (p.petPolicy && String(p.petPolicy).trim() === "Pet Friendly") {
+             petBadgeHtml = `<div class="pet-badge"><i class="bi bi-suit-heart-fill"></i> ${t.petFriendly}</div>`;
+        }
+
+        let mapUrl = (p.placeId && p.placeId !== "") 
+            ? `http://googleusercontent.com/maps.google.com/?q=${encodeURIComponent(p.project)}&query_place_id=${p.placeId}` 
+            : `http://googleusercontent.com/maps.google.com/?q=${encodeURIComponent(p.project)}`;
+        
+        let mapBtn = `<a href="${mapUrl}" target="_blank" class="btn-action-sm"><i class="bi bi-map"></i> ${t.map}</a>`;
+        let chatBtn = isUnavailable 
+          ? `<button class="btn-action-sm" disabled><i class="bi bi-x-circle"></i> ${t.rented}</button>` 
+          : `<button onclick="openChat(${i})" class="btn-action-sm"><i class="bi bi-chat-dots"></i> ${t.chat}</button>`;
+
+        let selectBtnHtml = isUnavailable ? '' : `
+          <button onclick="toggleSelect(${i})" class="btn-select">
+            <i class="bi ${isSel ? 'bi-heart-fill' : 'bi-heart'}"></i>
+          </button>`;
+
+        let priceDisplayHtml = "";
+        if (isExactTier === false) {
+          priceDisplayHtml = `
+            <div class="price-wrap" style="display: flex; flex-direction: column; align-items: flex-start; gap: 0; margin-bottom: 12px;">
+              <div style="display: flex; align-items: baseline; gap: 6px;">
+                <span class="price-amt">฿${parseInt(finalPriceTHB).toLocaleString()}</span>
+                <span class="price-label">/ ${t.month}</span>
+                ${convertedPriceHtml} 
+              </div>
+              <div style="font-size: 0.75rem; color: #E31C5F; font-weight: 500; line-height: 1.3; margin-top: 4px; background: #fff0f2; padding: 6px 10px; border-radius: 6px; border: 1px solid #ffd1d9;">
+                <i class="bi bi-info-circle me-1"></i> ${t.priceInfo} ${termLabel}
+              </div>
+            </div>`;
+        } else {
+          priceDisplayHtml = `
+            <div class="price-wrap" style="display: flex; align-items: baseline; gap: 6px; margin-bottom: 12px;">
+              <span class="price-amt">฿${parseInt(finalPriceTHB).toLocaleString()}</span>
+              <span class="price-label">/ ${t.month} <span style="font-size: 0.8rem; color: #9ca3af; font-weight: 500;">(${t.priceFor} ${termLabel})</span></span>
+              ${convertedPriceHtml}
+            </div>`;
+        }
+
+        let stationName = "N/A";
+        if (p.bts1 && p.bts1 !== "No Rail Nearby" && p.bts1 !== "-" && p.bts1 !== "WAITING...") {
+            stationName = p.bts1.includes('-') ? p.bts1.substring(p.bts1.indexOf('-') + 1).trim() : p.bts1;
+        }
+
+        let cardBookingBtnHtml = isUnavailable 
+            ? `<button class="btn-card-booking" disabled><i class="bi bi-x-circle"></i> ${t.rented}</button>`
+            : `<button onclick="bookSingleRoom(${i})" class="btn-card-booking"><i class="bi bi-calendar-check"></i> ${t.requestBooking}</button>`;
 
         html += `
-        <div class="bg-white rounded-3xl border ${isSel ? 'border-dark shadow-xl scale-[1.02]' : 'border-light shadow-sm'} overflow-hidden transition-all duration-300 relative ${isUnavailable ? 'opacity-70 grayscale' : ''}">
-          
-          <div class="absolute top-4 left-4 z-10 bg-dark/80 backdrop-blur-md text-white px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1 shadow-lg">
-            <span class="material-symbols-outlined text-[16px] text-brand">auto_awesome</span> ${p.score || 90}% Match
+        <div class="property-card ${isSel ? 'selected-card' : ''} ${isUnavailable ? 'opacity-70 grayscale' : ''}">
+          <div class="card-img-wrapper">
+             <div class="match-badge"><i class="bi bi-stars"></i> ${t.match} ${p.score || 90}%</div>
+             ${petBadgeHtml}
+             ${selectBtnHtml}
+             ${isUnavailable ? `<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 bg-black/75 text-white px-6 py-2 rounded-lg font-bold">RENTED OUT</div>` : ''}
+             <div id="carousel-${i}" class="carousel slide h-full" data-bs-ride="false">
+               <div class="carousel-inner h-full">${imagesHtml}</div>
+               ${carouselControls}
+             </div>
           </div>
           
-          ${isUnavailable ? `
-          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 bg-dark/80 text-white px-5 py-2 rounded-xl font-bold tracking-wide">
-            RENTED OUT
-          </div>
-          ` : `
-          <button onclick="toggleSelect(${i})" class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/90 shadow-md flex items-center justify-center transition-colors hover:bg-white active:scale-95">
-            <span class="material-symbols-outlined ${isSel ? 'text-brand' : 'text-muted'}">${isSel ? 'favorite' : 'favorite_border'}</span>
-          </button>
-          `}
+          <div class="card-body-premium">
+            <div class="flex flex-col gap-2 mb-3">
+              <h3 class="text-xl font-semibold text-dark m-0 truncate">${p.project || "Unknown Project"}</h3>
+              <div class="action-btn-group">${chatBtn}${mapBtn}</div>
+            </div>
+            
+            <div class="text-[0.95rem] text-muted mb-3 flex items-center gap-2">
+              <i class="bi bi-geo-alt"></i> ${p.zone || "-"}
+            </div>
 
-          <img src="${thumnailUrl}" class="w-full h-56 object-cover pointer-events-none">
-          
-          <div class="p-5">
-            <h3 class="text-xl font-semibold text-dark mb-1 truncate">${p.project || "Unknown Project"}</h3>
-            <div class="flex items-baseline gap-1 mb-3">
-              <span class="text-2xl font-bold text-dark">฿${finalPrice.toLocaleString()}</span><span class="text-muted text-sm">/mo</span>
+            ${priceDisplayHtml}
+            
+            <div class="specs-inline">
+              <span>${p.unitType || "Studio"}</span><i class="bi bi-circle-fill spec-dot"></i>
+              <span>${t.size} ${p.size || 0} ${t.sqm}</span><i class="bi bi-circle-fill spec-dot"></i>
+              <span>${t.floor}: ${p.floor || "-"}</span>
             </div>
-            <div class="flex gap-2 text-sm text-muted">
-              <span class="bg-bg px-3 py-1 rounded-lg border border-light">${p.unitType || "Studio"}</span>
-              <span class="bg-bg px-3 py-1 rounded-lg border border-light">${p.size || 0} sqm</span>
+            
+            <div class="amenities-row">
+              <span><i class="bi bi-train-front"></i> ${stationName} (${p.dist1 || 0}m)</span>
             </div>
+
+            ${cardBookingBtnHtml}
           </div>
         </div>`;
       });
@@ -339,17 +522,32 @@
 
     function updateFloatingBar() {
       const bar = document.getElementById('floating-bar');
+      const t = i18n[currentLang];
       if(selectedIndices.size > 0) {
-        document.getElementById('selected-count').innerText = `${selectedIndices.size} Selected`;
-        bar.style.bottom = "24px";
+        document.getElementById('selected-count').innerText = `${selectedIndices.size} ${t.selected}`;
+        bar.classList.add('show');
       } else {
-        bar.style.bottom = "-100px";
+        bar.classList.remove('show');
       }
     }
 
+    function bookSingleRoom(i) {
+      selectedIndices.add(i);
+      renderCatalog();
+      requestBooking();
+    }
+
+    function openChat(i) {
+      const p = loadedProperties[i];
+      const msg = encodeURIComponent(`สวัสดีครับ สนใจห้อง ${p.project} (รหัส: ${p.id || p.submissionId}) รบกวนขอข้อมูลเพิ่มครับ`);
+      window.open(`https://line.me/R/oaMessage/@needhome_th/?${msg}`, '_blank');
+    }
+
     function requestBooking() {
-      alert(`กำลังส่งรายชื่อ ${selectedIndices.size} ห้องไปหาแอดมิน! CID: ${currentCid}`);
-      // ยิง fetch updateBooking ตามโค้ดเก่ามึงได้เลย
+      const t = i18n[currentLang];
+      const selectedRooms = Array.from(selectedIndices).map(i => loadedProperties[i].project).join("\n- ");
+      alert(`กำลังส่งรายชื่อห้องที่คุณสนใจ:\n- ${selectedRooms}\n\nไปหาแอดมิน! (CID: ${currentCid})`);
+      // ยิง fetch updateBooking ตามโค้ดเก่าได้เลย
     }
 
     // Utilities
@@ -361,7 +559,9 @@
     function showLoading(txt) { document.getElementById('loading-text').innerText=txt; document.getElementById('loading-layer').classList.replace('hidden','flex'); }
     function hideLoading() { document.getElementById('loading-layer').classList.replace('flex','hidden'); }
 
+    fetchExchangeRates();
     initApp();
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
