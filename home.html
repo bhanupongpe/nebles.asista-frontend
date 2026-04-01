@@ -275,27 +275,55 @@
       let html = "";
       loadedProperties.forEach((p, i) => {
         const isSel = selectedIndices.has(i);
+        const isUnavailable = (p.status && p.status.toLowerCase() === "unavailable");
+        
+        // --- 1. จัดการรูปภาพ (ดึงจาก imageIds แบบ Google Drive) ---
+        let thumnailUrl = "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&q=80"; // fallback
+        if (p.imageIds && p.imageIds.length > 0) {
+            thumnailUrl = `https://drive.google.com/thumbnail?id=${p.imageIds[0]}&sz=w600`;
+        }
+
+        // --- 2. จัดการราคา (อิงตามสัญญาเช่า) ---
+        let reqMonthsStr = aiExtractedData ? parseInt(aiExtractedData.contract) : 12;
+        if (isNaN(reqMonthsStr)) reqMonthsStr = 12;
+        let pShort = p.prices && p.prices.short ? parseFloat(p.prices.short) : 0;
+        let pMid = p.prices && p.prices.mid ? parseFloat(p.prices.mid) : 0;
+        let pLong = p.prices && p.prices.long ? parseFloat(p.prices.long) : 0;
+        let finalPrice = 0;
+        
+        if (reqMonthsStr <= 5) finalPrice = pShort || pMid || pLong;
+        else if (reqMonthsStr <= 11) finalPrice = pMid || pLong || pShort;
+        else finalPrice = pLong || pMid || pShort;
+
+        if (finalPrice === 0) finalPrice = p.price || pLong || pMid || pShort || 0;
+
         html += `
-        <div class="bg-white rounded-3xl border ${isSel ? 'border-dark shadow-xl scale-[1.02]' : 'border-light shadow-sm'} overflow-hidden transition-all duration-300 relative">
+        <div class="bg-white rounded-3xl border ${isSel ? 'border-dark shadow-xl scale-[1.02]' : 'border-light shadow-sm'} overflow-hidden transition-all duration-300 relative ${isUnavailable ? 'opacity-70 grayscale' : ''}">
           
           <div class="absolute top-4 left-4 z-10 bg-dark/80 backdrop-blur-md text-white px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1 shadow-lg">
-            <span class="material-symbols-outlined text-[16px] text-brand">auto_awesome</span> ${p.score}% Match
+            <span class="material-symbols-outlined text-[16px] text-brand">auto_awesome</span> ${p.score || 90}% Match
           </div>
           
-          <button onclick="toggleSelect(${i})" class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/90 shadow-md flex items-center justify-center transition-colors">
+          ${isUnavailable ? `
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 bg-dark/80 text-white px-5 py-2 rounded-xl font-bold tracking-wide">
+            RENTED OUT
+          </div>
+          ` : `
+          <button onclick="toggleSelect(${i})" class="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/90 shadow-md flex items-center justify-center transition-colors hover:bg-white active:scale-95">
             <span class="material-symbols-outlined ${isSel ? 'text-brand' : 'text-muted'}">${isSel ? 'favorite' : 'favorite_border'}</span>
           </button>
+          `}
 
-          <img src="${p.images[0]}" class="w-full h-56 object-cover">
+          <img src="${thumnailUrl}" class="w-full h-56 object-cover pointer-events-none">
           
           <div class="p-5">
-            <h3 class="text-xl font-semibold text-dark mb-1">${p.project}</h3>
+            <h3 class="text-xl font-semibold text-dark mb-1 truncate">${p.project || "Unknown Project"}</h3>
             <div class="flex items-baseline gap-1 mb-3">
-              <span class="text-2xl font-bold text-dark">฿${p.price.toLocaleString()}</span><span class="text-muted text-sm">/mo</span>
+              <span class="text-2xl font-bold text-dark">฿${finalPrice.toLocaleString()}</span><span class="text-muted text-sm">/mo</span>
             </div>
             <div class="flex gap-2 text-sm text-muted">
-              <span class="bg-bg px-3 py-1 rounded-lg">${p.unitType}</span>
-              <span class="bg-bg px-3 py-1 rounded-lg">${p.size} sqm</span>
+              <span class="bg-bg px-3 py-1 rounded-lg border border-light">${p.unitType || "Studio"}</span>
+              <span class="bg-bg px-3 py-1 rounded-lg border border-light">${p.size || 0} sqm</span>
             </div>
           </div>
         </div>`;
