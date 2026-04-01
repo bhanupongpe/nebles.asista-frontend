@@ -240,34 +240,34 @@
       document.getElementById('leadModal').classList.replace('flex', 'hidden');
       showLoading("Finding top 10 matches...");
 
-      /* 🚨 ของจริงเปิดคอมเมนต์ใช้ Fetch นี้ยิงเข้า GAS
+      // 🚨 สำคัญ: ต้องใส่ Web App URL ของจริงตรงบรรทัดที่ 175 ก่อนใช้งาน!
       const payload = {
         action: "liff_ai_match", lineUid: userUid, customerName: document.getElementById('lead-name').value,
         contactMethod: document.querySelector('input[name="contact-method"]:checked').value,
         contactId: contactVal, aiData: aiExtractedData
       };
-      fetch(GAS_API_URL, { method: "POST", body: JSON.stringify(payload) })
-      .then(r => r.json()).then(res => {
-        if(res.status === 'success') {
-           currentCid = res.cid; loadedProperties = res.data; // 👈 GAS ต้องพ่น data 10 ห้องมาตรงนี้!
-           renderCatalog(); switchView('view-catalog'); hideLoading();
-        }
-      });
-      */
 
-      // 🚨 [Mock API Response] จำลองว่า GAS ตอบ 10 ห้องกลับมาให้แล้ว!
-      setTimeout(() => {
-        currentCid = "CUS-MOCK99";
-        loadedProperties = [
-          { id: "RM1", project: "Life Asoke", price: 18000, size: 26, unitType: "Studio", images: ["https://images.unsplash.com/photo-1502672260266-1c1de2422008?w=600"], score: 98 },
-          { id: "RM2", project: "Ideo Mobi", price: 15000, size: 32, unitType: "1 Bed", images: ["https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600"], score: 92 }
-        ];
-        document.getElementById('vip-title').innerText = `Top Matches for ${document.getElementById('lead-name').value || 'You'} 👑`;
-        
-        renderCatalog(); 
-        hideLoading();
-        switchView('view-catalog'); // 🚀 วาร์ปไปหน้าแคตตาล็อกโดยไม่ต้องโหลดเว็บใหม่!
-      }, 1500);
+      fetch(GAS_API_URL, { method: "POST", body: JSON.stringify(payload) })
+      .then(r => r.json())
+      .then(res => {
+        if (res.status === 'success') {
+           currentCid = res.cid; 
+           loadedProperties = res.data; // 👈 10 ห้องของจริงจะมาตรงนี้!
+           
+           document.getElementById('vip-title').innerText = `Top Matches for ${document.getElementById('lead-name').value || 'You'} 👑`;
+           renderCatalog(); 
+           switchView('view-catalog'); 
+           hideLoading();
+        } else {
+           alert("เกิดข้อผิดพลาด: " + res.message);
+           hideLoading();
+        }
+      })
+      .catch(err => {
+         console.error(err);
+         alert("ระบบไม่สามารถเชื่อมต่อได้ กรุณาลองใหม่อีกครั้ง");
+         hideLoading();
+      });
     }
 
     // 4. Render แคตตาล็อก (Tailwind)
