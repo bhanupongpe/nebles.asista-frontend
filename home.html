@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
   <title>Nebles | VIP Property Match</title>
-  
+
   <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL,GRAD,opsz@300,0,0,24&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL,GRAD,opsz@300,0,0,24&display=swap"
+    rel="stylesheet">
   <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -19,44 +24,249 @@
   </script>
 
   <style>
-    body { -webkit-tap-highlight-color: transparent; background-color: #ffffff; }
-    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
-    .hide-scrollbar::-webkit-scrollbar { display: none; }
-    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    .spinner { border: 3px solid #EBEBEB; border-top-color: #FF385C; border-radius: 50%; width: 36px; height: 36px; animation: spin 1s linear infinite; }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    
+    body {
+      -webkit-tap-highlight-color: transparent;
+      background-color: #ffffff;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .spinner {
+      border: 3px solid #EBEBEB;
+      border-top-color: #FF385C;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
     /* View Transitions */
-    .view-section { display: none; opacity: 0; transition: opacity 0.3s ease-in-out; }
-    .view-section.active { display: block; opacity: 1; animation: fadeIn 0.4s ease forwards; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .view-section {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .view-section.active {
+      display: block;
+      opacity: 1;
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
     /* Custom Styles */
-    .carousel-item img { width: 100%; height: 280px; object-fit: cover; }
-    .carousel-control-prev, .carousel-control-next { width: 10%; }
-    .carousel-control-prev-icon, .carousel-control-next-icon { width: 1.5rem; height: 1.5rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
-    .property-card { background: #fff; border-radius: 16px; overflow: hidden; margin-bottom: 32px; box-shadow: 0 6px 20px rgba(0,0,0,0.06); border: 1px solid #f0f0f0; transition: all 0.2s; position: relative; }
-    .property-card.selected-card { box-shadow: 0 0 0 2px #222222, 0 8px 25px rgba(0,0,0,0.1); transform: translateY(-3px); }
-    .card-img-wrapper { height: 280px; position: relative; }
-    .match-badge { position: absolute; top: 16px; left: 16px; z-index: 10; background: transparent; color: #ffffff; padding: 0; border: none; font-weight: 600; font-size: 0.95rem; text-shadow: 0 2px 6px rgba(0,0,0,0.7); display: flex; align-items: center; gap: 6px; }
-    .match-badge i { color: #FF385C; text-shadow: 0 2px 4px rgba(0,0,0,0.4); }
-    .pet-badge { position: absolute; top: 44px; left: 16px; z-index: 10; background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.4); color: #222222; padding: 4px 12px; border-radius: 50px; font-weight: 600; font-size: 0.8rem; display: flex; align-items: center; gap: 4px; }
-    .btn-select { position: absolute; top: 16px; right: 16px; z-index: 20; background: transparent; border: none; font-size: 1.6rem; color: rgba(255, 255, 255, 0.8); text-shadow: 0 2px 8px rgba(0,0,0,0.5); cursor: pointer; transition: 0.2s; padding: 0; }
-    .property-card.selected-card .btn-select { color: #FF385C; text-shadow: 0 2px 8px rgba(255, 56, 92, 0.4); } 
-    .floating-bar-premium { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: rgba(26, 26, 26, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 12px 20px; border-radius: 50px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: space-between; gap: 20px; width: max-content; max-width: 90%; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 1000; }
-    .floating-bar-premium.show { bottom: 25px; }
-    .btn-action-sm { font-size: 0.75rem; text-decoration: none; color: #4b5563; background: #f3f4f6; padding: 6px 12px; border-radius: 20px; border: none; display: flex; align-items: center; gap: 4px; font-weight: 600; transition: 0.2s; cursor: pointer; }
-    .btn-card-booking { background-color: #FF385C; color: #ffffff; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: 600; font-size: 0.95rem; margin-top: 16px; transition: 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .btn-card-booking:hover { background-color: #E31C5F; color: #ffffff; }
-    .btn-card-booking:disabled { background-color: #e5e7eb; color: #9ca3af; cursor: not-allowed; }
+    .carousel-item img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+      width: 10%;
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+      width: 1.5rem;
+      height: 1.5rem;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+    }
+
+    .property-card {
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 32px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+      border: 1px solid #f0f0f0;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .property-card.selected-card {
+      box-shadow: 0 0 0 2px #222222, 0 8px 25px rgba(0, 0, 0, 0.1);
+      transform: translateY(-3px);
+    }
+
+    .card-img-wrapper {
+      height: 280px;
+      position: relative;
+    }
+
+    .match-badge {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      z-index: 10;
+      background: transparent;
+      color: #ffffff;
+      padding: 0;
+      border: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .match-badge i {
+      color: #FF385C;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    }
+
+    .pet-badge {
+      position: absolute;
+      top: 44px;
+      left: 16px;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: #222222;
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-select {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 20;
+      background: transparent;
+      border: none;
+      font-size: 1.6rem;
+      color: rgba(255, 255, 255, 0.8);
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+      cursor: pointer;
+      transition: 0.2s;
+      padding: 0;
+    }
+
+    .property-card.selected-card .btn-select {
+      color: #FF385C;
+      text-shadow: 0 2px 8px rgba(255, 56, 92, 0.4);
+    }
+
+    .floating-bar-premium {
+      position: fixed;
+      bottom: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(26, 26, 26, 0.4);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 12px 20px;
+      border-radius: 50px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      width: max-content;
+      max-width: 90%;
+      transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 1000;
+    }
+
+    .floating-bar-premium.show {
+      bottom: 25px;
+    }
+
+    .btn-action-sm {
+      font-size: 0.75rem;
+      text-decoration: none;
+      color: #4b5563;
+      background: #f3f4f6;
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 600;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+
+    .btn-card-booking {
+      background-color: #FF385C;
+      color: #ffffff;
+      border: none;
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-top: 16px;
+      transition: 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-card-booking:hover {
+      background-color: #E31C5F;
+      color: #ffffff;
+    }
+
+    .btn-card-booking:disabled {
+      background-color: #e5e7eb;
+      color: #9ca3af;
+      cursor: not-allowed;
+    }
   </style>
 </head>
 
 <body class="text-dark min-h-screen selection:bg-brand selection:text-white pb-24">
 
-  <header class="bg-white/90 backdrop-blur-md border-b border-light sticky top-0 w-full z-40 px-6 py-4 flex justify-between items-center">
-    <img src="https://nebles.needhome.co/_next/image?url=%2Fimages%2Flogo.png&w=256&q=75" class="h-6 cursor-pointer" alt="Nebles" onclick="switchView('view-magic')">
-    <div onclick="openProfile()" class="flex items-center gap-2 px-3 py-1 border border-light rounded-full shadow-sm cursor-pointer active:scale-95 transition-transform">
+  <header
+    class="bg-white/90 backdrop-blur-md border-b border-light sticky top-0 w-full z-40 px-6 py-4 flex justify-between items-center">
+    <img src="https://nebles.needhome.co/_next/image?url=%2Fimages%2Flogo.png&w=256&q=75" class="h-6 cursor-pointer"
+      alt="Nebles" onclick="switchView('view-magic')">
+    <div onclick="openProfile()"
+      class="flex items-center gap-2 px-3 py-1 border border-light rounded-full shadow-sm cursor-pointer active:scale-95 transition-transform">
       <span class="material-symbols-outlined text-dark">menu</span>
       <span class="material-symbols-outlined text-muted text-2xl" id="user-placeholder">account_circle</span>
       <img src="" id="user-profile-img" class="w-7 h-7 rounded-full hidden object-cover">
@@ -71,9 +281,12 @@
         <p class="text-muted text-sm md:text-base">Let our AI match you with the perfect home.</p>
 
         <div class="mt-6 bg-white rounded-2xl shadow-[0_6px_16px_rgba(0,0,0,0.08)] border border-light p-2 relative">
-          <textarea id="ai-input" rows="4" class="w-full bg-transparent border-none focus:ring-0 text-dark text-lg p-4 resize-none placeholder:text-muted placeholder:font-light outline-none" placeholder="หาคอนโดเลี้ยงแมว แถวรัชดา งบ 15-20k..."></textarea>
+          <textarea id="ai-input" rows="4"
+            class="w-full bg-transparent border-none focus:ring-0 text-dark text-lg p-4 resize-none placeholder:text-muted placeholder:font-light outline-none"
+            placeholder="หาคอนโดเลี้ยงแมว แถวรัชดา งบ 15-20k..."></textarea>
           <div class="flex justify-end p-2">
-            <button onclick="submitMagicBox()" class="px-5 py-3 bg-brand text-white font-semibold rounded-xl flex items-center gap-2 active:scale-95 transition-transform">
+            <button onclick="submitMagicBox()"
+              class="px-5 py-3 bg-brand text-white font-semibold rounded-xl flex items-center gap-2 active:scale-95 transition-transform">
               <span class="material-symbols-outlined">auto_awesome</span> Search with AI
             </button>
           </div>
@@ -83,13 +296,14 @@
       <section>
         <h2 class="text-xl font-semibold text-dark mb-4 flex items-center gap-2">🔥 Hot Deals</h2>
         <div id="hot-deals-container" class="flex overflow-x-auto gap-4 pb-4 snap-x hide-scrollbar">
-          </div>
+        </div>
       </section>
     </div>
 
     <div id="view-wizard" class="view-section">
       <div class="flex items-center gap-3 mb-8">
-        <button onclick="switchView('view-magic')" class="w-10 h-10 rounded-full border border-light flex items-center justify-center">
+        <button onclick="switchView('view-magic')"
+          class="w-10 h-10 rounded-full border border-light flex items-center justify-center">
           <span class="material-symbols-outlined text-dark">chevron_left</span>
         </button>
         <h1 class="text-2xl font-semibold text-dark">Refine Details</h1>
@@ -98,17 +312,27 @@
       <div class="space-y-8 pb-20">
         <div id="grp-zone" class="hidden">
           <label class="block text-sm font-semibold text-dark mb-2">Location / Station</label>
-          <input id="wiz-zone" class="w-full border border-light rounded-xl px-4 py-3 outline-none" placeholder="e.g. Sukhumvit, On Nut" type="text">
+          <input id="wiz-zone" class="w-full border border-light rounded-xl px-4 py-3 outline-none"
+            placeholder="e.g. Sukhumvit, On Nut" type="text">
         </div>
         <div id="grp-budget" class="hidden">
           <label class="block text-sm font-semibold text-dark mb-2">Max Budget (฿/mo)</label>
-          <input id="wiz-budget" class="w-full border border-light rounded-xl px-4 py-3 outline-none" placeholder="e.g. 15000" type="number">
+          <input id="wiz-budget" class="w-full border border-light rounded-xl px-4 py-3 outline-none"
+            placeholder="e.g. 15000" type="number">
         </div>
         <div id="grp-pet" class="hidden">
           <label class="block text-sm font-semibold text-dark mb-3">Pets Allowed?</label>
           <div class="flex flex-wrap gap-2">
-            <label><input type="radio" name="wiz-pet" value="No" class="peer hidden" checked><div class="px-5 py-2.5 rounded-full border border-light peer-checked:bg-dark peer-checked:text-white transition-all text-sm font-medium">No Pets</div></label>
-            <label><input type="radio" name="wiz-pet" value="Yes" class="peer hidden"><div class="px-5 py-2.5 rounded-full border border-light peer-checked:bg-dark peer-checked:text-white transition-all text-sm font-medium">Pet Friendly</div></label>
+            <label><input type="radio" name="wiz-pet" value="No" class="peer hidden" checked>
+              <div
+                class="px-5 py-2.5 rounded-full border border-light peer-checked:bg-dark peer-checked:text-white transition-all text-sm font-medium">
+                No Pets</div>
+            </label>
+            <label><input type="radio" name="wiz-pet" value="Yes" class="peer hidden">
+              <div
+                class="px-5 py-2.5 rounded-full border border-light peer-checked:bg-dark peer-checked:text-white transition-all text-sm font-medium">
+                Pet Friendly</div>
+            </label>
           </div>
         </div>
         <div id="grp-size" class="hidden">
@@ -118,26 +342,48 @@
         <div id="grp-unit" class="hidden">
           <label class="block text-sm font-semibold text-dark mb-3">Unit Type</label>
           <div class="flex flex-wrap gap-2">
-            <label><input type="radio" name="wiz-unit" value="Studio" class="peer hidden" checked><div class="px-5 py-2.5 rounded-full border border-light peer-checked:bg-dark peer-checked:text-white transition-all text-sm font-medium">Studio</div></label>
-            <label><input type="radio" name="wiz-unit" value="1 Bed" class="peer hidden"><div class="px-5 py-2.5 rounded-full border border-light peer-checked:bg-dark peer-checked:text-white transition-all text-sm font-medium">1 Bed</div></label>
-            <label><input type="radio" name="wiz-unit" value="2 Bed" class="peer hidden"><div class="px-5 py-2.5 rounded-full border border-light peer-checked:bg-dark peer-checked:text-white transition-all text-sm font-medium">2 Bed</div></label>
+            <label><input type="radio" name="wiz-unit" value="Studio" class="peer hidden" checked>
+              <div
+                class="px-5 py-2.5 rounded-full border border-light peer-checked:bg-dark peer-checked:text-white transition-all text-sm font-medium">
+                Studio</div>
+            </label>
+            <label><input type="radio" name="wiz-unit" value="1 Bed" class="peer hidden">
+              <div
+                class="px-5 py-2.5 rounded-full border border-light peer-checked:bg-dark peer-checked:text-white transition-all text-sm font-medium">
+                1 Bed</div>
+            </label>
+            <label><input type="radio" name="wiz-unit" value="2 Bed" class="peer hidden">
+              <div
+                class="px-5 py-2.5 rounded-full border border-light peer-checked:bg-dark peer-checked:text-white transition-all text-sm font-medium">
+                2 Bed</div>
+            </label>
           </div>
         </div>
         <div id="grp-contract" class="hidden">
           <label class="block text-sm font-semibold text-dark mb-3">Contract (Months)</label>
           <div class="flex flex-wrap gap-2">
-            <label><input type="radio" name="wiz-contract" value="12" class="peer hidden" checked><div class="px-5 py-2.5 rounded-full border border-light peer-checked:bg-dark peer-checked:text-white transition-all text-sm font-medium">12 Months</div></label>
-            <label><input type="radio" name="wiz-contract" value="6" class="peer hidden"><div class="px-5 py-2.5 rounded-full border border-light peer-checked:bg-dark peer-checked:text-white transition-all text-sm font-medium">6 Months</div></label>
+            <label><input type="radio" name="wiz-contract" value="12" class="peer hidden" checked>
+              <div
+                class="px-5 py-2.5 rounded-full border border-light peer-checked:bg-dark peer-checked:text-white transition-all text-sm font-medium">
+                12 Months</div>
+            </label>
+            <label><input type="radio" name="wiz-contract" value="6" class="peer hidden">
+              <div
+                class="px-5 py-2.5 rounded-full border border-light peer-checked:bg-dark peer-checked:text-white transition-all text-sm font-medium">
+                6 Months</div>
+            </label>
           </div>
         </div>
         <div id="grp-movein" class="hidden">
           <label class="block text-sm font-semibold text-dark mb-2">Move In Date</label>
-          <input type="date" id="wiz-movein" class="w-full border border-light rounded-xl px-4 py-3 outline-none font-sans">
+          <input type="date" id="wiz-movein"
+            class="w-full border border-light rounded-xl px-4 py-3 outline-none font-sans">
         </div>
       </div>
 
       <div class="fixed bottom-0 left-0 w-full p-4 bg-white border-t border-light z-40">
-        <button onclick="submitWizard()" class="w-full max-w-xl mx-auto py-3.5 bg-dark text-white font-semibold text-lg rounded-xl active:scale-95 transition-transform">
+        <button onclick="submitWizard()"
+          class="w-full max-w-xl mx-auto py-3.5 bg-dark text-white font-semibold text-lg rounded-xl active:scale-95 transition-transform">
           Save & Continue
         </button>
       </div>
@@ -146,14 +392,16 @@
     <div id="view-catalog" class="view-section pb-20">
       <div class="mb-6 flex items-start gap-4 relative">
         <div class="absolute top-0 left-0 z-50">
-          <select id="lang-select" onchange="changeLanguageAndCurrency(this.value)" class="bg-white/90 border border-light rounded-full px-3 py-1 text-sm font-semibold shadow-sm outline-none cursor-pointer">
+          <select id="lang-select" onchange="changeLanguageAndCurrency(this.value)"
+            class="bg-white/90 border border-light rounded-full px-3 py-1 text-sm font-semibold shadow-sm outline-none cursor-pointer">
             <option value="TH">🇹🇭 THB</option>
             <option value="EN">🇺🇸 USD</option>
             <option value="CN">🇨🇳 CNY</option>
           </select>
         </div>
         <div class="ml-auto flex flex-col items-end">
-          <button onclick="switchView('view-magic')" class="w-10 h-10 rounded-full border border-light flex items-center justify-center shrink-0 mb-2">
+          <button onclick="switchView('view-magic')"
+            class="w-10 h-10 rounded-full border border-light flex items-center justify-center shrink-0 mb-2">
             <span class="material-symbols-outlined text-dark">chevron_left</span>
           </button>
           <div class="text-right">
@@ -167,7 +415,8 @@
 
       <div id="floating-bar" class="floating-bar-premium">
         <p id="selected-count" class="text-white font-semibold text-[0.95rem] m-0">0 Selected</p>
-        <button onclick="requestBooking()" class="bg-brand text-white px-6 py-2.5 rounded-full font-semibold text-[0.95rem] flex items-center gap-2 active:scale-95 transition-transform">
+        <button onclick="requestBooking()"
+          class="bg-brand text-white px-6 py-2.5 rounded-full font-semibold text-[0.95rem] flex items-center gap-2 active:scale-95 transition-transform">
           Request Booking <i class="bi bi-arrow-right"></i>
         </button>
       </div>
@@ -175,57 +424,77 @@
 
     <div id="view-profile" class="view-section pb-20">
       <div class="flex items-center gap-3 mb-8">
-        <button onclick="switchView('view-magic')" class="w-10 h-10 rounded-full border border-light flex items-center justify-center">
+        <button onclick="switchView('view-magic')"
+          class="w-10 h-10 rounded-full border border-light flex items-center justify-center">
           <span class="material-symbols-outlined text-dark">chevron_left</span>
         </button>
         <h1 class="text-2xl font-semibold text-dark">My Profile</h1>
       </div>
       <div id="history-container" class="space-y-4">
-        </div>
+      </div>
     </div>
 
   </main>
 
-  <div id="actionModal" class="fixed inset-0 z-50 bg-dark/70 backdrop-blur-md hidden flex-col items-center justify-center px-4 transition-opacity duration-300">
-    <div class="bg-white p-8 rounded-[2rem] max-w-sm w-full text-center shadow-2xl relative overflow-hidden transform transition-transform duration-300 scale-100">
+  <div id="actionModal"
+    class="fixed inset-0 z-50 bg-dark/70 backdrop-blur-md hidden flex-col items-center justify-center px-4 transition-opacity duration-300">
+    <div
+      class="bg-white p-8 rounded-[2rem] max-w-sm w-full text-center shadow-2xl relative overflow-hidden transform transition-transform duration-300 scale-100">
       <div class="absolute -top-16 -right-16 w-32 h-32 bg-brand/10 rounded-full blur-3xl"></div>
       <div class="absolute -bottom-16 -left-16 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl"></div>
 
       <div class="relative z-10">
-        <div class="w-20 h-20 bg-gradient-to-br from-brand to-[#E31C5F] rounded-full flex items-center justify-center mx-auto mb-5 shadow-lg border-4 border-white">
+        <div
+          class="w-20 h-20 bg-gradient-to-br from-brand to-[#E31C5F] rounded-full flex items-center justify-center mx-auto mb-5 shadow-lg border-4 border-white">
           <span class="material-symbols-outlined text-4xl text-white">auto_awesome</span>
         </div>
-        <div class="inline-block bg-bg border border-light px-3 py-1 rounded-full text-xs font-bold text-dark mb-3 uppercase tracking-wider">
+        <div
+          class="inline-block bg-bg border border-light px-3 py-1 rounded-full text-xs font-bold text-dark mb-3 uppercase tracking-wider">
           Scan Complete
         </div>
         <h3 class="text-2xl font-bold text-dark mb-2 leading-tight">พบห้องที่ตรงสเปคเบื้องต้นแล้ว! ✨</h3>
-        <p class="text-sm text-muted mb-8 leading-relaxed">เพื่อให้เราคัดเหลือ <strong class="text-dark">Top 10 ห้องที่ดีที่สุด</strong> รบกวนระบุข้อมูลเพิ่มเติมอีกนิดนะครับ</p>
+        <p class="text-sm text-muted mb-8 leading-relaxed">เพื่อให้เราคัดเหลือ <strong class="text-dark">Top 10
+            ห้องที่ดีที่สุด</strong> รบกวนระบุข้อมูลเพิ่มเติมอีกนิดนะครับ</p>
       </div>
-      
+
       <div class="space-y-3 relative z-10">
-        <button onclick="goRefine()" class="w-full py-4 bg-dark text-white font-semibold text-lg rounded-xl shadow-md active:scale-95 transition-all flex justify-center items-center gap-2">
+        <button onclick="goRefine()"
+          class="w-full py-4 bg-dark text-white font-semibold text-lg rounded-xl shadow-md active:scale-95 transition-all flex justify-center items-center gap-2">
           ระบุรายละเอียด <span class="text-xs bg-white/20 px-2 py-0.5 rounded-full font-medium">แนะนำ</span>
         </button>
-        <button onclick="doSkip()" class="w-full py-3 bg-transparent text-muted hover:text-dark font-medium rounded-xl transition-colors text-sm">
+        <button onclick="doSkip()"
+          class="w-full py-3 bg-transparent text-muted hover:text-dark font-medium rounded-xl transition-colors text-sm">
           ข้ามไปก่อน (ใช้ค่าเริ่มต้น)
         </button>
       </div>
     </div>
   </div>
 
-  <div id="leadModal" class="fixed inset-0 z-50 bg-dark/60 backdrop-blur-sm hidden flex-col items-center justify-center px-4">
+  <div id="leadModal"
+    class="fixed inset-0 z-50 bg-dark/60 backdrop-blur-sm hidden flex-col items-center justify-center px-4">
     <div class="bg-white p-8 rounded-3xl max-w-sm w-full shadow-2xl">
       <h3 class="text-xl font-semibold text-dark mb-1">Stay in touch 🎁</h3>
       <p class="text-sm text-muted mb-6">สร้าง VIP Profile เพื่อรับห้องราคาพิเศษ</p>
       <div class="space-y-4">
-        <input type="text" id="lead-name" class="w-full border border-light rounded-xl px-4 py-3 outline-none" placeholder="ชื่อของคุณ">
+        <input type="text" id="lead-name" class="w-full border border-light rounded-xl px-4 py-3 outline-none"
+          placeholder="ชื่อของคุณ">
         <div class="flex gap-2">
-          <label class="flex-1"><input type="radio" name="contact-method" value="LINE" class="peer hidden" checked><div class="py-2.5 text-center rounded-xl border border-light text-sm font-medium peer-checked:bg-[#06C755] peer-checked:text-white transition-all">LINE</div></label>
-          <label class="flex-1"><input type="radio" name="contact-method" value="WhatsApp" class="peer hidden"><div class="py-2.5 text-center rounded-xl border border-light text-sm font-medium peer-checked:bg-[#25D366] peer-checked:text-white transition-all">WhatsApp</div></label>
+          <label class="flex-1"><input type="radio" name="contact-method" value="LINE" class="peer hidden" checked>
+            <div
+              class="py-2.5 text-center rounded-xl border border-light text-sm font-medium peer-checked:bg-[#06C755] peer-checked:text-white transition-all">
+              LINE</div>
+          </label>
+          <label class="flex-1"><input type="radio" name="contact-method" value="WhatsApp" class="peer hidden">
+            <div
+              class="py-2.5 text-center rounded-xl border border-light text-sm font-medium peer-checked:bg-[#25D366] peer-checked:text-white transition-all">
+              WhatsApp</div>
+          </label>
         </div>
-        <input type="text" id="lead-contact" class="w-full border border-light rounded-xl px-4 py-3 outline-none" placeholder="LINE ID หรือ เบอร์โทร">
+        <input type="text" id="lead-contact" class="w-full border border-light rounded-xl px-4 py-3 outline-none"
+          placeholder="LINE ID หรือ เบอร์โทร">
       </div>
-      <button onclick="finalSubmitToGas()" class="w-full mt-6 py-3.5 bg-dark text-white font-semibold rounded-xl flex justify-center items-center gap-2 active:scale-95 transition-transform">
+      <button onclick="finalSubmitToGas()"
+        class="w-full mt-6 py-3.5 bg-dark text-white font-semibold rounded-xl flex justify-center items-center gap-2 active:scale-95 transition-transform">
         Show Matching Rooms <span class="material-symbols-outlined text-lg">arrow_forward</span>
       </button>
     </div>
@@ -265,7 +534,7 @@
         const res = await fetch('https://api.exchangerate-api.com/v4/latest/THB');
         const data = await res.json();
         exchangeRates.USD = data.rates.USD; exchangeRates.CNY = data.rates.CNY;
-      } catch (e) {}
+      } catch (e) { }
     }
 
     function changeLanguageAndCurrency(langCode) {
@@ -289,12 +558,12 @@
     // Load Hot Deals
     function loadHotDeals() {
       fetch(GAS_API_URL, { method: "POST", body: JSON.stringify({ action: "get_hot_deals" }) })
-      .then(r=>r.json()).then(res => {
-        if(res.status === "success" && res.data.length > 0) {
+        .then(r => r.json()).then(res => {
+          if (res.status === "success" && res.data.length > 0) {
             let html = "";
             res.data.forEach(p => {
-                html += `
-                <div class="min-w-[280px] snap-start bg-white border border-light rounded-2xl overflow-hidden shadow-sm cursor-pointer" onclick="alert('กำลังไปดูห้อง ${p.project}')">
+              html += `
+                <div class="min-w-[280px] snap-start bg-white border border-light rounded-2xl overflow-hidden shadow-sm cursor-pointer" onclick="quickSearch('${p.project}')">
                   <img src="${p.image}" class="w-full h-40 object-cover">
                   <div class="p-4">
                     <h3 class="font-semibold text-dark truncate">${p.project}</h3>
@@ -304,8 +573,13 @@
                 </div>`;
             });
             document.getElementById('hot-deals-container').innerHTML = html;
-        }
-      }).catch(e => console.log("Hot Deals loading skipped", e));
+          }
+        }).catch(e => console.log("Hot Deals loading skipped", e));
+    }
+
+    function quickSearch(projectName) {
+      document.getElementById('ai-input').value = "หาห้องที่ " + projectName;
+      submitMagicBox();
     }
 
     // Load Profile
@@ -313,22 +587,22 @@
       switchView('view-profile');
       showLoading("กำลังโหลดประวัติของคุณ...");
       fetch(GAS_API_URL, { method: "POST", body: JSON.stringify({ action: "get_user_history", lineUid: userUid }) })
-      .then(r=>r.json()).then(res => {
-        hideLoading();
-        let html = "";
-        if(!res.data || res.data.length === 0) html = "<div class='text-center py-10'><p class='text-muted'>ยังไม่มีประวัติการหาห้อง</p></div>";
-        else {
-          res.data.forEach(h => {
-             html += `
+        .then(r => r.json()).then(res => {
+          hideLoading();
+          let html = "";
+          if (!res.data || res.data.length === 0) html = "<div class='text-center py-10'><p class='text-muted'>ยังไม่มีประวัติการหาห้อง</p></div>";
+          else {
+            res.data.forEach(h => {
+              html += `
              <div class="p-4 border border-light rounded-xl shadow-sm bg-white cursor-pointer active:scale-95 transition-transform" onclick="window.location.href='?cid=${h.cid}'">
                <div class="text-xs text-muted mb-1">${h.timestamp || '-'}</div>
                <div class="font-bold text-dark text-lg truncate">📍 ${h.zones || 'All'} | งบ ${h.budget || 'Any'}</div>
                <div class="text-sm text-brand mt-2 font-medium">ดูห้องที่ AI แมตช์ไว้ <i class="bi bi-arrow-right"></i></div>
              </div>`;
-          });
-        }
-        document.getElementById('history-container').innerHTML = html;
-      }).catch(err => { hideLoading(); document.getElementById('history-container').innerHTML = "<p class='text-center text-muted'>ระบบโหลดประวัติขัดข้อง</p>"; });
+            });
+          }
+          document.getElementById('history-container').innerHTML = html;
+        }).catch(err => { hideLoading(); document.getElementById('history-container').innerHTML = "<p class='text-center text-muted'>ระบบโหลดประวัติขัดข้อง</p>"; });
     }
 
     // Magic Search
@@ -337,41 +611,41 @@
       if (!text) return alert("Please tell us what you're looking for.");
 
       showLoading("AI กำลังประมวลผลความต้องการของคุณ...");
-      
+
       fetch(GAS_API_URL, {
         method: "POST",
         body: JSON.stringify({ action: "parse_ai_only", rawReq: text })
       })
-      .then(r => r.json())
-      .then(res => {
-        hideLoading();
-        if (res.status === "success") {
-          aiExtractedData = res.data;
-          // เช็คว่ามีค่าว่างมั้ย
-          const hasNull = Object.values(aiExtractedData).some(v => v === null || v === "" || v === undefined);
-          
-          if (hasNull) {
-            document.getElementById('actionModal').classList.replace('hidden', 'flex');
+        .then(r => r.json())
+        .then(res => {
+          hideLoading();
+          if (res.status === "success") {
+            aiExtractedData = res.data;
+            // เช็คว่ามีค่าว่างมั้ย
+            const hasNull = Object.values(aiExtractedData).some(v => v === null || v === "" || v === undefined);
+
+            if (hasNull) {
+              document.getElementById('actionModal').classList.replace('hidden', 'flex');
+            } else {
+              document.getElementById('leadModal').classList.replace('hidden', 'flex');
+            }
           } else {
-            document.getElementById('leadModal').classList.replace('hidden', 'flex');
+            alert("AI มีปัญหา: " + (res.message || "Unknown Error"));
           }
-        } else {
-          alert("AI มีปัญหา: " + (res.message || "Unknown Error"));
-        }
-      }).catch(err => { hideLoading(); alert("เชื่อมต่อล้มเหลว กรุณาลองใหม่"); });
+        }).catch(err => { hideLoading(); alert("เชื่อมต่อล้มเหลว กรุณาลองใหม่"); });
     }
 
     function goRefine() {
       document.getElementById('actionModal').classList.replace('flex', 'hidden');
       switchView('view-wizard');
       // Show only missing fields
-      document.getElementById('grp-zone').style.display = (!aiExtractedData.zones || aiExtractedData.zones === "-") ? 'block' : 'none';
+      document.getElementById('grp-zone').style.display = (!aiExtractedData.zones || aiExtractedData.zones === "-" || aiExtractedData.zones === "") ? 'block' : 'none';
       document.getElementById('grp-budget').style.display = (!aiExtractedData.budgetMin && !aiExtractedData.budgetMax) ? 'block' : 'none';
-      document.getElementById('grp-pet').style.display = (aiExtractedData.petFriendly === null || aiExtractedData.petFriendly === "") ? 'block' : 'none';
-      document.getElementById('grp-size').style.display = (aiExtractedData.reqSize === null || aiExtractedData.reqSize === "") ? 'block' : 'none';
-      document.getElementById('grp-unit').style.display = (aiExtractedData.unitTypes === null || aiExtractedData.unitTypes === "") ? 'block' : 'none';
-      document.getElementById('grp-contract').style.display = (aiExtractedData.contract === null || aiExtractedData.contract === "") ? 'block' : 'none';
-      document.getElementById('grp-movein').style.display = (aiExtractedData.moveIn === null || aiExtractedData.moveIn === "") ? 'block' : 'none';
+      document.getElementById('grp-pet').style.display = (!aiExtractedData.petFriendly) ? 'block' : 'none';
+      document.getElementById('grp-size').style.display = (!aiExtractedData.reqSize) ? 'block' : 'none';
+      document.getElementById('grp-unit').style.display = (!aiExtractedData.unitTypes) ? 'block' : 'none';
+      document.getElementById('grp-contract').style.display = (!aiExtractedData.contract) ? 'block' : 'none';
+      document.getElementById('grp-movein').style.display = (!aiExtractedData.moveIn) ? 'block' : 'none';
     }
 
     function doSkip() {
@@ -387,14 +661,14 @@
       if (aiExtractedData.unitTypes === null || aiExtractedData.unitTypes === "") aiExtractedData.unitTypes = document.querySelector('input[name="wiz-unit"]:checked').value;
       if (aiExtractedData.contract === null || aiExtractedData.contract === "") aiExtractedData.contract = document.querySelector('input[name="wiz-contract"]:checked').value;
       if (aiExtractedData.moveIn === null || aiExtractedData.moveIn === "") aiExtractedData.moveIn = document.getElementById('wiz-movein').value;
-      
+
       applyDefaults(); document.getElementById('leadModal').classList.replace('hidden', 'flex');
     }
 
-    function applyDefaults() { 
+    function applyDefaults() {
       for (let k in defaultData) {
         if (aiExtractedData[k] === null || aiExtractedData[k] === "" || aiExtractedData[k] === undefined) {
-          aiExtractedData[k] = defaultData[k]; 
+          aiExtractedData[k] = defaultData[k];
         }
       }
     }
@@ -409,10 +683,10 @@
 
       const payload = {
         action: "liff_ai_match", // 👈 ท่อ Production
-        lineUid: userUid, 
+        lineUid: userUid,
         customerName: document.getElementById('lead-name').value,
         contactMethod: document.querySelector('input[name="contact-method"]:checked').value,
-        contactId: contactVal, 
+        contactId: contactVal,
         aiData: aiExtractedData
       };
 
@@ -423,13 +697,13 @@
           if (res.status === 'success') {
             currentCid = res.cid;
             loadedProperties = res.data || res.matchedRooms || []; // รองรับชื่อตัวแปรเผื่อกันเหนียว
-            
+
             document.getElementById('vip-title').innerText = `Top Matches for ${document.getElementById('lead-name').value || 'You'} 👑`;
-            
-            if(loadedProperties.length === 0) {
-                document.getElementById('property-container').innerHTML = `<div class="text-center py-10"><p class="text-muted">ขออภัย ไม่พบห้องที่ตรงสเปคในช่วงนี้<br>เจ้าหน้าที่จะรีบหาห้องเพิ่มเติมให้ครับ</p></div>`;
+
+            if (loadedProperties.length === 0) {
+              document.getElementById('property-container').innerHTML = `<div class="text-center py-10"><p class="text-muted">ขออภัย ไม่พบห้องที่ตรงสเปคในช่วงนี้<br>เจ้าหน้าที่จะรีบหาห้องเพิ่มเติมให้ครับ</p></div>`;
             } else {
-                renderCatalog();
+              renderCatalog();
             }
             switchView('view-catalog');
           } else {
@@ -604,9 +878,38 @@
     }
 
     function requestBooking() {
-      const selectedRooms = Array.from(selectedIndices).map(i => loadedProperties[i].project).join("\n- ");
-      alert(`กำลังส่งรายชื่อห้องที่คุณสนใจ:\n- ${selectedRooms}\n\nไปหาแอดมิน! (CID: ${currentCid})`);
-      // ยิง fetch action="updateBooking" ตามโค้ดเก่าได้เลย
+      if (selectedIndices.size === 0) return alert("กรุณาเลือกห้องที่สนใจก่อนครับ");
+      
+      const contactVal = document.getElementById('lead-contact').value.trim();
+      const contactMethod = document.querySelector('input[name="contact-method"]:checked').value;
+      const selectedRooms = Array.from(selectedIndices).map(i => loadedProperties[i].id).join(", ");
+      
+      showLoading("กำลังส่งข้อมูลการจอง...");
+      
+      const payload = {
+        action: "updateBooking",
+        cid: currentCid,
+        requestedIds: selectedRooms,
+        channel: contactMethod,
+        contactId: contactVal
+      };
+
+      fetch(GAS_API_URL, { method: "POST", body: JSON.stringify(payload) })
+        .then(r => r.json())
+        .then(res => {
+          hideLoading();
+          if (res.status === 'success') {
+            alert("ขอบคุณที่สนใจครับ! เจ้าหน้าที่จะติดต่อกลับหาคุณโดยเร็วที่สุด 🙏");
+            selectedIndices.clear();
+            renderCatalog();
+          } else {
+            alert("เกิดข้อผิดพลาด: " + res.message);
+          }
+        })
+        .catch(err => {
+          hideLoading();
+          alert("ขออภัย ระบบขัดข้องชั่วคราว กรุณาติดต่อแอดมินโดยตรงทาง LINE");
+        });
     }
 
     function switchView(viewId) {
@@ -623,4 +926,5 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
