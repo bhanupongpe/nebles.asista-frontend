@@ -1,18 +1,13 @@
 <!DOCTYPE html>
 <html lang="th">
-
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
   <title>Nebles | VIP Property Match</title>
 
   <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL,GRAD,opsz@300,0,0,24&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL,GRAD,opsz@300,0,0,24&display=swap" rel="stylesheet">
   <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -24,249 +19,25 @@
   </script>
 
   <style>
-    body {
-      -webkit-tap-highlight-color: transparent;
-      background-color: #ffffff;
-    }
-
-    .material-symbols-outlined {
-      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
-    }
-
-    .hide-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-
-    .hide-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-
-    .spinner {
-      border: 3px solid #EBEBEB;
-      border-top-color: #FF385C;
-      border-radius: 50%;
-      width: 36px;
-      height: 36px;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
-      }
-
-      100% {
-        transform: rotate(360deg);
-      }
-    }
-
-    /* View Transitions */
-    .view-section {
-      display: none;
-      opacity: 0;
-      transition: opacity 0.3s ease-in-out;
-    }
-
-    .view-section.active {
-      display: block;
-      opacity: 1;
-      animation: fadeIn 0.4s ease forwards;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Custom Styles */
-    .carousel-item img {
-      width: 100%;
-      height: 280px;
-      object-fit: cover;
-    }
-
-    .carousel-control-prev,
-    .carousel-control-next {
-      width: 10%;
-    }
-
-    .carousel-control-prev-icon,
-    .carousel-control-next-icon {
-      width: 1.5rem;
-      height: 1.5rem;
-      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
-    }
-
-    .property-card {
-      background: #fff;
-      border-radius: 16px;
-      overflow: hidden;
-      margin-bottom: 32px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
-      border: 1px solid #f0f0f0;
-      transition: all 0.2s;
-      position: relative;
-    }
-
-    .property-card.selected-card {
-      box-shadow: 0 0 0 2px #222222, 0 8px 25px rgba(0, 0, 0, 0.1);
-      transform: translateY(-3px);
-    }
-
-    .card-img-wrapper {
-      height: 280px;
-      position: relative;
-    }
-
-    .match-badge {
-      position: absolute;
-      top: 16px;
-      left: 16px;
-      z-index: 10;
-      background: transparent;
-      color: #ffffff;
-      padding: 0;
-      border: none;
-      font-weight: 600;
-      font-size: 0.95rem;
-      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .match-badge i {
-      color: #FF385C;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-    }
-
-    .pet-badge {
-      position: absolute;
-      top: 44px;
-      left: 16px;
-      z-index: 10;
-      background: rgba(255, 255, 255, 0.65);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      color: #222222;
-      padding: 4px 12px;
-      border-radius: 50px;
-      font-weight: 600;
-      font-size: 0.8rem;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .btn-select {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      z-index: 20;
-      background: transparent;
-      border: none;
-      font-size: 1.6rem;
-      color: rgba(255, 255, 255, 0.8);
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-      cursor: pointer;
-      transition: 0.2s;
-      padding: 0;
-    }
-
-    .property-card.selected-card .btn-select {
-      color: #FF385C;
-      text-shadow: 0 2px 8px rgba(255, 56, 92, 0.4);
-    }
-
-    .floating-bar-premium {
-      position: fixed;
-      bottom: -100px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(26, 26, 26, 0.4);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      padding: 12px 20px;
-      border-radius: 50px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-      width: max-content;
-      max-width: 90%;
-      transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      z-index: 1000;
-    }
-
-    .floating-bar-premium.show {
-      bottom: 25px;
-    }
-
-    .btn-action-sm {
-      font-size: 0.75rem;
-      text-decoration: none;
-      color: #4b5563;
-      background: #f3f4f6;
-      padding: 6px 12px;
-      border-radius: 20px;
-      border: none;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-weight: 600;
-      transition: 0.2s;
-      cursor: pointer;
-    }
-
-    .btn-card-booking {
-      background-color: #FF385C;
-      color: #ffffff;
-      border: none;
-      width: 100%;
-      padding: 12px;
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      margin-top: 16px;
-      transition: 0.2s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .btn-card-booking:hover {
-      background-color: #E31C5F;
-      color: #ffffff;
-    }
-
-    .btn-card-booking:disabled {
-      background-color: #e5e7eb;
-      color: #9ca3af;
-      cursor: not-allowed;
-    }
+    body { -webkit-tap-highlight-color: transparent; background-color: #ffffff; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .spinner { border: 3px solid #EBEBEB; border-top-color: #FF385C; border-radius: 50%; width: 36px; height: 36px; animation: spin 1s linear infinite; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .view-section { display: none; opacity: 0; transition: opacity 0.3s ease-in-out; }
+    .view-section.active { display: block; opacity: 1; animation: fadeIn 0.4s ease forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .chip-btn { padding: 6px 14px; background: #f3f4f6; border: 1px solid #ebebeb; border-radius: 20px; font-size: 0.85rem; color: #4b5563; font-weight: 500; cursor: pointer; transition: 0.2s; white-space: nowrap; }
+    .chip-btn:hover, .chip-btn:active { background: #EBEBEB; color: #222; border-color: #d1d5db; }
   </style>
 </head>
 
 <body class="text-dark min-h-screen selection:bg-brand selection:text-white pb-24">
 
-  <header
-    class="bg-white/90 backdrop-blur-md border-b border-light sticky top-0 w-full z-40 px-6 py-4 flex justify-between items-center">
-    <img src="https://nebles.needhome.co/_next/image?url=%2Fimages%2Flogo.png&w=256&q=75" class="h-6 cursor-pointer"
-      alt="Nebles" onclick="switchView('view-magic')">
-    <div onclick="openProfile()"
-      class="flex items-center gap-2 px-3 py-1 border border-light rounded-full shadow-sm cursor-pointer active:scale-95 transition-transform">
+  <header class="bg-white/90 backdrop-blur-md border-b border-light sticky top-0 w-full z-40 px-6 py-4 flex justify-between items-center">
+    <img src="https://nebles.needhome.co/_next/image?url=%2Fimages%2Flogo.png&w=256&q=75" class="h-6 cursor-pointer" alt="Nebles" onclick="switchView('view-magic')">
+    <div onclick="openProfile()" class="flex items-center gap-2 px-3 py-1 border border-light rounded-full shadow-sm cursor-pointer active:scale-95 transition-transform">
       <span class="material-symbols-outlined text-dark">menu</span>
       <span class="material-symbols-outlined text-muted text-2xl" id="user-placeholder">account_circle</span>
       <img src="" id="user-profile-img" class="w-7 h-7 rounded-full hidden object-cover">
@@ -278,16 +49,35 @@
     <div id="view-magic" class="view-section active">
       <section class="mb-10">
         <h1 class="text-3xl md:text-4xl font-semibold tracking-tight text-dark mb-2">Find your space</h1>
-        <p class="text-muted text-sm md:text-base">Let our AI match you with the perfect home.</p>
+        <p class="text-muted text-sm md:text-base mb-6">Let our AI match you with the perfect home.</p>
 
-        <div class="mt-6 bg-white rounded-2xl shadow-[0_6px_16px_rgba(0,0,0,0.08)] border border-light p-2 relative">
-          <textarea id="ai-input" rows="4"
-            class="w-full bg-transparent border-none focus:ring-0 text-dark text-lg p-4 resize-none placeholder:text-muted placeholder:font-light outline-none"
-            placeholder="หาคอนโดเลี้ยงแมว แถวรัชดา งบ 15-20k..."></textarea>
-          <div class="flex justify-end p-2">
-            <button onclick="submitMagicBox()"
-              class="px-5 py-3 bg-brand text-white font-semibold rounded-xl flex items-center gap-2 active:scale-95 transition-transform">
-              <span class="material-symbols-outlined">auto_awesome</span> Search with AI
+        <div class="bg-blue-50/50 border border-blue-100 rounded-xl p-4 mb-4">
+          <p class="text-sm text-dark font-medium mb-2 flex items-start gap-1">
+            <span class="material-symbols-outlined text-blue-500 text-lg">tips_and_updates</span>
+            เพื่อให้ได้ห้องที่ตรงใจที่สุด โปรดระบุ:
+          </p>
+          <p class="text-[0.8rem] text-muted mb-3 ml-6 leading-relaxed">
+            ทำเล, งบประมาณ, ขนาด, รูปแบบห้อง, การเลี้ยงสัตว์, ระยะเวลาเช่า
+          </p>
+          <div class="bg-white p-3 rounded-lg border border-light text-xs text-brand font-medium shadow-sm" onclick="quickExample()" style="cursor: pointer;">
+            <span class="text-muted mr-1">ตัวอย่าง:</span> หาคอนโดโซนห้วยขวาง รัชดา งบ 15000 ขนาด 20ตรม+ studio ไม่มีสัตว์เลี้ยง เช่า 1 ปี
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-[0_6px_16px_rgba(0,0,0,0.08)] border border-light p-2 relative">
+          <textarea id="ai-input" rows="4" class="w-full bg-transparent border-none focus:ring-0 text-dark text-lg p-4 resize-none placeholder:text-muted placeholder:font-light outline-none" placeholder="พิมพ์สิ่งที่คุณต้องการที่นี่..."></textarea>
+          <div class="flex justify-between items-end p-2">
+            <div class="flex flex-wrap gap-2 pr-2 max-w-[65%]">
+               <button onclick="appendPrompt('Studio')" class="chip-btn">Studio</button>
+               <button onclick="appendPrompt('1 Bed')" class="chip-btn">1 Bed</button>
+               <button onclick="appendPrompt('2 Bed')" class="chip-btn">2 Bed</button>
+               <button onclick="appendPrompt('เช่า 3 เดือน')" class="chip-btn">เช่า 3 เดือน</button>
+               <button onclick="appendPrompt('เช่า 6 เดือน')" class="chip-btn">เช่า 6 เดือน</button>
+               <button onclick="appendPrompt('เช่า 1 ปี')" class="chip-btn">เช่า 1 ปี</button>
+               <button onclick="appendPrompt('เลี้ยงสัตว์ได้')" class="chip-btn">🐶 เลี้ยงสัตว์</button>
+            </div>
+            <button onclick="submitMagicBox()" class="px-5 py-3 bg-brand text-white font-semibold rounded-xl flex items-center gap-2 active:scale-95 transition-transform shrink-0">
+              <span class="material-symbols-outlined">search</span> ค้นหา
             </button>
           </div>
         </div>
@@ -295,267 +85,104 @@
 
       <section>
         <h2 class="text-xl font-semibold text-dark mb-4 flex items-center gap-2">🔥 Hot Deals</h2>
-        <div id="hot-deals-container" class="flex overflow-x-auto gap-4 pb-4 snap-x hide-scrollbar">
-        </div>
+        <div id="hot-deals-container" class="flex overflow-x-auto gap-4 pb-4 snap-x hide-scrollbar"></div>
       </section>
-    </div>
-
-    <div id="view-wizard" class="view-section">
-      <div class="flex items-center gap-3 mb-8">
-        <button onclick="switchView('view-magic')"
-          class="w-10 h-10 rounded-full border border-light flex items-center justify-center">
-          <span class="material-symbols-outlined text-dark">chevron_left</span>
-        </button>
-        <h1 class="text-2xl font-semibold text-dark">Refine Details</h1>
-      </div>
-
-      <div class="space-y-8 pb-20">
-        <div id="grp-zone" class="hidden">
-          <label class="block text-sm font-semibold text-dark mb-2">Location / Station</label>
-          <input id="wiz-zone" class="w-full border border-light rounded-xl px-4 py-3 outline-none"
-            placeholder="e.g. Sukhumvit, On Nut" type="text">
-        </div>
-        <div id="grp-budget" class="hidden">
-          <label class="block text-sm font-semibold text-dark mb-2">Max Budget (฿/mo)</label>
-          <input id="wiz-budget" class="w-full border border-light rounded-xl px-4 py-3 outline-none"
-            placeholder="e.g. 15000" type="number">
-        </div>
-        <div id="grp-pet" class="hidden">
-          <label class="block text-sm font-semibold text-dark mb-3">Pets Allowed?</label>
-          <div class="flex flex-wrap gap-2">
-            <label><input type="radio" name="wiz-pet" value="No" class="peer hidden" checked>
-              <div
-                class="px-5 py-2.5 rounded-full border border-light peer-checked:bg-dark peer-checked:text-white transition-all text-sm font-medium">
-                No Pets</div>
-            </label>
-            <label><input type="radio" name="wiz-pet" value="Yes" class="peer hidden">
-              <div
-                class="px-5 py-2.5 rounded-full border border-light peer-checked:bg-dark peer-checked:text-white transition-all text-sm font-medium">
-                Pet Friendly</div>
-            </label>
-          </div>
-        </div>
-        <div id="grp-size" class="hidden">
-          <label class="block text-sm font-semibold text-dark mb-2">Minimum Room Size (sqm)</label>
-          <input id="wiz-size" class="w-full border border-light rounded-xl px-4 py-3 outline-none" type="number">
-        </div>
-        <div id="grp-unit" class="hidden">
-          <label class="block text-sm font-semibold text-dark mb-3">Unit Type</label>
-          <div class="flex flex-wrap gap-2">
-            <label><input type="radio" name="wiz-unit" value="Studio" class="peer hidden" checked>
-              <div
-                class="px-5 py-2.5 rounded-full border border-light peer-checked:bg-dark peer-checked:text-white transition-all text-sm font-medium">
-                Studio</div>
-            </label>
-            <label><input type="radio" name="wiz-unit" value="1 Bed" class="peer hidden">
-              <div
-                class="px-5 py-2.5 rounded-full border border-light peer-checked:bg-dark peer-checked:text-white transition-all text-sm font-medium">
-                1 Bed</div>
-            </label>
-            <label><input type="radio" name="wiz-unit" value="2 Bed" class="peer hidden">
-              <div
-                class="px-5 py-2.5 rounded-full border border-light peer-checked:bg-dark peer-checked:text-white transition-all text-sm font-medium">
-                2 Bed</div>
-            </label>
-          </div>
-        </div>
-        <div id="grp-contract" class="hidden">
-          <label class="block text-sm font-semibold text-dark mb-3">Contract (Months)</label>
-          <div class="flex flex-wrap gap-2">
-            <label><input type="radio" name="wiz-contract" value="12" class="peer hidden" checked>
-              <div
-                class="px-5 py-2.5 rounded-full border border-light peer-checked:bg-dark peer-checked:text-white transition-all text-sm font-medium">
-                12 Months</div>
-            </label>
-            <label><input type="radio" name="wiz-contract" value="6" class="peer hidden">
-              <div
-                class="px-5 py-2.5 rounded-full border border-light peer-checked:bg-dark peer-checked:text-white transition-all text-sm font-medium">
-                6 Months</div>
-            </label>
-          </div>
-        </div>
-        <div id="grp-movein" class="hidden">
-          <label class="block text-sm font-semibold text-dark mb-2">Move In Date</label>
-          <input type="date" id="wiz-movein"
-            class="w-full border border-light rounded-xl px-4 py-3 outline-none font-sans">
-        </div>
-      </div>
-
-      <div class="fixed bottom-0 left-0 w-full p-4 bg-white border-t border-light z-40">
-        <button onclick="submitWizard()"
-          class="w-full max-w-xl mx-auto py-3.5 bg-dark text-white font-semibold text-lg rounded-xl active:scale-95 transition-transform">
-          Save & Continue
-        </button>
-      </div>
-    </div>
-
-    <div id="view-catalog" class="view-section pb-20">
-      <div class="mb-6 flex items-start gap-4 relative">
-        <div class="absolute top-0 left-0 z-50">
-          <select id="lang-select" onchange="changeLanguageAndCurrency(this.value)"
-            class="bg-white/90 border border-light rounded-full px-3 py-1 text-sm font-semibold shadow-sm outline-none cursor-pointer">
-            <option value="TH">🇹🇭 THB</option>
-            <option value="EN">🇺🇸 USD</option>
-            <option value="CN">🇨🇳 CNY</option>
-          </select>
-        </div>
-        <div class="ml-auto flex flex-col items-end">
-          <button onclick="switchView('view-magic')"
-            class="w-10 h-10 rounded-full border border-light flex items-center justify-center shrink-0 mb-2">
-            <span class="material-symbols-outlined text-dark">chevron_left</span>
-          </button>
-          <div class="text-right">
-            <h2 class="text-2xl font-semibold text-dark leading-tight" id="vip-title">Top Matches 👑</h2>
-            <p class="text-sm text-muted mt-1" id="vip-subtitle">We found perfect units based on your criteria.</p>
-          </div>
-        </div>
-      </div>
-
-      <div id="property-container" class="space-y-6"></div>
-
-      <div id="floating-bar" class="floating-bar-premium">
-        <p id="selected-count" class="text-white font-semibold text-[0.95rem] m-0">0 Selected</p>
-        <button onclick="requestBooking()"
-          class="bg-brand text-white px-6 py-2.5 rounded-full font-semibold text-[0.95rem] flex items-center gap-2 active:scale-95 transition-transform">
-          Request Booking <i class="bi bi-arrow-right"></i>
-        </button>
-      </div>
     </div>
 
     <div id="view-profile" class="view-section pb-20">
       <div class="flex items-center gap-3 mb-8">
-        <button onclick="switchView('view-magic')"
-          class="w-10 h-10 rounded-full border border-light flex items-center justify-center">
+        <button onclick="switchView('view-magic')" class="w-10 h-10 rounded-full border border-light flex items-center justify-center">
           <span class="material-symbols-outlined text-dark">chevron_left</span>
         </button>
         <h1 class="text-2xl font-semibold text-dark">My Profile</h1>
       </div>
-      <div id="history-container" class="space-y-4">
-      </div>
+      <div id="history-container" class="space-y-4"></div>
     </div>
 
   </main>
 
-  <div id="actionModal"
-    class="fixed inset-0 z-50 bg-dark/70 backdrop-blur-md hidden flex-col items-center justify-center px-4 transition-opacity duration-300">
-    <div
-      class="bg-white p-8 rounded-[2rem] max-w-sm w-full text-center shadow-2xl relative overflow-hidden transform transition-transform duration-300 scale-100">
-      <div class="absolute -top-16 -right-16 w-32 h-32 bg-brand/10 rounded-full blur-3xl"></div>
-      <div class="absolute -bottom-16 -left-16 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl"></div>
-
-      <div class="relative z-10">
-        <div
-          class="w-20 h-20 bg-gradient-to-br from-brand to-[#E31C5F] rounded-full flex items-center justify-center mx-auto mb-5 shadow-lg border-4 border-white">
-          <span class="material-symbols-outlined text-4xl text-white">auto_awesome</span>
-        </div>
-        <div
-          class="inline-block bg-bg border border-light px-3 py-1 rounded-full text-xs font-bold text-dark mb-3 uppercase tracking-wider">
-          Scan Complete
-        </div>
-        <h3 class="text-2xl font-bold text-dark mb-2 leading-tight">พบห้องที่ตรงสเปคเบื้องต้นแล้ว! ✨</h3>
-        <p class="text-sm text-muted mb-8 leading-relaxed">เพื่อให้เราคัดเหลือ <strong class="text-dark">Top 10
-            ห้องที่ดีที่สุด</strong> รบกวนระบุข้อมูลเพิ่มเติมอีกนิดนะครับ</p>
-      </div>
-
-      <div class="space-y-3 relative z-10">
-        <button onclick="goRefine()"
-          class="w-full py-4 bg-dark text-white font-semibold text-lg rounded-xl shadow-md active:scale-95 transition-all flex justify-center items-center gap-2">
-          ระบุรายละเอียด <span class="text-xs bg-white/20 px-2 py-0.5 rounded-full font-medium">แนะนำ</span>
-        </button>
-        <button onclick="doSkip()"
-          class="w-full py-3 bg-transparent text-muted hover:text-dark font-medium rounded-xl transition-colors text-sm">
-          ข้ามไปก่อน (ใช้ค่าเริ่มต้น)
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div id="leadModal"
-    class="fixed inset-0 z-50 bg-dark/60 backdrop-blur-sm hidden flex-col items-center justify-center px-4">
+  <div id="leadModal" class="fixed inset-0 z-50 bg-dark/60 backdrop-blur-sm hidden flex-col items-center justify-center px-4">
     <div class="bg-white p-8 rounded-3xl max-w-sm w-full shadow-2xl">
       <h3 class="text-xl font-semibold text-dark mb-1">Stay in touch 🎁</h3>
-      <p class="text-sm text-muted mb-6">สร้าง VIP Profile เพื่อรับห้องราคาพิเศษ</p>
+      <p class="text-sm text-muted mb-5">ระบุช่องทางติดต่อเพื่อให้เจ้าหน้าที่ดูแลคุณ</p>
+      
       <div class="space-y-4">
-        <input type="text" id="lead-name" class="w-full border border-light rounded-xl px-4 py-3 outline-none"
-          placeholder="ชื่อของคุณ">
-        <div class="flex gap-2">
-          <label class="flex-1"><input type="radio" name="contact-method" value="LINE" class="peer hidden" checked>
-            <div
-              class="py-2.5 text-center rounded-xl border border-light text-sm font-medium peer-checked:bg-[#06C755] peer-checked:text-white transition-all">
-              LINE</div>
-          </label>
-          <label class="flex-1"><input type="radio" name="contact-method" value="WhatsApp" class="peer hidden">
-            <div
-              class="py-2.5 text-center rounded-xl border border-light text-sm font-medium peer-checked:bg-[#25D366] peer-checked:text-white transition-all">
-              WhatsApp</div>
-          </label>
+        <div>
+          <label class="block text-sm font-semibold text-dark mb-2">คาดว่าจะเข้าอยู่เมื่อไหร่?</label>
+          <input type="date" id="lead-movein" class="w-full border border-light rounded-xl px-4 py-3 outline-none font-sans text-sm">
         </div>
-        <input type="text" id="lead-contact" class="w-full border border-light rounded-xl px-4 py-3 outline-none"
-          placeholder="LINE ID หรือ เบอร์โทร">
+        
+        <hr class="border-light my-2">
+
+        <input type="text" id="lead-name" class="w-full border border-light rounded-xl px-4 py-3 outline-none" placeholder="ชื่อของคุณ">
+        <div class="flex gap-2">
+          <label class="flex-1"><input type="radio" name="contact-method" value="LINE" class="peer hidden" checked><div class="py-2.5 text-center rounded-xl border border-light text-sm font-medium peer-checked:bg-[#06C755] peer-checked:text-white transition-all cursor-pointer">LINE</div></label>
+          <label class="flex-1"><input type="radio" name="contact-method" value="WhatsApp" class="peer hidden"><div class="py-2.5 text-center rounded-xl border border-light text-sm font-medium peer-checked:bg-[#25D366] peer-checked:text-white transition-all cursor-pointer">WhatsApp</div></label>
+        </div>
+        <input type="text" id="lead-contact" class="w-full border border-light rounded-xl px-4 py-3 outline-none" placeholder="LINE ID หรือ เบอร์โทร">
       </div>
-      <button onclick="finalSubmitToGas()"
-        class="w-full mt-6 py-3.5 bg-dark text-white font-semibold rounded-xl flex justify-center items-center gap-2 active:scale-95 transition-transform">
-        Show Matching Rooms <span class="material-symbols-outlined text-lg">arrow_forward</span>
+      <button onclick="finalSubmitToGas()" class="w-full mt-6 py-3.5 bg-dark text-white font-semibold rounded-xl flex justify-center items-center gap-2 active:scale-95 transition-transform">
+        ค้นหาห้องเลย <span class="material-symbols-outlined text-lg">arrow_forward</span>
       </button>
+      <button onclick="document.getElementById('leadModal').classList.replace('flex','hidden')" class="w-full mt-2 py-2 text-muted text-sm hover:text-dark">ยกเลิก</button>
     </div>
   </div>
 
   <div id="loading-layer" class="fixed inset-0 z-[100] bg-white hidden flex-col items-center justify-center">
     <div class="spinner mb-5"></div>
-    <h4 class="text-lg font-semibold text-dark" id="loading-text">Extracting details...</h4>
+    <h4 class="text-lg font-semibold text-dark" id="loading-text">กำลังค้นหาห้อง...</h4>
   </div>
 
   <script>
     const LIFF_ID = "2008650874-tk7Jipf6";
-    // 🚨 ใส่ Web App URL ของจริงที่นี่
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbya2rWPhgYN7e9rmBuLffXjrJnRnFdmkRkL84Dib8NilKQAfXxmEmGwFfaq5aVkPW4q/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbya2rWPhgYN7e9rmBuLffXjrJnRnFdmkRkL84Dib8NilKQAfXxmEmGwFfaq5aVkPW4q/exec"; // 🚨 GAS ของมึง
 
-    let userUid = "GUEST_" + Math.random().toString(36).substr(2, 8).toUpperCase();
+    let userUid = "";
     let userName = "Guest";
-    let aiExtractedData = {};
-    const defaultData = { zones: "-", budgetMin: 0, budgetMax: 0, reqSize: 0, unitTypes: "Studio", contract: "12", moveIn: "", petFriendly: "No" };
 
-    let loadedProperties = [];
-    let selectedIndices = new Set();
-    let currentCid = "";
-
-    // i18n
-    const i18n = {
-      TH: { title: "ห้องที่คัดสรรมาให้สำหรับคุณ", subtitle: "Nebles กำลังคัดเลือกห้องที่ดีที่สุดสำหรับคุณ", loading: "AI กำลังค้นหาห้องที่ตรงกับคุณจริงๆ..", match: "ตรงสเปค", rented: "ปล่อยเช่าแล้ว", petFriendly: "รับสัตว์เลี้ยง", map: "แผนที่", chat: "แชท", size: "ขนาด", floor: "ชั้น", sqm: "ตร.ม.", month: "เดือน", selected: "ห้องที่เลือก", requestBooking: "ยืนยันความสนใจ", priceFor: "สำหรับสัญญา", priceInfo: "ราคาสำหรับสัญญา" },
-      EN: { title: "Recommended for You", subtitle: "Nebles is selecting the best units for you", loading: "AI is finding homes that actually fit you..", match: "Match", rented: "RENTED OUT", petFriendly: "Pet Friendly", map: "Map", chat: "Chat", size: "Size", floor: "Fl", sqm: "sqm", month: "month", selected: "Selected", requestBooking: "Request Booking", priceFor: "For", priceInfo: "Price for" },
-      CN: { title: "为您推荐", subtitle: "Nebles 正在为您挑选最佳房源", loading: "AI 正在寻找真正适合您的房源..", match: "匹配度", rented: "已出租", petFriendly: "允许宠物", map: "地图", chat: "聊天", size: "面积", floor: "楼层", sqm: "平方米", month: "月", selected: "已选择", requestBooking: "请求预订", priceFor: "租期为", priceInfo: "价格及租期：" }
-    };
-    let currentLang = "EN";
-    let exchangeRates = { THB: 1, USD: 0.028, CNY: 0.20 };
-    const currencySymbols = { TH: "฿", EN: "$", CN: "¥" };
-
-    async function fetchExchangeRates() {
-      try {
-        const res = await fetch('https://api.exchangerate-api.com/v4/latest/THB');
-        const data = await res.json();
-        exchangeRates.USD = data.rates.USD; exchangeRates.CNY = data.rates.CNY;
-      } catch (e) { }
-    }
-
-    function changeLanguageAndCurrency(langCode) {
-      currentLang = langCode; const t = i18n[currentLang];
-      document.getElementById('vip-title').innerText = t.title;
-      document.getElementById('vip-subtitle').innerText = t.subtitle;
-      updateFloatingBar(); if (loadedProperties.length > 0) renderCatalog();
+    function initUserUid() {
+      const storedUid = localStorage.getItem('nebles_user_uid');
+      if (storedUid) {
+        userUid = storedUid;
+      } else {
+        userUid = "GUEST_" + Math.random().toString(36).substr(2, 8).toUpperCase();
+        localStorage.setItem('nebles_user_uid', userUid);
+      }
     }
 
     async function initApp() {
+      initUserUid();
       try {
         await liff.init({ liffId: LIFF_ID });
         if (liff.isLoggedIn()) {
           const profile = await liff.getProfile();
-          userUid = profile.userId; userName = profile.displayName;
+          userUid = profile.userId;
+          userName = profile.displayName;
+          localStorage.setItem('nebles_user_uid', userUid);
           document.getElementById('lead-name').value = userName;
-        } else if (liff.isInClient()) liff.login();
-      } catch (err) { }
+        } else if (liff.isInClient()) {
+          liff.login();
+        }
+      } catch (err) { console.log("LIFF Init Error:", err); }
     }
 
-    // Load Hot Deals
+    // ⚡ ปุ่มตัวอย่าง กดแล้วก๊อปลงกล่องเลย
+    function quickExample() {
+      document.getElementById('ai-input').value = "หาคอนโดโซนห้วยขวาง รัชดา งบ 15000 ขนาด 20ตรม+ studio ไม่มีสัตว์เลี้ยง เช่า 1 ปี";
+    }
+
+    // ⚡ ปุ่ม Quick Chips เติมคำท้ายประโยค
+    function appendPrompt(text) {
+      const box = document.getElementById('ai-input');
+      let currentText = box.value.trim();
+      if(currentText.length > 0) {
+        box.value = currentText + " " + text;
+      } else {
+        box.value = text;
+      }
+      box.focus(); // ให้เคอร์เซอร์กระพริบต่อ
+    }
+
     function loadHotDeals() {
       fetch(GAS_API_URL, { method: "POST", body: JSON.stringify({ action: "get_hot_deals" }) })
         .then(r => r.json()).then(res => {
@@ -563,7 +190,7 @@
             let html = "";
             res.data.forEach(p => {
               html += `
-                <div class="min-w-[280px] snap-start bg-white border border-light rounded-2xl overflow-hidden shadow-sm cursor-pointer" onclick="quickSearch('${p.project}')">
+                <div class="min-w-[260px] snap-start bg-white border border-light rounded-2xl overflow-hidden shadow-sm cursor-pointer active:scale-95 transition-transform" onclick="quickSearch('${p.project}')">
                   <img src="${p.image}" class="w-full h-40 object-cover">
                   <div class="p-4">
                     <h3 class="font-semibold text-dark truncate">${p.project}</h3>
@@ -574,342 +201,89 @@
             });
             document.getElementById('hot-deals-container').innerHTML = html;
           }
-        }).catch(e => console.log("Hot Deals loading skipped", e));
+        }).catch(e => console.log("Hot Deals skipped"));
     }
 
     function quickSearch(projectName) {
-      document.getElementById('ai-input').value = "หาห้องที่ " + projectName;
+      document.getElementById('ai-input').value = "สนใจโครงการ " + projectName;
       submitMagicBox();
     }
 
-    // Load Profile
     function openProfile() {
       switchView('view-profile');
-      showLoading("กำลังโหลดประวัติของคุณ...");
+      showLoading("กำลังโหลดประวัติ...");
       fetch(GAS_API_URL, { method: "POST", body: JSON.stringify({ action: "get_user_history", lineUid: userUid }) })
         .then(r => r.json()).then(res => {
           hideLoading();
           let html = "";
-          if (!res.data || res.data.length === 0) html = "<div class='text-center py-10'><p class='text-muted'>ยังไม่มีประวัติการหาห้อง</p></div>";
-          else {
+          if (!res.data || res.data.length === 0) {
+            html = "<div class='text-center py-10'><p class='text-muted'>ยังไม่มีประวัติการหาห้อง</p></div>";
+          } else {
             res.data.forEach(h => {
+              const catalogLink = `https://nebles.asista.work/v2?v=2&cid=${h.cid}`;
               html += `
-             <div class="p-4 border border-light rounded-xl shadow-sm bg-white cursor-pointer active:scale-95 transition-transform" onclick="window.location.href='?cid=${h.cid}'">
-               <div class="text-xs text-muted mb-1">${h.timestamp || '-'}</div>
-               <div class="font-bold text-dark text-lg truncate">📍 ${h.zones || 'All'} | งบ ${h.budget || 'Any'}</div>
-               <div class="text-sm text-brand mt-2 font-medium">ดูห้องที่ AI แมตช์ไว้ <i class="bi bi-arrow-right"></i></div>
-             </div>`;
+              <div class="p-4 border border-light rounded-xl shadow-sm bg-white cursor-pointer active:scale-95 transition-transform" onclick="window.open('${catalogLink}', '_blank')">
+                <div class="text-xs text-muted mb-1">${h.timestamp || '-'}</div>
+                <div class="font-bold text-dark text-lg truncate">📍 ${h.zones || 'All'} | งบ ${h.budget || 'Any'}</div>
+                <div class="text-sm text-brand mt-2 font-medium">ดูห้องที่ AI แมตช์ไว้ <i class="bi bi-arrow-right"></i></div>
+              </div>`;
             });
           }
           document.getElementById('history-container').innerHTML = html;
-        }).catch(err => { hideLoading(); document.getElementById('history-container').innerHTML = "<p class='text-center text-muted'>ระบบโหลดประวัติขัดข้อง</p>"; });
+        }).catch(err => { hideLoading(); document.getElementById('history-container').innerHTML = "<p class='text-center text-muted'>ขัดข้อง</p>"; });
     }
 
-    // Magic Search
+    // 🚀 รวบตึง! กดปุ่มค้นหา -> โชว์ฟอร์มขอเบอร์เลย (ตัด API สกัดคำทิ้ง)
     function submitMagicBox() {
       const text = document.getElementById('ai-input').value.trim();
-      if (!text) return alert("Please tell us what you're looking for.");
-
-      showLoading("AI กำลังประมวลผลความต้องการของคุณ...");
-
-      fetch(GAS_API_URL, {
-        method: "POST",
-        body: JSON.stringify({ action: "parse_ai_only", rawReq: text })
-      })
-        .then(r => r.json())
-        .then(res => {
-          hideLoading();
-          if (res.status === "success") {
-            aiExtractedData = res.data;
-            // เช็คว่ามีค่าว่างมั้ย
-            const hasNull = Object.values(aiExtractedData).some(v => v === null || v === "" || v === undefined);
-
-            if (hasNull) {
-              document.getElementById('actionModal').classList.replace('hidden', 'flex');
-            } else {
-              document.getElementById('leadModal').classList.replace('hidden', 'flex');
-            }
-          } else {
-            alert("AI มีปัญหา: " + (res.message || "Unknown Error"));
-          }
-        }).catch(err => { hideLoading(); alert("เชื่อมต่อล้มเหลว กรุณาลองใหม่"); });
+      if (!text) return alert("กรุณาพิมพ์สิ่งที่คุณต้องการหาห้องด้วยครับ 🙏");
+      
+      // วันนี้เข้าอยู่ตั้ง Default เป็นวันนี้ได้เลย
+      document.getElementById('lead-movein').valueAsDate = new Date();
+      
+      // โชว์ฟอร์มทันที
+      document.getElementById('leadModal').classList.replace('hidden', 'flex');
     }
 
-    function goRefine() {
-      document.getElementById('actionModal').classList.replace('flex', 'hidden');
-      switchView('view-wizard');
-      // Show only missing fields
-      document.getElementById('grp-zone').style.display = (!aiExtractedData.zones || aiExtractedData.zones === "-" || aiExtractedData.zones === "") ? 'block' : 'none';
-      document.getElementById('grp-budget').style.display = (!aiExtractedData.budgetMin && !aiExtractedData.budgetMax) ? 'block' : 'none';
-      document.getElementById('grp-pet').style.display = (!aiExtractedData.petFriendly) ? 'block' : 'none';
-      document.getElementById('grp-size').style.display = (!aiExtractedData.reqSize) ? 'block' : 'none';
-      document.getElementById('grp-unit').style.display = (!aiExtractedData.unitTypes) ? 'block' : 'none';
-      document.getElementById('grp-contract').style.display = (!aiExtractedData.contract) ? 'block' : 'none';
-      document.getElementById('grp-movein').style.display = (!aiExtractedData.moveIn) ? 'block' : 'none';
-    }
-
-    function doSkip() {
-      document.getElementById('actionModal').classList.replace('flex', 'hidden');
-      applyDefaults(); document.getElementById('leadModal').classList.replace('hidden', 'flex');
-    }
-
-    function submitWizard() {
-      if (!aiExtractedData.zones || aiExtractedData.zones === "-") aiExtractedData.zones = document.getElementById('wiz-zone').value || "-";
-      if (!aiExtractedData.budgetMin && !aiExtractedData.budgetMax) { aiExtractedData.budgetMax = document.getElementById('wiz-budget').value || 0; }
-      if (aiExtractedData.petFriendly === null || aiExtractedData.petFriendly === "") aiExtractedData.petFriendly = document.querySelector('input[name="wiz-pet"]:checked').value;
-      if (aiExtractedData.reqSize === null || aiExtractedData.reqSize === "") aiExtractedData.reqSize = document.getElementById('wiz-size').value || 0;
-      if (aiExtractedData.unitTypes === null || aiExtractedData.unitTypes === "") aiExtractedData.unitTypes = document.querySelector('input[name="wiz-unit"]:checked').value;
-      if (aiExtractedData.contract === null || aiExtractedData.contract === "") aiExtractedData.contract = document.querySelector('input[name="wiz-contract"]:checked').value;
-      if (aiExtractedData.moveIn === null || aiExtractedData.moveIn === "") aiExtractedData.moveIn = document.getElementById('wiz-movein').value;
-
-      applyDefaults(); document.getElementById('leadModal').classList.replace('hidden', 'flex');
-    }
-
-    function applyDefaults() {
-      for (let k in defaultData) {
-        if (aiExtractedData[k] === null || aiExtractedData[k] === "" || aiExtractedData[k] === undefined) {
-          aiExtractedData[k] = defaultData[k];
-        }
-      }
-    }
-
-    // Final Submit
+    // 🚀 ยิง GAS ดอกเดียวจบ
     function finalSubmitToGas() {
       const contactVal = document.getElementById('lead-contact').value.trim();
       if (!contactVal) return alert("กรุณาระบุช่องทางการติดต่อด้วยครับ 🙏");
 
       document.getElementById('leadModal').classList.replace('flex', 'hidden');
-      showLoading("Finding top matches...");
+      showLoading("ระบบกำลังประมวลผลและค้นหาห้องที่ใช่ที่สุด...");
 
+      // แพ็กข้อมูลทั้งหมดที่ลูกค้าพิมพ์ส่งไปให้ GAS ท่าเดียวเลย
       const payload = {
-        action: "liff_ai_match", // 👈 ท่อ Production
+        action: "liff_ai_match", 
         lineUid: userUid,
         customerName: document.getElementById('lead-name').value,
         contactMethod: document.querySelector('input[name="contact-method"]:checked').value,
         contactId: contactVal,
-        aiData: aiExtractedData
+        aiData: { 
+          rawReq: document.getElementById('ai-input').value.trim(), 
+          moveIn: document.getElementById('lead-movein').value 
+        }
       };
 
+      // ยิงแบบ Fast Track (ทิ้งแล้วลืม)
       fetch(GAS_API_URL, { method: "POST", body: JSON.stringify(payload) })
         .then(r => r.json())
         .then(res => {
           hideLoading();
           if (res.status === 'success') {
-            currentCid = res.cid;
-            loadedProperties = res.data || res.matchedRooms || []; // รองรับชื่อตัวแปรเผื่อกันเหนียว
-
-            document.getElementById('vip-title').innerText = `Top Matches for ${document.getElementById('lead-name').value || 'You'} 👑`;
-
-            if (loadedProperties.length === 0) {
-              document.getElementById('property-container').innerHTML = `<div class="text-center py-10"><p class="text-muted">ขออภัย ไม่พบห้องที่ตรงสเปคในช่วงนี้<br>เจ้าหน้าที่จะรีบหาห้องเพิ่มเติมให้ครับ</p></div>`;
-            } else {
-              renderCatalog();
-            }
-            switchView('view-catalog');
+            const newCid = res.cid;
+            // 🔗 1. เด้งเปิดหน้าเว็บ แคตตาล็อกเดิม
+            window.open(`https://nebles.asista.work/v2?v=2&cid=${newCid}`, '_blank');
+            
+            // 🎯 2. สลับหน้าจอปัจจุบันไปรอที่ Profile
+            document.getElementById('ai-input').value = ""; 
+            openProfile(); 
           } else {
             alert("เกิดข้อผิดพลาด: " + (res.message || "Unknown Error"));
           }
         })
-        .catch(err => { hideLoading(); alert("ระบบไม่สามารถเชื่อมต่อได้ กรุณาลองใหม่อีกครั้ง"); });
-    }
-
-    // Render Catalog
-    function renderCatalog() {
-      let html = "";
-      const t = i18n[currentLang];
-      let curRate = 1; let curSymbol = "฿";
-      if (currentLang === "EN") { curRate = exchangeRates.USD; curSymbol = "$"; }
-      else if (currentLang === "CN") { curRate = exchangeRates.CNY; curSymbol = "¥"; }
-
-      loadedProperties.forEach((p, i) => {
-        const isSel = selectedIndices.has(i);
-        const isUnavailable = (p.status && p.status.toLowerCase() === "unavailable");
-
-        let imagesHtml = '';
-        if (p.imageIds && p.imageIds.length > 0) {
-          p.imageIds.slice(0, 5).forEach((img, j) => {
-            imagesHtml += `<div class="carousel-item ${j === 0 ? 'active' : ''} h-full"><img src="https://drive.google.com/thumbnail?id=${img}&sz=w600" class="w-full h-full object-cover"></div>`;
-          });
-        } else {
-          imagesHtml = `<div class="carousel-item active h-full"><div class="flex items-center justify-center h-full bg-light text-muted">No Image</div></div>`;
-        }
-
-        let carouselControls = (p.imageIds && p.imageIds.length > 1) ? `
-          <button class="carousel-control-prev" type="button" data-bs-target="#carousel-${i}" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
-          <button class="carousel-control-next" type="button" data-bs-target="#carousel-${i}" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>` : '';
-
-        let reqMonthsStr = aiExtractedData && aiExtractedData.contract ? parseInt(aiExtractedData.contract) : 12;
-        if (isNaN(reqMonthsStr)) reqMonthsStr = 12;
-
-        let pShort = p.prices && p.prices.short ? parseFloat(p.prices.short) : 0;
-        let pMid = p.prices && p.prices.mid ? parseFloat(p.prices.mid) : 0;
-        let pLong = p.prices && p.prices.long ? parseFloat(p.prices.long) : 0;
-
-        let finalPriceTHB = 0; let isExactTier = true; let termLabel = "";
-
-        if (reqMonthsStr <= 5) {
-          if (pShort > 0) { finalPriceTHB = pShort; isExactTier = true; termLabel = "1-5 Months"; }
-          else if (pMid > 0) { finalPriceTHB = pMid; isExactTier = false; termLabel = "6-11 Months"; }
-          else if (pLong > 0) { finalPriceTHB = pLong; isExactTier = false; termLabel = "1 Year+"; }
-        }
-        else if (reqMonthsStr <= 11) {
-          if (pMid > 0) { finalPriceTHB = pMid; isExactTier = true; termLabel = "6-11 Months"; }
-          else if (pLong > 0) { finalPriceTHB = pLong; isExactTier = false; termLabel = "1 Year+"; }
-          else if (pShort > 0) { finalPriceTHB = pShort; isExactTier = false; termLabel = "1-5 Months"; }
-        }
-        else {
-          if (pLong > 0) { finalPriceTHB = pLong; isExactTier = true; termLabel = "1 Year+"; }
-          else if (pMid > 0) { finalPriceTHB = pMid; isExactTier = false; termLabel = "6-11 Months"; }
-          else if (pShort > 0) { finalPriceTHB = pShort; isExactTier = false; termLabel = "1-5 Months"; }
-        }
-
-        if (finalPriceTHB === 0) {
-          finalPriceTHB = p.price || pLong || pMid || pShort || 0;
-          isExactTier = false; termLabel = "Available Term";
-        }
-
-        let convertedPriceHtml = "";
-        if (currentLang !== "TH") {
-          let convertedPrice = Math.round(finalPriceTHB * curRate);
-          convertedPriceHtml = `<span style="font-size: 0.85rem; color: #717171; font-weight: 500; margin-left: 6px;">(~ ${curSymbol}${convertedPrice.toLocaleString()})</span>`;
-        }
-
-        let petBadgeHtml = '';
-        if (p.petPolicy && String(p.petPolicy).trim() === "Pet Friendly") {
-          petBadgeHtml = `<div class="pet-badge"><i class="bi bi-suit-heart-fill"></i> ${t.petFriendly}</div>`;
-        }
-
-        let mapUrl = (p.placeId && p.placeId !== "")
-          ? `http://googleusercontent.com/maps.google.com/?q=${encodeURIComponent(p.project)}&query_place_id=${p.placeId}`
-          : `http://googleusercontent.com/maps.google.com/?q=${encodeURIComponent(p.project)}`;
-
-        let mapBtn = `<a href="${mapUrl}" target="_blank" class="btn-action-sm"><i class="bi bi-map"></i> ${t.map}</a>`;
-        let chatBtn = isUnavailable
-          ? `<button class="btn-action-sm" disabled><i class="bi bi-x-circle"></i> ${t.rented}</button>`
-          : `<button onclick="openChat(${i})" class="btn-action-sm"><i class="bi bi-chat-dots"></i> ${t.chat}</button>`;
-
-        let selectBtnHtml = isUnavailable ? '' : `
-          <button onclick="toggleSelect(${i})" class="btn-select">
-            <i class="bi ${isSel ? 'bi-heart-fill' : 'bi-heart'}"></i>
-          </button>`;
-
-        let priceDisplayHtml = `
-            <div class="price-wrap flex-col items-start gap-0 mb-3">
-              <div class="flex items-baseline gap-1">
-                <span class="price-amt">฿${parseInt(finalPriceTHB).toLocaleString()}</span>
-                <span class="price-label">/ ${t.month} ${isExactTier ? `<span class="text-xs">(${t.priceFor} ${termLabel})</span>` : ''}</span>
-                ${convertedPriceHtml}
-              </div>
-              ${!isExactTier ? `<div class="text-xs text-[#E31C5F] font-medium mt-1 bg-[#fff0f2] px-2 py-1 rounded border border-[#ffd1d9]"><i class="bi bi-info-circle"></i> ${t.priceInfo} ${termLabel}</div>` : ''}
-            </div>`;
-
-        let stationName = "N/A";
-        if (p.bts1 && p.bts1 !== "No Rail Nearby" && p.bts1 !== "-" && p.bts1 !== "WAITING...") {
-          stationName = p.bts1.includes('-') ? p.bts1.substring(p.bts1.indexOf('-') + 1).trim() : p.bts1;
-        }
-
-        let cardBookingBtnHtml = isUnavailable
-          ? `<button class="btn-card-booking" disabled><i class="bi bi-x-circle"></i> ${t.rented}</button>`
-          : `<button onclick="bookSingleRoom(${i})" class="btn-card-booking"><i class="bi bi-calendar-check"></i> ${t.requestBooking}</button>`;
-
-        html += `
-        <div class="property-card ${isSel ? 'selected-card' : ''} ${isUnavailable ? 'opacity-70 grayscale' : ''}">
-          <div class="card-img-wrapper">
-             <div class="match-badge"><i class="bi bi-stars"></i> ${t.match} ${p.score || 90}%</div>
-             ${petBadgeHtml}
-             ${selectBtnHtml}
-             ${isUnavailable ? `<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 bg-black/75 text-white px-6 py-2 rounded-lg font-bold">RENTED OUT</div>` : ''}
-             <div id="carousel-${i}" class="carousel slide h-full" data-bs-ride="false">
-               <div class="carousel-inner h-full">${imagesHtml}</div>
-               ${carouselControls}
-             </div>
-          </div>
-          
-          <div class="card-body-premium">
-            <div class="flex flex-col gap-2 mb-3">
-              <h3 class="text-xl font-semibold text-dark m-0 truncate">${p.project || "Unknown Project"}</h3>
-              <div class="action-btn-group">${chatBtn}${mapBtn}</div>
-            </div>
-            
-            <div class="text-[0.95rem] text-muted mb-3 flex items-center gap-2"><i class="bi bi-geo-alt"></i> ${p.zone || "-"}</div>
-            ${priceDisplayHtml}
-            
-            <div class="specs-inline">
-              <span>${p.unitType || "Studio"}</span><i class="bi bi-circle-fill spec-dot"></i>
-              <span>${t.size} ${p.size || 0} ${t.sqm}</span><i class="bi bi-circle-fill spec-dot"></i>
-              <span>${t.floor}: ${p.floor || "-"}</span>
-            </div>
-            
-            <div class="amenities-row">
-              <span><i class="bi bi-train-front"></i> ${stationName} (${p.dist1 || 0}m)</span>
-            </div>
-            ${cardBookingBtnHtml}
-          </div>
-        </div>`;
-      });
-      document.getElementById('property-container').innerHTML = html;
-      updateFloatingBar();
-    }
-
-    function toggleSelect(i) {
-      if (selectedIndices.has(i)) selectedIndices.delete(i); else selectedIndices.add(i);
-      renderCatalog();
-    }
-
-    function updateFloatingBar() {
-      const bar = document.getElementById('floating-bar');
-      const t = i18n[currentLang];
-      if (selectedIndices.size > 0) {
-        document.getElementById('selected-count').innerText = `${selectedIndices.size} ${t.selected}`;
-        bar.classList.add('show');
-      } else {
-        bar.classList.remove('show');
-      }
-    }
-
-    function bookSingleRoom(i) {
-      selectedIndices.add(i); renderCatalog(); requestBooking();
-    }
-
-    function openChat(i) {
-      const p = loadedProperties[i];
-      const msg = encodeURIComponent(`สวัสดีครับ สนใจห้อง ${p.project} (รหัส: ${p.id || p.submissionId}) รบกวนขอข้อมูลเพิ่มครับ`);
-      window.open(`https://line.me/R/oaMessage/@needhome_th/?${msg}`, '_blank');
-    }
-
-    function requestBooking() {
-      if (selectedIndices.size === 0) return alert("กรุณาเลือกห้องที่สนใจก่อนครับ");
-      
-      const contactVal = document.getElementById('lead-contact').value.trim();
-      const contactMethod = document.querySelector('input[name="contact-method"]:checked').value;
-      const selectedRooms = Array.from(selectedIndices).map(i => loadedProperties[i].id).join(", ");
-      
-      showLoading("กำลังส่งข้อมูลการจอง...");
-      
-      const payload = {
-        action: "updateBooking",
-        cid: currentCid,
-        requestedIds: selectedRooms,
-        channel: contactMethod,
-        contactId: contactVal
-      };
-
-      fetch(GAS_API_URL, { method: "POST", body: JSON.stringify(payload) })
-        .then(r => r.json())
-        .then(res => {
-          hideLoading();
-          if (res.status === 'success') {
-            alert("ขอบคุณที่สนใจครับ! เจ้าหน้าที่จะติดต่อกลับหาคุณโดยเร็วที่สุด 🙏");
-            selectedIndices.clear();
-            renderCatalog();
-          } else {
-            alert("เกิดข้อผิดพลาด: " + res.message);
-          }
-        })
-        .catch(err => {
-          hideLoading();
-          alert("ขออภัย ระบบขัดข้องชั่วคราว กรุณาติดต่อแอดมินโดยตรงทาง LINE");
-        });
+        .catch(err => { hideLoading(); alert("ระบบขัดข้อง กรุณาลองใหม่"); });
     }
 
     function switchView(viewId) {
@@ -920,11 +294,8 @@
     function showLoading(txt) { document.getElementById('loading-text').innerText = txt; document.getElementById('loading-layer').classList.replace('hidden', 'flex'); }
     function hideLoading() { document.getElementById('loading-layer').classList.replace('flex', 'hidden'); }
 
-    fetchExchangeRates();
     initApp();
     loadHotDeals();
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>
