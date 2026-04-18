@@ -554,10 +554,13 @@
         if (currentLang === "TH") msg = encodeURIComponent(`สวัสดีค่ะ สนใจห้อง ${roomDetails} (จากแคมเปญ: ${campaignName})`);
         if (currentLang === "CN") msg = encodeURIComponent(`你好，我对 ${roomDetails} 感兴趣 (Ref: ${campaignName})`);
 
-        // 🚨 ถ้าเกิด Error ให้เปลี่ยนสีไอคอนและข้อความเตือนให้ลูกค้ารีบทัก
         if (isError) {
-            document.querySelector('#campLeadStep2 .bi-check-lg').className = "bi bi-exclamation-triangle";
-            document.querySelector('#campLeadStep2 .bi-exclamation-triangle').style.color = "#FF9800"; // สีส้มเตือนภัย
+            // 🚨 แก้บั๊ก Null! ให้มันเช็คก่อนว่ามีไอคอนให้เปลี่ยนมั้ย ถ้ามีค่อยเปลี่ยน
+            let iconEl = document.querySelector('#campLeadStep2 .bi-check-lg') || document.querySelector('#campLeadStep2 i');
+            if (iconEl) {
+                iconEl.className = "bi bi-exclamation-triangle";
+                iconEl.style.color = "#FF9800";
+            }
             
             let errTitle = currentLang === "TH" ? "ระบบมีความล่าช้า!" : "System Delayed!";
             let errDesc = currentLang === "TH" ? "ข้อมูลอาจยังไม่เข้าระบบ โปรดกดแชทหาแอดมินโดยตรงเพื่อความรวดเร็วค่ะ" : "Your data might be delayed. Please chat with us directly below.";
