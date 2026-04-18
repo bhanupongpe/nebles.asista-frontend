@@ -103,7 +103,7 @@
           <div class="mb-4">
             <div class="input-group" style="border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb;">
               <span class="input-group-text bg-white border-0" style="color: #25D366; font-weight: bold;"><i class="bi bi-whatsapp"></i></span>
-              <select class="form-select border-0 bg-white" id="campWaCode" style="max-width: 95px; font-weight: 600; font-size:0.85rem;"></select>
+              <select class="form-select border-0 bg-white px-2" id="campWaCode" style="min-width: 110px; max-width: 140px; font-weight: 600; font-size: 0.85rem; cursor: pointer;"></select>
               <input type="tel" class="form-control border-0 bg-white" id="campCusWaNum" placeholder="Phone Number">
             </div>
           </div>
@@ -168,10 +168,40 @@
         }
     };
 
+    // 🚨 ยัด Array ประเทศทั่วโลก (ฮิตสุดอยู่บนสุด)
     const countryCodes = [
-      {c: "TH", d: "+66"}, {c: "CN", d: "+86"}, {c: "HK", d: "+852"}, {c: "TW", d: "+886"}, {c: "SG", d: "+65"}, 
-      {c: "US", d: "+1"}, {c: "UK", d: "+44"}, {c: "JP", d: "+81"}, {c: "MY", d: "+60"}, {c: "ID", d: "+62"}, 
-      {c: "VN", d: "+84"}, {c: "IN", d: "+91"}, {c: "AE", d: "+971"}, {c: "AU", d: "+61"}, {c: "FR", d: "+33"}
+      // --- Top Countries ---
+      {c: "TH", d: "+66"}, {c: "CN", d: "+86"}, {c: "HK", d: "+852"}, {c: "TW", d: "+886"}, 
+      {c: "SG", d: "+65"}, {c: "MY", d: "+60"}, {c: "ID", d: "+62"}, {c: "VN", d: "+84"},
+      {c: "PH", d: "+63"}, {c: "MM", d: "+95"}, {c: "KH", d: "+855"}, {c: "LA", d: "+856"},
+      {c: "JP", d: "+81"}, {c: "KR", d: "+82"}, {c: "IN", d: "+91"}, {c: "AE", d: "+971"},
+      {c: "SA", d: "+966"}, {c: "QA", d: "+974"}, {c: "US", d: "+1"}, {c: "CA", d: "+1"},
+      {c: "GB", d: "+44"}, {c: "FR", d: "+33"}, {c: "DE", d: "+49"}, {c: "IT", d: "+39"},
+      {c: "ES", d: "+34"}, {c: "RU", d: "+7"}, {c: "AU", d: "+61"}, {c: "NZ", d: "+64"},
+      // --- All Other Countries ---
+      {c: "AF", d: "+93"}, {c: "AL", d: "+355"}, {c: "DZ", d: "+213"}, {c: "AD", d: "+376"},
+      {c: "AO", d: "+244"}, {c: "AR", d: "+54"}, {c: "AM", d: "+374"}, {c: "AT", d: "+43"},
+      {c: "AZ", d: "+994"}, {c: "BH", d: "+973"}, {c: "BD", d: "+880"}, {c: "BY", d: "+375"},
+      {c: "BE", d: "+32"}, {c: "BO", d: "+591"}, {c: "BA", d: "+387"}, {c: "BR", d: "+55"},
+      {c: "BG", d: "+359"}, {c: "CM", d: "+237"}, {c: "CL", d: "+56"}, {c: "CO", d: "+57"},
+      {c: "CR", d: "+506"}, {c: "HR", d: "+385"}, {c: "CU", d: "+53"}, {c: "CY", d: "+357"},
+      {c: "CZ", d: "+420"}, {c: "DK", d: "+45"}, {c: "DO", d: "+1-809"}, {c: "EC", d: "+593"},
+      {c: "EG", d: "+20"}, {c: "SV", d: "+503"}, {c: "EE", d: "+372"}, {c: "FI", d: "+358"},
+      {c: "GE", d: "+995"}, {c: "GR", d: "+30"}, {c: "GT", d: "+502"}, {c: "HT", d: "+509"},
+      {c: "HN", d: "+504"}, {c: "HU", d: "+36"}, {c: "IS", d: "+354"}, {c: "IR", d: "+98"},
+      {c: "IQ", d: "+964"}, {c: "IE", d: "+353"}, {c: "IL", d: "+972"}, {c: "JM", d: "+1-876"},
+      {c: "JO", d: "+962"}, {c: "KZ", d: "+7"}, {c: "KE", d: "+254"}, {c: "KW", d: "+965"},
+      {c: "LB", d: "+961"}, {c: "LY", d: "+218"}, {c: "LT", d: "+370"}, {c: "LU", d: "+352"},
+      {c: "MO", d: "+853"}, {c: "MG", d: "+261"}, {c: "MT", d: "+356"}, {c: "MX", d: "+52"},
+      {c: "MC", d: "+377"}, {c: "MA", d: "+212"}, {c: "NP", d: "+977"}, {c: "NL", d: "+31"},
+      {c: "NG", d: "+234"}, {c: "NO", d: "+47"}, {c: "OM", d: "+968"}, {c: "PK", d: "+92"},
+      {c: "PA", d: "+507"}, {c: "PY", d: "+595"}, {c: "PE", d: "+51"}, {c: "PL", d: "+48"},
+      {c: "PT", d: "+351"}, {c: "PR", d: "+1"}, {c: "RO", d: "+40"}, {c: "SN", d: "+221"},
+      {c: "RS", d: "+381"}, {c: "SK", d: "+421"}, {c: "SI", d: "+386"}, {c: "ZA", d: "+27"},
+      {c: "LK", d: "+94"}, {c: "SD", d: "+249"}, {c: "SE", d: "+46"}, {c: "CH", d: "+41"},
+      {c: "SY", d: "+963"}, {c: "TZ", d: "+255"}, {c: "TN", d: "+216"}, {c: "TR", d: "+90"},
+      {c: "UA", d: "+380"}, {c: "UY", d: "+598"}, {c: "UZ", d: "+998"}, {c: "VE", d: "+58"},
+      {c: "ZM", d: "+260"}, {c: "ZW", d: "+263"}
     ];
 
     function populateCountryCodes() {
