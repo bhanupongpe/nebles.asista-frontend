@@ -282,11 +282,12 @@
     // 📥 Fetch Data
     // ==========================================
     document.addEventListener('DOMContentLoaded', () => {
-        populateCountryCodes(); 
-        if(!campId) {
-            document.getElementById('loading-container').innerHTML = "<h4>Invalid Link</h4>";
-            return;
-        }
+    populateCountryCodes(); 
+    if(!campId) {
+        document.getElementById('loading-container').innerHTML = "<h4>Invalid Link</h4>";
+        return;
+    }
+    trackEvent('open'); // 🚨 ยิงนับแต้ม Open ทันที!
 
         fetchExchangeRates();
 
