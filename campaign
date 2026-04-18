@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nebles | Special Campaign</title>
+  <link rel="preconnect" href="https://script.google.com">
+  <link rel="preconnect" href="https://drive.google.com">
+  <script>
+    // 🚀 [Early Fetch] ยิง API ขอข้อมูลล่วงหน้าด้วย campId
+    const earlyGasApiUrl = "https://script.google.com/macros/s/AKfycbya2rWPhgYN7e9rmBuLffXjrJnRnFdmkRkL84Dib8NilKQAfXxmEmGwFfaq5aVkPW4q/exec";
+    const earlyParams = new URLSearchParams(window.location.search);
+    const earlyCampId = earlyParams.get('campId');
+    if (earlyCampId) {
+       window.earlyDataPromise = fetch(`${earlyGasApiUrl}?campId=${encodeURIComponent(earlyCampId)}`).then(res => res.json()).catch(err => null);
+    }
+  </script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  
+  <style>
+    /* CSS ออริจินัลของลูกพี่ (Skeleton, Fade, Card Premium) อยู่ครบ! */
+    body { background-color: #ffffff; font-family: 'Inter', sans-serif; color: #222222; padding-bottom: 90px; }
+    .container { max-width: 540px; position: relative; min-height: 100vh; display: flex; flex-direction: column; padding-left: 24px; padding-right: 24px; }
+    .header-logo { position: absolute; top: 15px; right: 24px; height: 70px; width: auto; z-index: 100; }
+    .header-section { padding-top: 80px; margin-bottom: 4px; text-align: left; }
+    .req-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; color: #222; }
+    .req-subtitle { font-size: 0.95rem; color: #717171; line-height: 1.5; margin-bottom: 0 !important; }
+
+    .property-card { background: #fff; border-radius: 16px; overflow: hidden; margin-bottom: 32px; box-shadow: 0 6px 20px rgba(0,0,0,0.06); border: 1px solid #f0f0f0; transition: all 0.2s; position: relative; }
+    .card-img-wrapper { height: 280px; position: relative; }
+    .carousel-item img { width: 100%; height: 280px; object-fit: cover; }
+    
+    .match-badge { position: absolute; top: 16px; left: 16px; z-index: 10; background: transparent; color: #ffffff; padding: 0; border: none; font-weight: 600; font-size: 0.95rem; text-shadow: 0 2px 6px rgba(0,0,0,0.7); display: flex; align-items: center; gap: 6px; }
+    .match-badge i { color: #FF385C; text-shadow: 0 2px 4px rgba(0,0,0,0.4); }
+    .pet-badge { position: absolute; top: 44px; left: 16px; z-index: 10; background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.4); color: #222222; padding: 4px 12px; border-radius: 50px; font-weight: 600; font-size: 0.8rem; display: flex; align-items: center; gap: 4px; }
+    
+    .btn-booking { background-color: #FF385C !important; color: #ffffff !important; border: none; padding: 10px 24px; border-radius: 30px; font-weight: 600; font-size: 0.95rem; transition: background-color 0.2s ease; cursor: pointer; }
+    .action-btn-group { display: flex; gap: 6px; }
+    .btn-action-sm { font-size: 0.75rem; text-decoration: none; color: #4b5563; background: #f3f4f6; padding: 6px 12px; border-radius: 20px; border: none; display: flex; align-items: center; gap: 4px; font-weight: 600; transition: 0.2s; cursor: pointer; }
+    
+    .card-body-premium { padding: 20px; }
+    .project-name { font-size: 1.2rem; font-weight: 600; margin-bottom: 6px; color: #222; }
+    .location-text { font-size: 0.95rem; color: #717171; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+    .price-wrap { display: flex; align-items:baseline; gap: 6px; margin-bottom: 12px; }
+    .price-amt { font-size: 1.35rem; font-weight: 700; color: #222; }
+    .price-label { font-size: 0.95rem; color: #717171; }
+    .specs-inline { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; color: #717171; margin-bottom: 16px; flex-wrap: wrap; }
+    .spec-dot { font-size: 10px; color: #d1d5db; }
+    .amenities-row { display: flex; gap: 16px; font-size: 0.85rem; color: #717171; border-top: 1px solid #ebebeb; padding-top: 16px; }
+
+    .lang-switcher { position: absolute; top: 25px; left: 24px; z-index: 100; }
+    .lang-switcher select { background: rgba(255,255,255,0.9); border: 1px solid #ebebeb; border-radius: 20px; padding: 4px 12px; font-size: 0.85rem; font-weight: 600; outline: none; box-shadow: 0 2px 10px rgba(0,0,0,0.05); cursor: pointer; }
+
+    .footer-text { text-align: center; font-size: 0.85rem; color: #6c757d; margin-top: auto; padding-top: 40px; }
+    #final-req-text { font-size: 0.95rem; font-weight: 500; color: #4b5563; word-spacing: 2px; letter-spacing: 0.3px; margin-top: 4px; margin-bottom: 24px; }
+    
+    .typing-cursor::after { content: '█'; font-size: 0.9rem; margin-left: 6px; color: #222; animation: blink-cursor 0.8s step-end infinite; }
+    @keyframes blink-cursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    .modal-content { border-radius: 20px; border: none; }
+    .btn-card-booking { background-color: #FF385C; color: #ffffff; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: 600; font-size: 0.95rem; margin-top: 16px; transition: 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-card-booking:hover { background-color: #E31C5F; color: #ffffff; }
+
+    .fade-element { opacity: 1; transition: opacity 0.5s ease-in-out, transform 0.5s ease-out; }
+    .fade-out { opacity: 0; transform: translateY(-10px); pointer-events: none; }
+    .fade-in { animation: smoothReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    @keyframes smoothReveal { 0% { opacity: 0; transform: translateY(15px); } 100% { opacity: 1; transform: translateY(0); } }
+
+    .skeleton { background: linear-gradient(110deg, #f3f4f6 8%, #f9fafb 18%, #f3f4f6 33%); background-size: 200% 100%; animation: 2s shine linear infinite; border-radius: 8px; }
+    @keyframes shine { to { background-position-x: -200%; } }
+    .skeleton-card { background: #fff; border-radius: 16px; margin-bottom: 24px; overflow: hidden; height: 380px; border: 1px solid #f0f0f0; }
+    .skeleton-img { width: 100%; height: 280px; border-radius: 0; }
+    .skeleton-text { height: 16px; width: 80%; margin: 20px 20px 10px; }
+    .skeleton-text-sm { height: 12px; width: 50%; margin: 0 20px 20px; }
+  </style>
+</head>
+<body>
+
+  <div class="container py-3">
+    <img src="https://nebles.needhome.co/_next/image?url=%2Fimages%2Flogo.png&w=256&q=75" class="header-logo" alt="Nebles" fetchpriority="high">
+    
+    <div class="header-section">
+      <h2 class="req-title" id="page-title">Special Offers</h2>
+      <p class="req-subtitle" id="page-subtitle">Nebles is selecting the best units for you</p>
+    </div>
+
+    <div id="loading-container" class="text-center" style="padding: 40px 0;">
+      <p id="loading-msg-state" style="font-size: 1.1rem; color: #222; font-weight: 600; margin-bottom: 24px;" class="typing-cursor">Loading properties..</p>
+      
+      <div id="skeleton-loader" style="text-align: left;">
+          <div class="skeleton-card">
+              <div class="skeleton skeleton-img"></div>
+              <div class="skeleton skeleton-text"></div>
+              <div class="skeleton skeleton-text-sm"></div>
+          </div>
+          <div class="skeleton-card">
+              <div class="skeleton skeleton-img"></div>
+              <div class="skeleton skeleton-text" style="width: 60%;"></div>
+              <div class="skeleton skeleton-text-sm" style="width: 40%;"></div>
+          </div>
+      </div>
+    </div>
+
+    <div id="req-summary" style="display:none; text-align: left;">
+      <p id="final-req-text"></p>
+    </div>
+
+    <div id="property-container" style="display: none;"></div>
+
+    <div class="footer-text">© 2026 Nebles Powered by NeedHome</div>
+  </div>
+
+  <div class="lang-switcher">
+    <select id="lang-select" onchange="changeLanguageAndCurrency(this.value)">
+      <option value="EN" selected>🇺🇸 USD</option>
+      <option value="TH">🇹🇭 THB</option>
+      <option value="CN">🇨🇳 CNY</option>
+    </select>
+  </div>
+
+  <div class="modal fade" id="campaignLeadModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content px-2 pb-2 shadow-lg">
+        <div class="modal-header border-0 pb-0 justify-content-end">
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        
+        <div class="modal-body text-start pt-0 pb-4 px-4" id="campLeadStep1">
+          <h4 class="fw-bold" style="color: #222;" id="modal-title">Interested</h4>
+          <p class="text-muted small mb-4" id="modal-desc">Please provide details so our admin can contact you.</p>
+
+          <input type="hidden" id="campTargetRoom">
+
+          <div class="mb-3">
+            <label class="form-label fw-bold small text-dark"><span id="lbl-name">Name</span> <span class="text-danger">*</span></label>
+            <input type="text" class="form-control bg-light border-0" id="campCusName" style="border-radius: 12px; padding: 12px;">
+          </div>
+
+          <label class="form-label fw-bold small text-dark mb-2"><span id="lbl-contact">Contact Method (At least 1)</span> <span class="text-danger">*</span></label>
+          
+          <div class="mb-3">
+            <div class="input-group" style="border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb;">
+              <span class="input-group-text bg-white border-0 text-success fw-bold"><i class="bi bi-line"></i></span>
+              <input type="text" class="form-control border-0 bg-white" id="campCusLine" placeholder="LINE ID">
+            </div>
+            <div class="text-danger small fw-bold mt-1 d-none" id="campLineErr"><i class="bi bi-exclamation-circle"></i> <span id="lbl-line-err">Minimum 3 characters</span></div>
+          </div>
+
+          <div class="mb-4">
+            <div class="input-group" style="border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb;">
+              <span class="input-group-text bg-white border-0" style="color: #25D366; font-weight: bold;"><i class="bi bi-whatsapp"></i></span>
+              <select class="form-select border-0 bg-white" id="campWaCode" style="max-width: 95px; font-weight: 600;">
+                <option value="+66">🇹🇭 +66</option>
+                <option value="+86">🇨🇳 +86</option>
+                <option value="+852">🇭🇰 +852</option>
+                <option value="+886">🇹🇼 +886</option>
+                <option value="+65">🇸🇬 +65</option>
+                <option value="+44">🇬🇧 +44</option>
+                <option value="+1">🇺🇸 +1</option>
+              </select>
+              <input type="tel" class="form-control border-0 bg-white" id="campCusWaNum" placeholder="Phone Number">
+            </div>
+          </div>
+
+          <button class="btn-card-booking w-100" id="btnSubmitCamp" onclick="submitCampaignLead()">
+            <span id="btn-submit-txt">Submit</span> <i class="bi bi-arrow-right"></i>
+          </button>
+        </div>
+
+        <div class="modal-body text-center pt-2 pb-4 px-4" id="campLeadStep2" style="display: none;">
+          <div style="width: 70px; height: 70px; background: #fff0f2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto;">
+            <i class="bi bi-check-lg" style="font-size: 2.5rem; color: #FF385C;"></i>
+          </div>
+          <h4 class="fw-bold text-dark mb-2" id="success-title">Thank You!</h4>
+          <p class="text-muted mb-4" id="success-desc">Please click below to chat with our admin.</p>
+          <div id="dynamicAppButtons"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+  <script>
+    // 🚨 ใส่ URL GAS ของมึง
+    const gasApiUrl = "https://script.google.com/macros/s/AKfycbya2rWPhgYN7e9rmBuLffXjrJnRnFdmkRkL84Dib8NilKQAfXxmEmGwFfaq5aVkPW4q/exec";
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const campId = urlParams.get('campId');
+    const utmSource = urlParams.get('utm_source') || "";
+    const utmMedium = urlParams.get('utm_medium') || "";
+
+    let loadedProperties = [];
+    let campaignName = "";
+    
+    // ==========================================
+    // 🌐 1. ระบบแปลภาษา & Currency (EN Default)
+    // ==========================================
+    let currentLang = "EN"; 
+    let exchangeRates = { THB: 1, USD: 0.028, CNY: 0.20 }; 
+    const currencySymbols = { TH: "฿", EN: "$", CN: "¥" };
+
+    const i18n = {
+        EN: { 
+            subtitle: "Nebles is selecting the best units for you", loading: "Loading properties..", 
+            match: "HOT DEAL", rented: "RENTED OUT", petFriendly: "Pet Friendly", map: "Map", chat: "Chat", 
+            size: "Size", floor: "Fl", sqm: "sqm", month: "month", requestBooking: "I'm Interested", priceFor: "For",
+            modalTitle: "Interested", modalDesc: "Please provide details so our admin can contact you.",
+            name: "Name", contact: "Contact Method (At least 1)", lineErr: "Min 3 chars", submit: "Submit",
+            sTitle: "Thank You!", sDesc: "Please click below to chat with our admin.", chatLine: "Chat via LINE", chatWa: "Chat via WhatsApp"
+        },
+        TH: { 
+            subtitle: "Nebles กำลังคัดเลือกห้องที่ดีที่สุดให้คุณ", loading: "กำลังดึงข้อมูลห้อง..", 
+            match: "ดีลพิเศษ", rented: "ปล่อยเช่าแล้ว", petFriendly: "รับสัตว์เลี้ยง", map: "แผนที่", chat: "แชท", 
+            size: "ขนาด", floor: "ชั้น", sqm: "ตร.ม.", month: "เดือน", requestBooking: "สนใจห้องนี้", priceFor: "สำหรับสัญญา",
+            modalTitle: "สนใจห้องพัก", modalDesc: "กรุณากรอกข้อมูลเพื่อให้แอดมินเช็คคิวและติดต่อกลับค่ะ",
+            name: "ชื่อ-นามสกุล", contact: "ช่องทางติดต่อ (อย่างน้อย 1 อย่าง)", lineErr: "ขั้นต่ำ 3 ตัวอักษร", submit: "ส่งข้อมูล",
+            sTitle: "ขอบคุณค่ะ!", sDesc: "ทีมงานจะรีบเช็คห้องให้ค่ะ โปรดกดปุ่มเพื่อแชทกับแอดมิน", chatLine: "แชทผ่าน LINE", chatWa: "แชทผ่าน WhatsApp"
+        },
+        CN: {
+            subtitle: "Nebles 正在为您挑选最佳房源", loading: "正在加载房源..", 
+            match: "特价房", rented: "已出租", petFriendly: "允许宠物", map: "地图", chat: "聊天", 
+            size: "面积", floor: "楼层", sqm: "平方米", month: "月", requestBooking: "我感兴趣", priceFor: "租期为",
+            modalTitle: "感兴趣", modalDesc: "请提供您的详细信息，以便管理员与您联系。",
+            name: "姓名", contact: "联系方式（至少提供1个）", lineErr: "至少3个字符", submit: "提交",
+            sTitle: "谢谢！", sDesc: "请点击下方与管理员聊天。", chatLine: "通过 LINE 聊天", chatWa: "通过 WhatsApp 聊天"
+        }
+    };
+
+    async function fetchExchangeRates() {
+        try {
+            const res = await fetch('https://api.exchangerate-api.com/v4/latest/THB');
+            const data = await res.json();
+            exchangeRates.USD = data.rates.USD;
+            exchangeRates.CNY = data.rates.CNY;
+        } catch (e) { console.log("⚠️ Failed to fetch rates", e); }
+    }
+
+    function changeLanguageAndCurrency(langCode) {
+        currentLang = langCode;
+        const t = i18n[currentLang];
+        
+        document.getElementById('page-subtitle').innerText = t.subtitle;
+        document.querySelector('.typing-cursor').innerText = t.loading;
+        
+        // แปลภาษาใน Modal ท่าที่ 3
+        document.getElementById('modal-title').innerText = t.modalTitle;
+        document.getElementById('modal-desc').innerText = t.modalDesc;
+        document.getElementById('lbl-name').innerText = t.name;
+        document.getElementById('lbl-contact').innerText = t.contact;
+        document.getElementById('lbl-line-err').innerText = t.lineErr;
+        document.getElementById('btn-submit-txt').innerText = t.submit;
+        document.getElementById('success-title').innerText = t.sTitle;
+        document.getElementById('success-desc').innerText = t.sDesc;
+
+        if (loadedProperties.length > 0) renderProperties();
+    }
+
+    // ==========================================
+    // 🎨 2. ระบบ UI Reveal
+    // ==========================================
+    function revealContent(textToType) {
+        const loadingContainer = document.getElementById('loading-container');
+        const propertyContainer = document.getElementById('property-container');
+        const summaryContainer = document.getElementById('req-summary');
+        const typeArea = document.getElementById('loading-msg-state');
+
+        typeArea.innerHTML = textToType; 
+        typeArea.classList.remove('typing-cursor');
+        loadingContainer.classList.add('fade-element', 'fade-out');
+
+        setTimeout(() => {
+            loadingContainer.style.display = 'none';
+            summaryContainer.style.display = 'block';
+            propertyContainer.style.display = 'block';
+            
+            summaryContainer.classList.add('fade-in');
+            propertyContainer.classList.add('fade-in');
+            
+            renderProperties();
+        }, 500); 
+    }
+
+    // ==========================================
+    // 📥 3. Fetch Data จาก GAS
+    // ==========================================
+    document.addEventListener('DOMContentLoaded', () => {
+        if(!campId) {
+            document.getElementById('loading-container').innerHTML = "<h4>Invalid Link</h4><p>Missing Campaign ID.</p>";
+            return;
+        }
+
+        fetchExchangeRates();
+
+        const fetchReq = window.earlyDataPromise 
+            ? window.earlyDataPromise 
+            : fetch(`${gasApiUrl}?campId=${encodeURIComponent(campId)}`).then(res => res.json());
+
+        fetchReq.then(result => {
+            window.earlyDataPromise = null;
+            if(!result || result.status !== 'success' || !result.data || result.data.length === 0) {
+                document.getElementById('loading-container').style.display = 'none';
+                document.getElementById('property-container').innerHTML = `
+                <div style="background: #fff; border-radius: 20px; padding: 40px 24px; text-align: center; border: 1px solid #f0f0f0; margin-top: 20px;">
+                    <i class="bi bi-search" style="font-size: 2.5rem; color: #FF385C; margin-bottom:15px; display:block;"></i>
+                    <h3 style="font-weight: 700; color: #222;">No Properties Found</h3>
+                    <p style="color: #717171;">This campaign may have expired or units are rented out.</p>
+                </div>`;
+                document.getElementById('property-container').style.display = 'block';
+                return;
+            }
+
+            loadedProperties = result.data;
+            campaignName = result.campName || "Special Collection";
+            
+            document.getElementById('page-title').innerText = campaignName;
+            document.getElementById('final-req-text').innerText = "📌 " + campaignName;
+            
+            changeLanguageAndCurrency(currentLang); // เซ็ต EN เป็นค่าเริ่มต้น
+            revealContent(document.getElementById('final-req-text').innerText);
+        }).catch(err => {
+            console.error(err);
+            document.getElementById('loading-container').innerHTML = "<h4>Error connecting to server</h4>";
+        });
+    });
+
+    // ==========================================
+    // 🏘️ 4. Render Properties (แบบ Premium)
+    // ==========================================
+    function renderProperties() {
+        let html = '';
+        const t = i18n[currentLang]; 
+        
+        let curRate = 1;
+        let curSymbol = "฿";
+        if (currentLang === "EN") { curRate = exchangeRates.USD; curSymbol = "$"; }
+        else if (currentLang === "CN") { curRate = exchangeRates.CNY; curSymbol = "¥"; }
+        
+        loadedProperties.forEach((prop, i) => {
+            let imagesHtml = '';
+            if(prop.imageIds && prop.imageIds.length > 0) {
+                prop.imageIds.slice(0, 5).forEach((img, j) => {
+                    imagesHtml += `<div class="carousel-item ${j === 0 ? 'active' : ''} h-100"><img src="https://drive.google.com/thumbnail?id=${img}&sz=w600" loading="lazy"></div>`;
+                });
+            } else {
+                imagesHtml = `<div class="carousel-item active h-100"><div class="d-flex align-items-center justify-content-center h-100 bg-light text-muted">No Image</div></div>`;
+            }
+            let carouselControls = (prop.imageIds && prop.imageIds.length > 1) ? `<button class="carousel-control-prev" type="button" data-bs-target="#carousel-${i}" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button><button class="carousel-control-next" type="button" data-bs-target="#carousel-${i}" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>` : '';
+
+            let mapUrl = (prop.placeId && prop.placeId !== "") ? `http://googleusercontent.com/maps.google.com/?q=${encodeURIComponent(prop.project)}&query_place_id=${prop.placeId}` : `http://googleusercontent.com/maps.google.com/?q=${encodeURIComponent(prop.project)}`;
+            let mapBtn = `<a href="${mapUrl}" target="_blank" class="btn-action-sm"><i class="bi bi-map"></i> ${t.map}</a>`;
+            let chatBtn = `<button onclick="openLeadModal(${i})" class="btn-action-sm"><i class="bi bi-chat-dots"></i> ${t.chat}</button>`;
+
+            let petBadgeHtml = (prop.petPolicy && String(prop.petPolicy).trim() === "Pet Friendly") ? `<div class="pet-badge"><i class="bi bi-suit-heart-fill"></i> ${t.petFriendly}</div>` : '';
+
+            let pShort = prop.prices && prop.prices.short ? parseFloat(prop.prices.short) : 0;
+            let pMid = prop.prices && prop.prices.mid ? parseFloat(prop.prices.mid) : 0;
+            let pLong = prop.prices && prop.prices.long ? parseFloat(prop.prices.long) : 0;
+            let finalPriceTHB = pLong > 0 ? pLong : (pMid > 0 ? pMid : pShort);
+
+            let convertedPriceHtml = "";
+            if (currentLang !== "TH") {
+                let convertedPrice = Math.round(finalPriceTHB * curRate);
+                convertedPriceHtml = `<span style="font-size: 0.85rem; color: #717171; font-weight: 500; margin-left: 6px;">(~ ${curSymbol}${convertedPrice.toLocaleString()})</span>`;
+            }
+
+            html += `
+              <div class="property-card">
+                <div class="card-img-wrapper">
+                  ${petBadgeHtml}
+                  <div class="match-badge"><i class="bi bi-fire"></i> ${t.match}</div>
+                  <div id="carousel-${i}" class="carousel slide h-100" data-bs-ride="false">
+                    <div class="carousel-inner h-100">${imagesHtml}</div>
+                    ${carouselControls}
+                  </div>
+                </div>
+                <div class="card-body-premium">
+                  <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px;">
+                    <div style="font-size: 1.2rem; font-weight: 600; line-height: 1.3; color: #222;">${prop.project || "Condo"}</div>
+                    <div class="action-btn-group" style="display: flex; gap: 8px;">${chatBtn}${mapBtn}</div>
+                  </div>
+                  <div class="location-text"><i class="bi bi-geo-alt"></i> ${prop.zone || "-"}</div>
+                  
+                  <div class="price-wrap" style="display: flex; align-items: baseline; gap: 6px; margin-bottom: 16px;">
+                    <span class="price-amt">฿${parseInt(finalPriceTHB).toLocaleString()}</span>
+                    <span class="price-label">/ ${t.month}</span>
+                    ${convertedPriceHtml}
+                  </div>
+                  
+                  <div class="specs-inline">
+                    <span>${prop.unitType || "Studio"}</span><i class="bi bi-circle-fill spec-dot"></i>
+                    <span>${t.size} ${prop.size} ${t.sqm}</span><i class="bi bi-circle-fill spec-dot"></i>
+                    <span>${t.floor}: ${prop.floor}</span>
+                  </div>
+                  
+                  <button class="btn-card-booking" onclick="openLeadModal(${i})"><i class="bi bi-check2-circle"></i> ${t.requestBooking}</button>
+                </div>
+            </div>`;
+        });
+        
+        document.getElementById('property-container').innerHTML = html;
+    }
+
+    // ==========================================
+    // 🙋‍♂️ 5. ระบบ Capture Lead (ท่าที่ 3)
+    // ==========================================
+    let leadModalObj;
+    function openLeadModal(index) {
+        if(!leadModalObj) leadModalObj = new bootstrap.Modal(document.getElementById('campaignLeadModal'));
+        document.getElementById('campLeadStep1').style.display = 'block';
+        document.getElementById('campLeadStep2').style.display = 'none';
+        
+        const room = loadedProperties[index];
+        document.getElementById('campTargetRoom').value = `${room.project} (ID: ${room.id})`;
+        leadModalObj.show();
+    }
+
+    function submitCampaignLead() {
+        const name = document.getElementById('campCusName').value.trim();
+        const line = document.getElementById('campCusLine').value.trim();
+        const waNum = document.getElementById('campCusWaNum').value.trim();
+        
+        if (!name) return alert(currentLang === "TH" ? "โปรดระบุชื่อ" : "Please enter your name");
+        if (!line && !waNum) return alert(currentLang === "TH" ? "ระบุ LINE หรือ WhatsApp" : "Provide LINE or WhatsApp");
+
+        const btn = document.getElementById('btnSubmitCamp');
+        const orgText = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Processing...';
+        btn.disabled = true;
+
+        const targetRoom = document.getElementById('campTargetRoom').value;
+        const fullWa = waNum ? document.getElementById('campWaCode').value + waNum.replace(/^0+/, '') : "";
+
+        const payload = {
+            action: "savePublicLead",
+            campaignName: campaignName,
+            roomId: targetRoom,
+            name: name,
+            lineId: line,
+            whatsapp: fullWa,
+            utm_source: utmSource,
+            utm_medium: utmMedium
+        };
+
+        fetch(gasApiUrl, { method: 'POST', body: JSON.stringify(payload) })
+        .then(res => res.json())
+        .then(() => { 
+            btn.innerHTML = orgText; btn.disabled = false;
+            showSuccess(line, fullWa, targetRoom); 
+        })
+        .catch(() => { 
+            btn.innerHTML = orgText; btn.disabled = false;
+            showSuccess(line, fullWa, targetRoom); 
+        });
+    }
+
+    function showSuccess(hasLine, hasWa, roomDetails) {
+        document.getElementById('campLeadStep1').style.display = 'none';
+        document.getElementById('campLeadStep2').style.display = 'block';
+        
+        const t = i18n[currentLang];
+        let msg = encodeURIComponent(`สวัสดีค่ะ สนใจห้อง ${roomDetails} (จากแคมเปญ: ${campaignName})`);
+        let btns = "";
+        
+        if (hasLine) {
+            btns += `<a href="https://line.me/R/oaMessage/@needhome_th/?${msg}" target="_blank" class="btn btn-lg w-100 mb-3 fw-bold" style="background-color:#00c300; color:white; border-radius:12px;"><i class="bi bi-line"></i> ${t.chatLine}</a>`;
+        }
+        if (hasWa) {
+            btns += `<a href="https://wa.me/66962435566?text=${msg}" target="_blank" class="btn btn-lg w-100 fw-bold" style="background-color:#25D366; color:white; border-radius:12px;"><i class="bi bi-whatsapp"></i> ${t.chatWa}</a>`;
+        }
+        document.getElementById('dynamicAppButtons').innerHTML = btns;
+    }
+  </script>
+</body>
+</html>
