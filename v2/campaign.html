@@ -415,10 +415,14 @@
         document.getElementById('pdpa-modal-body').innerHTML = t.pdpaModalBody; // ใช้ innerHTML เพราะมีแท็ก <strong>
       
         const heroTitleEl = document.getElementById('loading-hero-title');
-        if (heroTitleEl) heroTitleEl.innerHTML = t.heroTitle; // ใช้ innerHTML เพราะเรามี <br>
+        if (heroTitleEl) heroTitleEl.innerHTML = t.heroTitle;
         
         const heroDescEl = document.getElementById('loading-hero-desc');
         if (heroDescEl) heroDescEl.innerHTML = t.heroDesc;
+
+        // 🚨 (แถม) ขยายขนาดโลโก้หน้าโหลดให้ใหญ่ขึ้นอีกนิด จะได้ไม่ดูเล็กจิ๋ว
+        const loadingLogo = document.querySelector('.anim-step-1');
+        if (loadingLogo) loadingLogo.style.height = "80px";
 
         // 🚨 NEW: อัปเดตข้อความและลิงก์ปุ่ม AI Banner
         const aiBtnTitle = document.getElementById('ai-btn-title');
