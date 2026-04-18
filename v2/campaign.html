@@ -460,18 +460,32 @@
         };
 
         fetch(gasApiUrl, { method: 'POST', body: JSON.stringify(payload) })
-        .then(res => res.json())
-        .then(() => { 
-            btn.innerHTML = orgText; btn.disabled = false;
-            showSuccess(line, fullWa, targetRoom); 
+        .then(res => {
+            if (!res.ok) throw new Error("Network Error");
+            return res.json();
         })
-        .catch(() => { 
+        .then(data => { 
             btn.innerHTML = orgText; btn.disabled = false;
-            showSuccess(line, fullWa, targetRoom); 
+            if(data.status === "success") {
+                showSuccess(line, fullWa, targetRoom, false); // 🟢 สำเร็จปกติ (false = ไม่พัง)
+            } else {
+                throw new Error(data.message || "Server Error");
+            }
+        })
+        .catch(err => { 
+            console.error("Submission failed:", err);
+            btn.innerHTML = orgText; btn.disabled = false;
+            
+            // 🚨 สำรองข้อมูลไว้ใน LocalStorage เผื่อตามเก็บทีหลัง (Data Recovery)
+            localStorage.setItem('nebles_unsaved_lead', JSON.stringify(payload));
+            
+            // 🚨 เรียกหน้า Success แบบ "พังมีศิลปะ" (true = เกิด Error เบื้องหลัง)
+            showSuccess(line, fullWa, targetRoom, true); 
         });
     }
 
-    function showSuccess(hasLine, hasWa, roomDetails) {
+    // 🚨 เติมพารามิเตอร์ isError เข้ามา
+    function showSuccess(hasLine, hasWa, roomDetails, isError = false) {
         document.getElementById('campLeadStep1').style.display = 'none';
         document.getElementById('campLeadStep2').style.display = 'block';
         
@@ -480,8 +494,20 @@
         if (currentLang === "TH") msg = encodeURIComponent(`สวัสดีค่ะ สนใจห้อง ${roomDetails} (จากแคมเปญ: ${campaignName})`);
         if (currentLang === "CN") msg = encodeURIComponent(`你好，我对 ${roomDetails} 感兴趣 (Ref: ${campaignName})`);
 
+        // 🚨 ถ้าเกิด Error ให้เปลี่ยนสีไอคอนและข้อความเตือนให้ลูกค้ารีบทัก
+        if (isError) {
+            document.querySelector('#campLeadStep2 .bi-check-lg').className = "bi bi-exclamation-triangle";
+            document.querySelector('#campLeadStep2 .bi-exclamation-triangle').style.color = "#FF9800"; // สีส้มเตือนภัย
+            
+            let errTitle = currentLang === "TH" ? "ระบบมีความล่าช้า!" : "System Delayed!";
+            let errDesc = currentLang === "TH" ? "ข้อมูลอาจยังไม่เข้าระบบ โปรดกดแชทหาแอดมินโดยตรงเพื่อความรวดเร็วค่ะ" : "Your data might be delayed. Please chat with us directly below.";
+            
+            document.getElementById('success-title').innerText = errTitle;
+            document.getElementById('success-desc').innerText = errDesc;
+            document.getElementById('success-desc').style.color = "#FF9800";
+        }
+
         let btns = "";
-        
         if (hasLine) {
             btns += `<a href="https://line.me/R/oaMessage/@needhome_th/?${msg}" target="_blank" class="btn btn-lg w-100 mb-3 fw-bold shadow-sm" style="background-color:#00c300; color:white; border-radius:12px;"><i class="bi bi-line"></i> ${t.chatLine}</a>`;
         }
