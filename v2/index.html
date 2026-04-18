@@ -437,9 +437,10 @@ function renderProperties() {
             stationName = prop.bts1.includes('-') ? prop.bts1.substring(prop.bts1.indexOf('-') + 1).trim() : prop.bts1;
         }
 
+        // 🚨 อัปเดตลิ้งก์ Map ให้เป็น API มาตรฐาน (แก้ 404)
         let mapUrl = (prop.placeId && prop.placeId !== "") 
-            ? `http://googleusercontent.com/maps.google.com/?q=${encodeURIComponent(prop.project)}&query_place_id=${prop.placeId}` 
-            : `http://googleusercontent.com/maps.google.com/?q=${encodeURIComponent(prop.project)}`;
+          ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(prop.project)}&query_place_id=${prop.placeId}` 
+          : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(prop.project)}`;
 
         let mapBtn = `<a href="${mapUrl}" target="_blank" class="btn-action-sm"><i class="bi bi-map"></i> ${t.map}</a>`;
         let chatBtn = isUnavailable 
