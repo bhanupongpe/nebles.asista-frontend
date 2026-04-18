@@ -132,6 +132,7 @@
     const campId = urlParams.get('campId');
     const utmSource = urlParams.get('utm_source') || "";
     const utmMedium = urlParams.get('utm_medium') || "";
+    const utmCampaign = urlParams.get('utm_campaign') || "";
 
     let loadedProperties = [];
     let campaignName = "";
@@ -381,7 +382,8 @@
             lineId: line,
             whatsapp: fullWa,
             utm_source: utmSource,
-            utm_medium: utmMedium
+            utm_medium: utmMedium,
+            utm_campaign: utmCampaign
         };
 
         fetch(gasApiUrl, { method: 'POST', body: JSON.stringify(payload) })
