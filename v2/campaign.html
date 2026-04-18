@@ -189,6 +189,13 @@
               </div>
             </div>
           </div>
+          <div class="form-check mb-4 text-start">
+            <input class="form-check-input" type="checkbox" id="campPdpa" checked style="cursor: pointer; border-color: #e5e7eb;">
+            <label class="form-check-label text-muted" for="campPdpa" style="font-size: 0.75rem; cursor: pointer; line-height: 1.4;">
+              <span id="lbl-pdpa">I consent to the collection of my data for property matching.</span>
+              <a href="javascript:void(0)" class="text-decoration-underline fw-bold ms-1" style="color: #FF385C;" data-bs-toggle="modal" data-bs-target="#pdpaModal" id="lbl-pdpa-readmore">Read More</a>
+            </label>
+          </div>
 
           <button class="btn-card-booking w-100" id="btnSubmitCamp" onclick="submitCampaignLead()">
             <span id="btn-submit-txt">Submit</span> <i class="bi bi-arrow-right"></i>
@@ -206,7 +213,19 @@
       </div>
     </div>
   </div>
-
+      <div class="modal fade" id="pdpaModal" tabindex="-1" aria-hidden="true" style="z-index: 1060;">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content" style="border-radius: 16px;">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold text-dark" id="pdpa-modal-title">Privacy Policy</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body text-start text-muted" id="pdpa-modal-body" style="font-size: 0.85rem; line-height: 1.6;">
+          </div>
+      </div>
+    </div>
+  </div>
+  
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     const gasApiUrl = "https://script.google.com/macros/s/AKfycbya2rWPhgYN7e9rmBuLffXjrJnRnFdmkRkL84Dib8NilKQAfXxmEmGwFfaq5aVkPW4q/exec";
@@ -234,8 +253,12 @@
             plSearch: "🔍 Search country or code...", 
             contract: "Contract", movein: "Move In Date", alertMoveIn: "Please select a Move In Date.",
             months: "Months", month: "Month", plDate: "Select Date",
-            // 🚨 NEW i18n
-            aiTitle: "Let AI find your perfect room", aiDesc: "Tell AI what you need and get matches instantly", aiUrl: "https://nebles.needhome.co/en/renter"
+            aiTitle: "Let AI find your perfect room", aiDesc: "Tell AI what you need and get matches instantly", aiUrl: "https://nebles.needhome.co/en/renter",
+            pdpa: "I consent to the collection of my data for property matching.", 
+            alertPdpa: "Please agree to the Privacy Policy to proceed.",
+            pdpaReadMore: "Read More",
+            pdpaModalTitle: "Privacy Policy & Consent",
+            pdpaModalBody: "<strong>1. Purpose:</strong> We collect your name, contact information, and preferences solely to find suitable properties and contact you back.<br><br><strong>2. Data Protection:</strong> We do not sell your data. Your information is securely kept and shared only with our internal team and relevant property owners to close the deal.<br><br><strong>3. Your Rights:</strong> You have the right to request access, modification, or deletion of your data at any time by contacting our admin."
         },
         TH: { 
             loading: "กำลังดึงข้อมูลห้อง..", match: "ดีลพิเศษ", petFriendly: "สัตว์เลี้ยง", map: "แผนที่", chat: "แชท", 
@@ -247,8 +270,12 @@
             plSearch: "🔍 ค้นหาประเทศ หรือรหัส...",
             contract: "ระยะสัญญา", movein: "วันที่เข้าอยู่", alertMoveIn: "โปรดเลือกวันที่ต้องการเข้าอยู่ค่ะ",
             months: "เดือน", month: "เดือน", plDate: "เลือกวันที่",
-            // 🚨 NEW i18n
-            aiTitle: "ให้ AI ช่วยหาห้องที่ใช่สำหรับคุณ", aiDesc: "บอกความต้องการ แล้วรับห้องที่ตรงใจทันที", aiUrl: "https://nebles.needhome.co/th/renter"
+            aiTitle: "ให้ AI ช่วยหาห้องที่ใช่สำหรับคุณ", aiDesc: "บอกความต้องการ แล้วรับห้องที่ตรงใจทันที", aiUrl: "https://nebles.needhome.co/th/renter",
+            pdpa: "ฉันยินยอมให้เก็บรวบรวมข้อมูลเพื่อการจัดหาที่พักและติดต่อกลับ", 
+            alertPdpa: "โปรดกดยอมรับนโยบายความเป็นส่วนตัวก่อนส่งข้อมูลค่ะ",
+            pdpaReadMore: "อ่านเพิ่มเติม",
+            pdpaModalTitle: "นโยบายความเป็นส่วนตัว (PDPA)",
+            pdpaModalBody: "<strong>1. วัตถุประสงค์:</strong> เราเก็บรวบรวมชื่อ ข้อมูลการติดต่อ และความต้องการของคุณ เพื่อใช้ในการนำเสนอห้องพักที่เหมาะสมและติดต่อกลับเท่านั้น<br><br><strong>2. การปกป้องข้อมูล:</strong> เราจะไม่นำข้อมูลของคุณไปขาย ข้อมูลจะถูกส่งต่อให้ทีมงานภายในและเจ้าของห้องที่เกี่ยวข้องเพื่อการเช่า/ซื้อเท่านั้น<br><br><strong>3. สิทธิของคุณ:</strong> คุณสามารถแจ้งแอดมินเพื่อขอเข้าถึง แก้ไข หรือขอลบข้อมูลส่วนบุคคลของคุณออกจากระบบได้ตลอดเวลา"
         },
         CN: {
             loading: "正在加载房源..", match: "特价房", petFriendly: "宠物", map: "地图", chat: "聊天", 
@@ -260,8 +287,12 @@
             plSearch: "🔍 搜索国家或代码...",
             contract: "合同期", movein: "入住日期", alertMoveIn: "请选择入住日期。",
             months: "个月", month: "个月", plDate: "选择日期",
-            // 🚨 NEW i18n
-            aiTitle: "让 AI 为您寻找理想客房", aiDesc: "告诉AI您的需求，立即获得匹配推荐", aiUrl: "https://nebles.needhome.co/cn/renter"
+            aiTitle: "让 AI 为您寻找理想客房", aiDesc: "告诉AI您的需求，立即获得匹配推荐", aiUrl: "https://nebles.needhome.co/cn/renter",
+            pdpa: "我同意收集我的数据用于房源匹配和联系。", 
+            alertPdpa: "请同意隐私政策。",
+            pdpaReadMore: "阅读更多",
+            pdpaModalTitle: "隐私政策与同意书",
+            pdpaModalBody: "<strong>1. 目的：</strong> 我们收集您的姓名、联系方式和偏好，仅用于为您寻找合适的房源并与您联系。<br><br><strong>2. 数据保护：</strong> 我们不会出售您的数据。您的信息仅与我们的内部团队及相关房东共享，以促成交易。<br><br><strong>3. 您的权利：</strong> 您有权随时联系管理员要求访问、修改或删除您的个人数据。"
         }
     };
 
@@ -349,6 +380,10 @@
         document.getElementById('lbl-contract').innerText = t.contract;
         document.getElementById('lbl-movein').innerText = t.movein;
         document.getElementById('campMoveIn').placeholder = t.plDate;
+        document.getElementById('lbl-pdpa').innerText = t.pdpa; 
+        document.getElementById('lbl-pdpa-readmore').innerText = t.pdpaReadMore;
+        document.getElementById('pdpa-modal-title').innerText = t.pdpaModalTitle;
+        document.getElementById('pdpa-modal-body').innerHTML = t.pdpaModalBody; // ใช้ innerHTML เพราะมีแท็ก <strong>
 
         // 🚨 NEW: อัปเดตข้อความและลิงก์ปุ่ม AI Banner
         const aiBtnTitle = document.getElementById('ai-btn-title');
