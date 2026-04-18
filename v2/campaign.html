@@ -50,6 +50,41 @@
     .footer-text { text-align: center; font-size: 0.85rem; color: #6c757d; margin-top: auto; padding-top: 40px; }
     .btn-card-booking { background-color: #FF385C; color: #ffffff; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: 600; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;}
     .btn-card-booking:hover { background-color: #E31C5F; color: #ffffff; }
+
+    /* 🚨 NEW CSS: AI Banner Style */
+    .ai-promo-banner {
+        background: linear-gradient(90deg, #f8faff 0%, #ffffff 100%);
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 16px;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    .ai-promo-banner:hover {
+        border-color: #FF385C;
+        box-shadow: 0 4px 12px rgba(255, 56, 92, 0.1);
+    }
+    .ai-promo-icon {
+        width: 40px;
+        height: 40px;
+        background: #FF385C;
+        color: white;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+    .ai-promo-text { flex-grow: 1; }
+    .ai-promo-text strong { display: block; font-size: 0.95rem; color: #222; }
+    .ai-promo-text span { font-size: 0.8rem; color: #717171; }
+    .ai-promo-arrow { color: #FF385C; font-size: 1.2rem; }
   </style>
 </head>
 <body>
@@ -61,6 +96,19 @@
       <h2 class="req-title" id="page-title">Loading Campaign...</h2>
       <p class="req-subtitle" id="page-subtitle"></p>
     </div>
+
+    <a href="https://nebles.needhome.co/en/renter" id="ai-link" class="ai-promo-banner" target="_blank">
+      <div class="ai-promo-icon">
+        <i class="bi bi-stars"></i>
+      </div>
+      <div class="ai-promo-text">
+        <strong id="ai-btn-title">Let AI find your perfect room</strong>
+        <span id="ai-btn-desc">Tell AI what you need and get matches instantly</span>
+      </div>
+      <div class="ai-promo-arrow">
+        <i class="bi bi-chevron-right"></i>
+      </div>
+    </a>
 
     <div id="loading-container" class="text-center" style="padding: 40px 0;">
       <p id="loading-msg-state" style="font-size: 1.1rem; color: #222; font-weight: 600; margin-bottom: 24px;">Loading properties..</p>
@@ -183,9 +231,11 @@
             name: "Name", contact: "Contact Method (At least 1)", submit: "Submit",
             sTitle: "Thank You!", sDesc: "Please click below to chat with our admin.", chatLine: "Chat via LINE", chatWa: "Chat via WhatsApp",
             plName: "Your Name", plPhone: "Phone Number", alertName: "Please enter your name.", alertContact: "Please provide LINE or WhatsApp.", lineErr: "Min 3 characters",
-            plSearch: "🔍 Search country or code...", // 🚨 เติมอันนี้
+            plSearch: "🔍 Search country or code...", 
             contract: "Contract", movein: "Move In Date", alertMoveIn: "Please select a Move In Date.",
-            months: "Months", month: "Month", plDate: "Select Date" // 🚨 เพิ่มบรรทัดนี้
+            months: "Months", month: "Month", plDate: "Select Date",
+            // 🚨 NEW i18n
+            aiTitle: "Let AI find your perfect room", aiDesc: "Tell AI what you need and get matches instantly", aiUrl: "https://nebles.needhome.co/en/renter"
         },
         TH: { 
             loading: "กำลังดึงข้อมูลห้อง..", match: "ดีลพิเศษ", petFriendly: "สัตว์เลี้ยง", map: "แผนที่", chat: "แชท", 
@@ -196,7 +246,9 @@
             plName: "ระบุชื่อของคุณ", plPhone: "เบอร์โทรศัพท์", alertName: "โปรดระบุชื่อด้วยค่ะ", alertContact: "โปรดระบุ LINE หรือ WhatsApp อย่างน้อย 1 ช่องทาง", lineErr: "ขั้นต่ำ 3 ตัวอักษร",
             plSearch: "🔍 ค้นหาประเทศ หรือรหัส...",
             contract: "ระยะสัญญา", movein: "วันที่เข้าอยู่", alertMoveIn: "โปรดเลือกวันที่ต้องการเข้าอยู่ค่ะ",
-            months: "เดือน", month: "เดือน", plDate: "เลือกวันที่"
+            months: "เดือน", month: "เดือน", plDate: "เลือกวันที่",
+            // 🚨 NEW i18n
+            aiTitle: "ให้ AI ช่วยหาห้องที่ใช่สำหรับคุณ", aiDesc: "บอกความต้องการ แล้วรับห้องที่ตรงใจทันที", aiUrl: "https://nebles.needhome.co/th/renter"
         },
         CN: {
             loading: "正在加载房源..", match: "特价房", petFriendly: "宠物", map: "地图", chat: "聊天", 
@@ -207,7 +259,9 @@
             plName: "你的名字", plPhone: "电话号码", alertName: "请输入您的姓名。", alertContact: "请提供 LINE 或 WhatsApp。", lineErr: "至少3个字符",
             plSearch: "🔍 搜索国家或代码...",
             contract: "合同期", movein: "入住日期", alertMoveIn: "请选择入住日期。",
-            months: "个月", month: "个月", plDate: "选择日期"
+            months: "个月", month: "个月", plDate: "选择日期",
+            // 🚨 NEW i18n
+            aiTitle: "让 AI 为您寻找理想客房", aiDesc: "告诉AI您的需求，立即获得匹配推荐", aiUrl: "https://nebles.needhome.co/en/renter"
         }
     };
 
@@ -295,6 +349,15 @@
         document.getElementById('lbl-contract').innerText = t.contract;
         document.getElementById('lbl-movein').innerText = t.movein;
         document.getElementById('campMoveIn').placeholder = t.plDate;
+
+        // 🚨 NEW: อัปเดตข้อความและลิงก์ปุ่ม AI Banner
+        const aiBtnTitle = document.getElementById('ai-btn-title');
+        if(aiBtnTitle) aiBtnTitle.innerText = t.aiTitle;
+        const aiBtnDesc = document.getElementById('ai-btn-desc');
+        if(aiBtnDesc) aiBtnDesc.innerText = t.aiDesc;
+        const aiLink = document.getElementById('ai-link');
+        if(aiLink) aiLink.href = t.aiUrl;
+
         // 🚨 เสก Dropdown สัญญา 1-12 เดือน ตามภาษาที่เลือก
         const contractSelect = document.getElementById('campContract');
         const currentVal = contractSelect.value || "12"; // จำค่าเดิมที่ลูกค้าเลือกไว้ (Default 12)
@@ -511,7 +574,7 @@
             roomId: document.getElementById('campTargetRoom').value, // รหัสห้องเพียวๆ
             contractMonths: document.getElementById('campContract').value, // 🚨 เพิ่มตัวนี้
             moveInDate: document.getElementById('campMoveIn').value,       // 🚨 เพิ่มตัวนี้
-            campaignUrl: window.location.href,                            // 🚨 เพิ่มตัวนี้
+            campaignUrl: window.location.href,                             // 🚨 เพิ่มตัวนี้
             name: name,
             lineId: line,
             whatsapp: fullWa,
@@ -614,7 +677,6 @@
         }).catch(err => console.log("Log error")); // พังก็ไม่เป็นไร ไม่กวนหน้าเว็บ
     }
 
-    // 📱 ฟังก์ชันแอบดูเครื่องลูกค้าว่าใช้มือถือหรือคอมอะไร
     function getDeviceOS() {
         const ua = navigator.userAgent;
         if (/iPad|iPhone|iPod/.test(ua)) return "iOS";
