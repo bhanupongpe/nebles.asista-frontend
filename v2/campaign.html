@@ -101,10 +101,24 @@
           </div>
 
           <div class="mb-4">
-            <div class="input-group" style="border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb;">
+            <div class="input-group" style="border-radius: 12px; border: 1px solid #e5e7eb; background: #fff;">
               <span class="input-group-text bg-white border-0" style="color: #25D366; font-weight: bold;"><i class="bi bi-whatsapp"></i></span>
-              <select class="form-select border-0 bg-white px-2" id="campWaCode" style="min-width: 110px; max-width: 140px; font-weight: 600; font-size: 0.85rem; cursor: pointer;"></select>
-              <input type="tel" class="form-control border-0 bg-white" id="campCusWaNum" placeholder="Phone Number">
+              
+              <div class="dropdown d-flex align-items-center">
+                <button class="btn border-0 bg-white dropdown-toggle" type="button" id="campWaBtn" data-bs-toggle="dropdown" aria-expanded="false" style="min-width: 110px; text-align: left; font-weight: 600; font-size: 0.85rem; border-right: 1px solid #eee !important; border-radius: 0;">
+                  TH +66
+                </button>
+                <ul class="dropdown-menu shadow-lg border-0" style="max-height: 250px; overflow-y: auto; width: 260px; font-size: 0.85rem; border-radius: 12px;">
+                  <li class="px-2 pb-2 position-sticky top-0 bg-white" style="z-index: 10;">
+                    <input type="text" class="form-control form-control-sm bg-light" id="searchWaCode" placeholder="🔍 พิมพ์เลข หรือชื่อประเทศ..." onkeyup="filterCountryCodes()" onclick="event.stopPropagation()">
+                  </li>
+                  <div id="countryCodeList"></div>
+                </ul>
+              </div>
+              
+              <input type="hidden" id="campWaCode" value="+66"> 
+
+              <input type="tel" class="form-control border-0 bg-transparent" id="campCusWaNum" placeholder="Phone Number">
             </div>
           </div>
 
