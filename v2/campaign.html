@@ -238,14 +238,7 @@
       });
     }
 
-    function populateCountryCodes() {
-      const select = document.getElementById('campWaCode');
-      let html = '';
-      countryCodes.forEach(cc => { html += `<option value="${cc.d}">${cc.c} ${cc.d}</option>`; });
-      select.innerHTML = html;
-    }
-
-    async function fetchExchangeRates() {
+   async function fetchExchangeRates() {
         try {
             const res = await fetch('https://api.exchangerate-api.com/v4/latest/THB');
             const data = await res.json();
