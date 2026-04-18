@@ -51,64 +51,65 @@
     .btn-card-booking { background-color: #FF385C; color: #ffffff; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: 600; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;}
     .btn-card-booking:hover { background-color: #E31C5F; color: #ffffff; }
 
-   /* 1. แบนเนอร์ตัวเดิม (กลับมาสีขาวคลีนๆ) */
-    .ai-promo-banner {
-        background: linear-gradient(90deg, #f8faff 0%, #ffffff 100%);
-        border: 1px solid #e2e8f0;
-        border-radius: 16px;
-        padding: 16px;
-        margin-bottom: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        text-decoration: none;
-        transition: all 0.3s ease;
-    }
-    .ai-promo-banner:hover {
-        border-color: #FF385C;
-        box-shadow: 0 4px 12px rgba(255, 56, 92, 0.1);
-    }
-    .ai-promo-icon {
-        width: 40px; height: 40px; background: #FF385C; color: white;
-        border-radius: 12px; display: flex; align-items: center; justify-content: center;
-        font-size: 1.2rem; flex-shrink: 0;
-    }
-    .ai-promo-text { flex-grow: 1; }
-    .ai-promo-text strong { display: block; font-size: 0.95rem; color: #222; }
-    .ai-promo-text span { font-size: 0.8rem; color: #717171; }
-    .ai-promo-arrow { color: #FF385C; font-size: 1.2rem; }
-
-    /* 2. แคปซูลขวาบน (แอบซ่อนไว้ก่อน) */
+   /* 🚨 อัปเดต: แคปซูล AI แบบ 2 บรรทัด + สีชมพู Nebles */
     .ai-floating-pill {
         position: fixed;
-        top: 25px; /* ระดับเดียวกับปุ่มเปลี่ยนภาษาเป๊ะๆ */
-        right: 24px; /* มุมขวาบน */
+        top: 25px;
+        /* แก้เรื่องระยะ: ในคอมให้เกาะขอบคอนเทนต์ ในมือถือให้เกาะขอบจอ */
+        right: calc(50% - 600px); 
         z-index: 1050;
-        background-color: #ffffff;
-        color: #FF385C;
-        padding: 8px 16px;
-        border-radius: 50px;
+        
+        /* เปลี่ยนเป็นสีชมพูไล่เฉดเหมือนโลโก้/แบนเนอร์ */
+        background: linear-gradient(135deg, #FF385C 0%, #E61E4D 100%);
+        color: #ffffff !important;
+        padding: 6px 16px;
+        border-radius: 12px; /* ทรงสี่เหลี่ยมโค้งมนนิดๆ ให้ดูทันสมัย */
         display: flex;
         align-items: center;
-        gap: 6px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        border: 1px solid #FF385C;
-        font-weight: 700;
-        font-size: 0.85rem;
+        gap: 10px;
+        box-shadow: 0 8px 20px rgba(255, 56, 92, 0.3);
+        border: none;
         text-decoration: none;
         
-        /* 🚨 ท่าไม้ตายหดตัว: ตอนแรกให้ใหญ่ๆ ลอยๆ แล้วจางหายไป */
         opacity: 0;
-        transform: scale(1.5) translate(-20px, 20px);
+        transform: translateY(-20px);
         pointer-events: none;
         transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    /* คลาสนี้ JS จะเป็นคนสั่งเปิดตอนลูกค้าสไลด์ผ่าน */
+
+    /* ปรับระยะสำหรับหน้าจอมือถือ */
+    @media (max-width: 1240px) {
+        .ai-floating-pill {
+            right: 15px;
+        }
+    }
+
     .ai-floating-pill.show-pill {
         opacity: 1;
-        transform: scale(1) translate(0, 0); /* ดูดตัวกลับเข้ามุมขวาบน */
+        transform: translateY(0);
         pointer-events: auto;
+    }
+
+    .ai-floating-pill i {
+        font-size: 1.4rem;
+        color: #ffffff;
+    }
+
+    /* จัด Layout 2 บรรทัด */
+    .ai-pill-content {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.2;
+    }
+    .ai-pill-title {
+        font-weight: 800;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+    }
+    .ai-pill-sub {
+        font-weight: 400;
+        font-size: 0.65rem;
+        opacity: 0.9;
     }
   </style>
 </head>
@@ -175,7 +176,11 @@
   </div>
 
   <a href="https://nebles.needhome.co/en/renter" id="ai-floating-pill" class="ai-floating-pill" target="_blank">
-    <i class="bi bi-stars"></i> AI
+    <i class="bi bi-stars"></i>
+    <div class="ai-pill-content">
+      <span class="ai-pill-title">AI MATCH</span>
+      <span class="ai-pill-sub">Find Perfect Room</span>
+    </div>
   </a>
   
   <div class="modal fade" id="campaignLeadModal" tabindex="-1" aria-hidden="true">
@@ -453,7 +458,7 @@
     const loadingLogo = document.querySelector('.anim-step-1');
     if (loadingLogo) loadingLogo.style.height = "80px";
 
-    // 🚨 อัปเดตข้อความในแบนเนอร์ (ใช้ชื่อ ID ให้ตรงกับ HTML)
+  // 🚨 อัปเดตข้อความในแบนเนอร์ใหญ่
     const aiBtnTitle = document.getElementById('ai-btn-title');
     if(aiBtnTitle) aiBtnTitle.innerText = t.aiTitle;
     
@@ -463,9 +468,28 @@
     // 🚨 อัปเดตลิงก์ AI ทั้งแบนเนอร์ใหญ่ และ แคปซูลเล็ก
     const aiStaticLink = document.getElementById('ai-static-banner');
     if(aiStaticLink) aiStaticLink.href = t.aiUrl;
-    
+
     const aiPillLink = document.getElementById('ai-floating-pill');
     if(aiPillLink) aiPillLink.href = t.aiUrl;
+
+    // 🚨 อัปเดตข้อความในแคปซูล AI (ใช้ currentLang เพื่อความแม่นยำ)
+    const pillTitle = document.querySelector('.ai-pill-title');
+    const pillSub = document.querySelector('.ai-pill-sub');
+    
+    if(currentLang === 'TH') {
+        if(pillTitle) pillTitle.innerText = "AI ช่วยหาห้อง";
+        if(pillSub) pillSub.innerText = "หาห้องที่ใช่ทันที";
+    } else if(currentLang === 'CN') {
+        if(pillTitle) pillTitle.innerText = "AI 智能找房";
+        if(pillSub) pillSub.innerText = "立即匹配理想客房";
+    } else {
+        if(pillTitle) pillTitle.innerText = "AI MATCH";
+        if(pillSub) pillSub.innerText = "Find Perfect Room";
+    }
+
+        // ลิงก์ยังใช้เหมือนเดิม
+        const aiPillLink = document.getElementById('ai-floating-pill');
+        if(aiPillLink) aiPillLink.href = t.aiUrl;
 
         // 🚨 เสก Dropdown สัญญา 1-12 เดือน ตามภาษาที่เลือก
         const contractSelect = document.getElementById('campContract');
