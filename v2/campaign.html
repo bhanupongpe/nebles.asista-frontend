@@ -437,11 +437,14 @@
 
         const payload = {
             action: "savePublicLead",
+            campaignId: campId,         // 🚨 ส่ง ID แคมเปญไปให้หลังบ้านจด Log
             campaignName: campaignName,
             roomId: targetRoom,
             name: name,
             lineId: line,
             whatsapp: fullWa,
+            sessionId: getSessionId(),  // 🚨 ส่ง Session ID (กันยอดผี)
+            deviceOS: getDeviceOS(),    // 🚨 ส่ง Device/OS (iOS, Android, PC)
             utm_source: utmSource,
             utm_medium: utmMedium,
             utm_campaign: utmCampaign
@@ -497,6 +500,7 @@
             campaignId: campId,
             eventType: type, // 'open' หรือ 'interest'
             sessionId: getSessionId(), // 🚨 ส่งรหัสเครื่องไปด้วย!
+            deviceOS: getDeviceOS(),
             utm_source: utmSource,
             utm_medium: utmMedium,
             utm_campaign: urlParams.get('utm_campaign') || campaignName
@@ -506,6 +510,16 @@
             method: 'POST',
             body: JSON.stringify(payload)
         }).catch(err => console.log("Log error")); // พังก็ไม่เป็นไร ไม่กวนหน้าเว็บ
+    }
+
+    // 📱 ฟังก์ชันแอบดูเครื่องลูกค้าว่าใช้มือถือหรือคอมอะไร
+    function getDeviceOS() {
+        const ua = navigator.userAgent;
+        if (/iPad|iPhone|iPod/.test(ua)) return "iOS";
+        if (/android/i.test(ua)) return "Android";
+        if (/Mac/.test(ua)) return "Mac";
+        if (/Win/.test(ua)) return "Windows PC";
+        return "Other";
     }
   </script>
 </body>
