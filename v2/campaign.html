@@ -477,7 +477,7 @@
         document.getElementById('campLeadStep2').style.display = 'none';
         
         const room = loadedProperties[index];
-        document.getElementById('campTargetRoom').value = `${room.project} (ID: ${room.id})`;
+        document.getElementById('campTargetRoom').value = room.id;
         leadModalObj.show();
     }
 
@@ -506,14 +506,17 @@
 
         const payload = {
             action: "savePublicLead",
-            campaignId: campId,         // 🚨 ส่ง ID แคมเปญไปให้หลังบ้านจด Log
+            campaignId: campId,
             campaignName: campaignName,
-            roomId: targetRoom,
+            roomId: document.getElementById('campTargetRoom').value, // รหัสห้องเพียวๆ
+            contractMonths: document.getElementById('campContract').value, // 🚨 เพิ่มตัวนี้
+            moveInDate: document.getElementById('campMoveIn').value,       // 🚨 เพิ่มตัวนี้
+            campaignUrl: window.location.href,                            // 🚨 เพิ่มตัวนี้
             name: name,
             lineId: line,
             whatsapp: fullWa,
-            sessionId: getSessionId(),  // 🚨 ส่ง Session ID (กันยอดผี)
-            deviceOS: getDeviceOS(),    // 🚨 ส่ง Device/OS (iOS, Android, PC)
+            sessionId: getSessionId(),
+            deviceOS: getDeviceOS(),
             utm_source: utmSource,
             utm_medium: utmMedium,
             utm_campaign: utmCampaign
