@@ -408,6 +408,12 @@
         document.getElementById('lbl-pdpa-readmore').innerText = t.pdpaReadMore;
         document.getElementById('pdpa-modal-title').innerText = t.pdpaModalTitle;
         document.getElementById('pdpa-modal-body').innerHTML = t.pdpaModalBody; // ใช้ innerHTML เพราะมีแท็ก <strong>
+      
+        const heroTitleEl = document.getElementById('loading-hero-title');
+        if (heroTitleEl) heroTitleEl.innerHTML = t.heroTitle; // ใช้ innerHTML เพราะเรามี <br>
+        
+        const heroDescEl = document.getElementById('loading-hero-desc');
+        if (heroDescEl) heroDescEl.innerHTML = t.heroDesc;
 
         // 🚨 NEW: อัปเดตข้อความและลิงก์ปุ่ม AI Banner
         const aiBtnTitle = document.getElementById('ai-btn-title');
