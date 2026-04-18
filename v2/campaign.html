@@ -51,46 +51,36 @@
     .btn-card-booking { background-color: #FF385C; color: #ffffff; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: 600; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;}
     .btn-card-booking:hover { background-color: #E31C5F; color: #ffffff; }
 
-    /* 🚨 NEW CSS: AI Banner Style */
-    /* 🚨 อัปเดต CSS: AI Banner Style (ทำให้มันลอยตามจอ) */
-    .ai-promo-banner {
-        position: sticky;  /* 👈 หัวใจหลัก! สั่งให้แปะติดขอบจอเวลาเลื่อนผ่าน */
-        top: 20px;         /* 👈 ระยะห่างจากขอบจอด้านบนตอนลอย */
-        z-index: 1050;     /* 👈 ดัน Layer ให้อยู่หน้าสุด จะได้ไม่โดนรูปห้องบัง */
+   /* 🚨 NEW CSS: Floating Action Pill (Airbnb Style) */
+    .ai-floating-pill {
+        position: fixed;
+        bottom: 30px; /* ลอยขึ้นมาจากขอบล่างนิดนึง หลบเมนูมือถือ */
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1050; /* ดันให้อยู่หน้าสุด */
         
-        background: linear-gradient(90deg, #f8faff 0%, #ffffff 100%);
-        border: 1px solid #e2e8f0;
-        border-radius: 16px;
-        padding: 16px;
-        margin-bottom: 24px;
+        background-color: #222222; /* พื้นดำดูพรีเมียม ตัดกับเว็บสีขาว */
+        color: #ffffff;
+        padding: 14px 28px;
+        border-radius: 50px; /* ทรงแคปซูล */
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        gap: 12px;
+        gap: 10px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.25); /* เงาเข้มๆ ให้ลอยชัดเจน */
+        font-weight: 600;
+        font-size: 0.95rem;
         text-decoration: none;
-        transition: all 0.3s ease;
-        box-shadow: 0 10px 25px rgba(255, 56, 92, 0.15); /* 👈 เพิ่มเงาสีชมพูอ่อนๆ ให้มันดูเด้งออกมาจากพื้นเว็บ */
+        white-space: nowrap; /* ห้ามบรรทัดตก */
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    .ai-promo-banner:hover {
-        border-color: #FF385C;
-        box-shadow: 0 4px 12px rgba(255, 56, 92, 0.1);
+    .ai-floating-pill:hover {
+        transform: translateX(-50%) scale(1.05); /* เอฟเฟกต์เด้งตอนกด */
+        color: #ffffff;
     }
-    .ai-promo-icon {
-        width: 40px;
-        height: 40px;
-        background: #FF385C;
-        color: white;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    .ai-floating-pill i {
+        color: #FF385C; /* ไอคอนดาวสีชมพู Nebles */
         font-size: 1.2rem;
-        flex-shrink: 0;
     }
-    .ai-promo-text { flex-grow: 1; }
-    .ai-promo-text strong { display: block; font-size: 0.95rem; color: #222; }
-    .ai-promo-text span { font-size: 0.8rem; color: #717171; }
-    .ai-promo-arrow { color: #FF385C; font-size: 1.2rem; }
   </style>
 </head>
 <body>
@@ -103,18 +93,10 @@
       <p class="req-subtitle" id="page-subtitle"></p>
     </div>
 
-    <a href="https://nebles.needhome.co/en/renter" id="ai-link" class="ai-promo-banner" target="_blank">
-      <div class="ai-promo-icon">
-        <i class="bi bi-stars"></i>
-      </div>
-      <div class="ai-promo-text">
-        <strong id="ai-btn-title">Let AI find your perfect room</strong>
-        <span id="ai-btn-desc">Tell AI what you need and get matches instantly</span>
-      </div>
-      <div class="ai-promo-arrow">
-        <i class="bi bi-chevron-right"></i>
-      </div>
-    </a>
+    <a href="https://nebles.needhome.co/en/renter" id="ai-link" class="ai-floating-pill" target="_blank">
+    <i class="bi bi-stars"></i>
+    <span id="ai-btn-title">Let AI find your perfect room</span>
+  </a>
 
    <div id="loading-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 60vh; min-height: 400px; padding: 20px;">
       
