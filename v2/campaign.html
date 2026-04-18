@@ -580,13 +580,21 @@
     }
 
     function submitCampaignLead() {
+        // 🚨 1. ดึงค่าทั้งหมด (เพิ่ม Move In กับ PDPA ให้ครบ)
         const name = document.getElementById('campCusName').value.trim();
         const line = document.getElementById('campCusLine').value.trim();
         const waNum = document.getElementById('campCusWaNum').value.trim();
+        const moveIn = document.getElementById('campMoveIn').value;      // 👈 ดึงค่าวันเข้าอยู่
+        const pdpaChecked = document.getElementById('campPdpa').checked; // 👈 ดึงสถานะติ๊ก PDPA
         const t = i18n[currentLang];
         
+        // 🚨 2. ด่านกักกัน (เตะสกัดให้ครบทุกตัว!)
         if (!name) return alert(t.alertName);
         if (!line && !waNum) return alert(t.alertContact);
+        if (!moveIn) return alert(t.alertMoveIn);      // 👈 ดักวันเข้าอยู่
+        if (!pdpaChecked) return alert(t.alertPdpa);   // 👈 ดัก PDPA (Consent)
+
+        // 🛡️ 3. ดัก LINE สั้นไป
         if (line && line.length < 3) {
             document.getElementById('campLineErr').classList.remove('d-none');
             return; // หยุดการทำงานถ้าสั้นไป
@@ -598,6 +606,8 @@
         const orgText = btn.innerHTML;
         btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Processing...';
         btn.disabled = true;
+
+        // ... (โค้ดต่อจากนี้เหมือนเดิม ดึง Target Room และส่ง Fetch ลง GAS) ...
 
         const targetRoom = document.getElementById('campTargetRoom').value;
         const fullWa = waNum ? document.getElementById('campWaCode').value + waNum.replace(/^0+/, '') : "";
