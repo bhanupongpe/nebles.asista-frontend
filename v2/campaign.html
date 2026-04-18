@@ -51,35 +51,64 @@
     .btn-card-booking { background-color: #FF385C; color: #ffffff; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: 600; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;}
     .btn-card-booking:hover { background-color: #E31C5F; color: #ffffff; }
 
-   /* 🚨 NEW CSS: Floating Action Pill (Airbnb Style) */
-    .ai-floating-pill {
-        position: fixed;
-        bottom: 30px; /* ลอยขึ้นมาจากขอบล่างนิดนึง หลบเมนูมือถือ */
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 1050; /* ดันให้อยู่หน้าสุด */
-        
-        background-color: #222222; /* พื้นดำดูพรีเมียม ตัดกับเว็บสีขาว */
-        color: #ffffff;
-        padding: 14px 28px;
-        border-radius: 50px; /* ทรงแคปซูล */
+   /* 1. แบนเนอร์ตัวเดิม (กลับมาสีขาวคลีนๆ) */
+    .ai-promo-banner {
+        background: linear-gradient(90deg, #f8faff 0%, #ffffff 100%);
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 16px;
+        margin-bottom: 24px;
         display: flex;
         align-items: center;
-        gap: 10px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.25); /* เงาเข้มๆ ให้ลอยชัดเจน */
-        font-weight: 600;
-        font-size: 0.95rem;
+        justify-content: space-between;
+        gap: 12px;
         text-decoration: none;
-        white-space: nowrap; /* ห้ามบรรทัดตก */
-        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transition: all 0.3s ease;
     }
-    .ai-floating-pill:hover {
-        transform: translateX(-50%) scale(1.05); /* เอฟเฟกต์เด้งตอนกด */
-        color: #ffffff;
+    .ai-promo-banner:hover {
+        border-color: #FF385C;
+        box-shadow: 0 4px 12px rgba(255, 56, 92, 0.1);
     }
-    .ai-floating-pill i {
-        color: #FF385C; /* ไอคอนดาวสีชมพู Nebles */
-        font-size: 1.2rem;
+    .ai-promo-icon {
+        width: 40px; height: 40px; background: #FF385C; color: white;
+        border-radius: 12px; display: flex; align-items: center; justify-content: center;
+        font-size: 1.2rem; flex-shrink: 0;
+    }
+    .ai-promo-text { flex-grow: 1; }
+    .ai-promo-text strong { display: block; font-size: 0.95rem; color: #222; }
+    .ai-promo-text span { font-size: 0.8rem; color: #717171; }
+    .ai-promo-arrow { color: #FF385C; font-size: 1.2rem; }
+
+    /* 2. แคปซูลขวาบน (แอบซ่อนไว้ก่อน) */
+    .ai-floating-pill {
+        position: fixed;
+        top: 25px; /* ระดับเดียวกับปุ่มเปลี่ยนภาษาเป๊ะๆ */
+        right: 24px; /* มุมขวาบน */
+        z-index: 1050;
+        background-color: #ffffff;
+        color: #FF385C;
+        padding: 8px 16px;
+        border-radius: 50px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border: 1px solid #FF385C;
+        font-weight: 700;
+        font-size: 0.85rem;
+        text-decoration: none;
+        
+        /* 🚨 ท่าไม้ตายหดตัว: ตอนแรกให้ใหญ่ๆ ลอยๆ แล้วจางหายไป */
+        opacity: 0;
+        transform: scale(1.5) translate(-20px, 20px);
+        pointer-events: none;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    /* คลาสนี้ JS จะเป็นคนสั่งเปิดตอนลูกค้าสไลด์ผ่าน */
+    .ai-floating-pill.show-pill {
+        opacity: 1;
+        transform: scale(1) translate(0, 0); /* ดูดตัวกลับเข้ามุมขวาบน */
+        pointer-events: auto;
     }
   </style>
 </head>
@@ -93,10 +122,18 @@
       <p class="req-subtitle" id="page-subtitle"></p>
     </div>
 
-    <a href="https://nebles.needhome.co/en/renter" id="ai-link" class="ai-floating-pill" target="_blank">
-    <i class="bi bi-stars"></i>
-    <span id="ai-btn-title">Let AI find your perfect room</span>
-  </a>
+    <a href="https://nebles.needhome.co/en/renter" id="ai-static-banner" class="ai-promo-banner" target="_blank">
+      <div class="ai-promo-icon">
+        <i class="bi bi-stars"></i>
+      </div>
+      <div class="ai-promo-text">
+        <strong id="ai-btn-title">Let AI find your perfect room</strong>
+        <span id="ai-btn-desc">Tell AI what you need and get matches instantly</span>
+      </div>
+      <div class="ai-promo-arrow">
+        <i class="bi bi-chevron-right"></i>
+      </div>
+    </a>
 
    <div id="loading-container" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 60vh; min-height: 400px; padding: 20px;">
       
@@ -137,6 +174,10 @@
     </select>
   </div>
 
+  <a href="https://nebles.needhome.co/en/renter" id="ai-floating-pill" class="ai-floating-pill" target="_blank">
+    <i class="bi bi-stars"></i> AI
+  </a>
+  
   <div class="modal fade" id="campaignLeadModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content px-2 pb-2 shadow-lg">
@@ -408,17 +449,23 @@
         const heroDescEl = document.getElementById('loading-hero-desc');
         if (heroDescEl) heroDescEl.innerHTML = t.heroDesc;
 
-        // 🚨 (แถม) ขยายขนาดโลโก้หน้าโหลดให้ใหญ่ขึ้นอีกนิด จะได้ไม่ดูเล็กจิ๋ว
-        const loadingLogo = document.querySelector('.anim-step-1');
-        if (loadingLogo) loadingLogo.style.height = "80px";
+        // 🚨 (แถม) ขยายขนาดโลโก้หน้าโหลด
+    const loadingLogo = document.querySelector('.anim-step-1');
+    if (loadingLogo) loadingLogo.style.height = "80px";
 
-        // 🚨 NEW: อัปเดตข้อความและลิงก์ปุ่ม AI Banner
-        const aiBtnTitle = document.getElementById('ai-btn-title');
-        if(aiBtnTitle) aiBtnTitle.innerText = t.aiTitle;
-        const aiBtnDesc = document.getElementById('ai-btn-desc');
-        if(aiBtnDesc) aiBtnDesc.innerText = t.aiDesc;
-        const aiLink = document.getElementById('ai-link');
-        if(aiLink) aiLink.href = t.aiUrl;
+    // 🚨 อัปเดตข้อความในแบนเนอร์ (ใช้ชื่อ ID ให้ตรงกับ HTML)
+    const aiBtnTitle = document.getElementById('ai-btn-title');
+    if(aiBtnTitle) aiBtnTitle.innerText = t.aiTitle;
+    
+    const aiBtnDesc = document.getElementById('ai-btn-desc');
+    if(aiBtnDesc) aiBtnDesc.innerText = t.aiDesc;
+
+    // 🚨 อัปเดตลิงก์ AI ทั้งแบนเนอร์ใหญ่ และ แคปซูลเล็ก
+    const aiStaticLink = document.getElementById('ai-static-banner');
+    if(aiStaticLink) aiStaticLink.href = t.aiUrl;
+    
+    const aiPillLink = document.getElementById('ai-floating-pill');
+    if(aiPillLink) aiPillLink.href = t.aiUrl;
 
         // 🚨 เสก Dropdown สัญญา 1-12 เดือน ตามภาษาที่เลือก
         const contractSelect = document.getElementById('campContract');
@@ -758,6 +805,21 @@
         if (/Win/.test(ua)) return "Windows PC";
         return "Other";
     }
+    // 🚀 ระบบเรดาร์จับการเลื่อนจอ (Scroll Observer)
+    window.addEventListener('scroll', () => {
+        const banner = document.getElementById('ai-static-banner');
+        const pill = document.getElementById('ai-floating-pill');
+        
+        if (banner && pill) {
+            const rect = banner.getBoundingClientRect();
+            // ถ้าขอบล่างของแบนเนอร์ไถลหลุดขอบบนของจอไปแล้ว (ค่าน้อยกว่า 0)
+            if (rect.bottom < 0) {
+                pill.classList.add('show-pill'); // สั่งให้แคปซูลบินออกมา!
+            } else {
+                pill.classList.remove('show-pill'); // สั่งให้แคปซูลหดกลับไป!
+            }
+        }
+    });
   </script>
 </body>
 </html>
