@@ -110,8 +110,26 @@
       </div>
     </a>
 
-    <div id="loading-container" class="text-center" style="padding: 40px 0;">
-      <p id="loading-msg-state" style="font-size: 1.1rem; color: #222; font-weight: 600; margin-bottom: 24px;">Loading properties..</p>
+    <div id="loading-container" style="position: relative; width: 100%; height: 55vh; min-height: 400px; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: #111; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+      
+      <video autoplay muted loop playsinline style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.45;">
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-modern-apartment-interior-design-39690-large.mp4" type="video/mp4">
+      </video>
+
+      <div style="position: relative; z-index: 2; padding: 30px; color: #ffffff;">
+        <img src="https://nebles.needhome.co/_next/image?url=%2Fimages%2Flogo.png&w=256&q=75" alt="Nebles" style="height: 60px; margin-bottom: 24px; filter: brightness(0) invert(1) drop-shadow(0 2px 4px rgba(0,0,0,0.5));">
+        
+        <h3 id="loading-hero-title" style="font-size: 1.4rem; font-weight: 700; margin-bottom: 12px; text-shadow: 0 2px 8px rgba(0,0,0,0.6); line-height: 1.4;">
+          </h3>
+        
+        <p id="loading-hero-desc" style="font-size: 0.95rem; line-height: 1.6; opacity: 0.9; max-width: 280px; margin: 0 auto 30px auto; text-shadow: 0 2px 5px rgba(0,0,0,0.6);">
+          </p>
+
+        <div style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); padding: 10px 20px; border-radius: 50px; display: inline-flex; align-items: center; gap: 12px; border: 1px solid rgba(255,255,255,0.2);">
+          <div class="spinner-border spinner-border-sm text-white" role="status"></div>
+          <span id="loading-msg-state" style="font-size: 0.85rem; font-weight: 600; letter-spacing: 0.5px;">Loading...</span>
+        </div>
+      </div>
     </div>
 
     <div id="property-container" style="display: none;"></div>
@@ -258,7 +276,9 @@
             alertPdpa: "Please agree to the Privacy Policy to proceed.",
             pdpaReadMore: "Read More",
             pdpaModalTitle: "Privacy Policy & Consent",
-            pdpaModalBody: "<strong>1. Purpose:</strong> We collect your name, contact information, and preferences solely to find suitable properties and contact you back.<br><br><strong>2. Data Protection:</strong> We do not sell your data. Your information is securely kept and shared only with our internal team and relevant property owners to close the deal.<br><br><strong>3. Your Rights:</strong> You have the right to request access, modification, or deletion of your data at any time by contacting our admin."
+            pdpaModalBody: "<strong>1. Purpose:</strong> We collect your name, contact information, and preferences solely to find suitable properties and contact you back.<br><br><strong>2. Data Protection:</strong> We do not sell your data. Your information is securely kept and shared only with our internal team and relevant property owners to close the deal.<br><br><strong>3. Your Rights:</strong> You have the right to request access, modification, or deletion of your data at any time by contacting our admin.",
+            heroTitle: "Rent in Bangkok<br>starting from 1 month.",
+            heroDesc: "Convenient, safe, and worry-free. Let AI find your perfect room."
         },
         TH: { 
             loading: "กำลังดึงข้อมูลห้อง..", match: "ดีลพิเศษ", petFriendly: "สัตว์เลี้ยง", map: "แผนที่", chat: "แชท", 
@@ -275,7 +295,9 @@
             alertPdpa: "โปรดกดยอมรับนโยบายความเป็นส่วนตัวก่อนส่งข้อมูลค่ะ",
             pdpaReadMore: "อ่านเพิ่มเติม",
             pdpaModalTitle: "นโยบายความเป็นส่วนตัว (PDPA)",
-            pdpaModalBody: "<strong>1. วัตถุประสงค์:</strong> เราเก็บรวบรวมชื่อ ข้อมูลการติดต่อ และความต้องการของคุณ เพื่อใช้ในการนำเสนอห้องพักที่เหมาะสมและติดต่อกลับเท่านั้น<br><br><strong>2. การปกป้องข้อมูล:</strong> เราจะไม่นำข้อมูลของคุณไปขาย ข้อมูลจะถูกส่งต่อให้ทีมงานภายในและเจ้าของห้องที่เกี่ยวข้องเพื่อการเช่า/ซื้อเท่านั้น<br><br><strong>3. สิทธิของคุณ:</strong> คุณสามารถแจ้งแอดมินเพื่อขอเข้าถึง แก้ไข หรือขอลบข้อมูลส่วนบุคคลของคุณออกจากระบบได้ตลอดเวลา"
+            pdpaModalBody: "<strong>1. วัตถุประสงค์:</strong> เราเก็บรวบรวมชื่อ ข้อมูลการติดต่อ และความต้องการของคุณ เพื่อใช้ในการนำเสนอห้องพักที่เหมาะสมและติดต่อกลับเท่านั้น<br><br><strong>2. การปกป้องข้อมูล:</strong> เราจะไม่นำข้อมูลของคุณไปขาย ข้อมูลจะถูกส่งต่อให้ทีมงานภายในและเจ้าของห้องที่เกี่ยวข้องเพื่อการเช่า/ซื้อเท่านั้น<br><br><strong>3. สิทธิของคุณ:</strong> คุณสามารถแจ้งแอดมินเพื่อขอเข้าถึง แก้ไข หรือขอลบข้อมูลส่วนบุคคลของคุณออกจากระบบได้ตลอดเวลา",
+            heroTitle: "เช่าที่พักในกรุงเทพฯ<br>เริ่มต้นที่ 1 เดือน",
+            heroDesc: "สะดวก ปลอดภัย ไร้กังวล พร้อมบริการระดับพรีเมียมที่ดูแลคุณตลอดสัญญา"
         },
         CN: {
             loading: "正在加载房源..", match: "特价房", petFriendly: "宠物", map: "地图", chat: "聊天", 
@@ -292,7 +314,9 @@
             alertPdpa: "请同意隐私政策。",
             pdpaReadMore: "阅读更多",
             pdpaModalTitle: "隐私政策与同意书",
-            pdpaModalBody: "<strong>1. 目的：</strong> 我们收集您的姓名、联系方式和偏好，仅用于为您寻找合适的房源并与您联系。<br><br><strong>2. 数据保护：</strong> 我们不会出售您的数据。您的信息仅与我们的内部团队及相关房东共享，以促成交易。<br><br><strong>3. 您的权利：</strong> 您有权随时联系管理员要求访问、修改或删除您的个人数据。"
+            pdpaModalBody: "<strong>1. 目的：</strong> 我们收集您的姓名、联系方式和偏好，仅用于为您寻找合适的房源并与您联系。<br><br><strong>2. 数据保护：</strong> 我们不会出售您的数据。您的信息仅与我们的内部团队及相关房东共享，以促成交易。<br><br><strong>3. 您的权利：</strong> 您有权随时联系管理员要求访问、修改或删除您的个人数据。",
+            heroTitle: "曼谷租房<br>1 个月起租",
+            heroDesc: "便捷、安全、无忧。让AI为您寻找理想客房。"
         }
     };
 
