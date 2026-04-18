@@ -162,7 +162,8 @@
             modalTitle: "Interested", modalDesc: "Please provide details so our admin can contact you.",
             name: "Name", contact: "Contact Method (At least 1)", submit: "Submit",
             sTitle: "Thank You!", sDesc: "Please click below to chat with our admin.", chatLine: "Chat via LINE", chatWa: "Chat via WhatsApp",
-            plName: "Your Name", plPhone: "Phone Number", alertName: "Please enter your name.", alertContact: "Please provide LINE or WhatsApp.", lineErr: "Min 3 characters"
+            plName: "Your Name", plPhone: "Phone Number", alertName: "Please enter your name.", alertContact: "Please provide LINE or WhatsApp.", lineErr: "Min 3 characters",
+            plSearch: "🔍 Search country or code..." // 🚨 เติมอันนี้
         },
         TH: { 
             loading: "กำลังดึงข้อมูลห้อง..", match: "ดีลพิเศษ", petFriendly: "สัตว์เลี้ยง", map: "แผนที่", chat: "แชท", 
@@ -170,7 +171,8 @@
             modalTitle: "สนใจห้องพัก", modalDesc: "กรุณากรอกข้อมูลเพื่อให้แอดมินเช็คคิวและติดต่อกลับค่ะ",
             name: "ชื่อ-นามสกุล", contact: "ช่องทางติดต่อ (อย่างน้อย 1 อย่าง)", submit: "ส่งข้อมูล",
             sTitle: "ขอบคุณค่ะ!", sDesc: "ทีมงานจะรีบเช็คห้องให้ค่ะ โปรดกดปุ่มเพื่อแชทกับแอดมิน", chatLine: "แชทผ่าน LINE", chatWa: "แชทผ่าน WhatsApp",
-            plName: "ระบุชื่อของคุณ", plPhone: "เบอร์โทรศัพท์", alertName: "โปรดระบุชื่อด้วยค่ะ", alertContact: "โปรดระบุ LINE หรือ WhatsApp อย่างน้อย 1 ช่องทาง", lineErr: "ขั้นต่ำ 3 ตัวอักษร"
+            plName: "ระบุชื่อของคุณ", plPhone: "เบอร์โทรศัพท์", alertName: "โปรดระบุชื่อด้วยค่ะ", alertContact: "โปรดระบุ LINE หรือ WhatsApp อย่างน้อย 1 ช่องทาง", lineErr: "ขั้นต่ำ 3 ตัวอักษร",
+            plSearch: "🔍 ค้นหาประเทศ หรือรหัส..."
         },
         CN: {
             loading: "正在加载房源..", match: "特价房", petFriendly: "宠物", map: "地图", chat: "聊天", 
@@ -178,7 +180,8 @@
             modalTitle: "感兴趣", modalDesc: "请提供您的详细信息，以便管理员与您联系。",
             name: "姓名", contact: "联系方式（至少提供1个）", submit: "提交",
             sTitle: "谢谢！", sDesc: "请点击下方与管理员聊天。", chatLine: "通过 LINE 聊天", chatWa: "通过 WhatsApp 聊天",
-            plName: "你的名字", plPhone: "电话号码", alertName: "请输入您的姓名。", alertContact: "请提供 LINE 或 WhatsApp。", lineErr: "至少3个字符"
+            plName: "你的名字", plPhone: "电话号码", alertName: "请输入您的姓名。", alertContact: "请提供 LINE 或 WhatsApp。", lineErr: "至少3个字符",
+            plSearch: "🔍 搜索国家或代码..."
         }
     };
 
@@ -262,7 +265,7 @@
         document.getElementById('lbl-line-err').innerText = t.lineErr;
         document.getElementById('campCusName').placeholder = t.plName;
         document.getElementById('campCusWaNum').placeholder = t.plPhone;
-
+        document.getElementById('searchWaCode').placeholder = t.plSearch;
         if (loadedProperties.length > 0) renderProperties();
     }
 
