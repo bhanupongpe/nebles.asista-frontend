@@ -123,25 +123,18 @@
           </div>
           <div class="row g-2 mb-4">
             <div class="col-6">
-              <label class="form-label fw-bold small text-dark"><span id="lbl-contract">Contract (Months)</span> <span class="text-danger">*</span></label>
-              <select class="form-select bg-light border-0" id="campContract" style="border-radius: 12px; padding: 12px; font-size: 0.9rem;">
-                <option value="12" selected>12</option>
-                <option value="11">11</option>
-                <option value="10">10</option>
-                <option value="9">9</option>
-                <option value="8">8</option>
-                <option value="7">7</option>
-                <option value="6">6</option>
-                <option value="5">5</option>
-                <option value="4">4</option>
-                <option value="3">3</option>
-                <option value="2">2</option>
-                <option value="1">1</option>
-              </select>
+              <label class="form-label fw-bold small text-dark"><span id="lbl-contract">Contract</span> <span class="text-danger">*</span></label>
+              <div class="input-group" style="border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb; background: #fff;">
+                <span class="input-group-text bg-white border-0 text-muted"><i class="bi bi-calendar-check"></i></span>
+                <select class="form-select bg-white border-0 shadow-none" id="campContract" style="padding: 12px 12px 12px 0; font-size: 0.9rem; cursor: pointer;"></select>
+              </div>
             </div>
             <div class="col-6">
               <label class="form-label fw-bold small text-dark"><span id="lbl-movein">Move In Date</span> <span class="text-danger">*</span></label>
-              <input type="date" class="form-control bg-light border-0" id="campMoveIn" style="border-radius: 12px; padding: 12px; font-size: 0.9rem;">
+              <div class="input-group" style="border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb; background: #fff;">
+                <span class="input-group-text bg-white border-0 text-muted"><i class="bi bi-calendar-event"></i></span>
+                <input type="text" class="form-control bg-white border-0 shadow-none" id="campMoveIn" placeholder="Select Date" style="padding: 12px 12px 12px 0; font-size: 0.9rem; cursor: pointer;" onfocus="(this.type='date'); this.showPicker ? this.showPicker() : null" onblur="if(!this.value) this.type='text'">
+              </div>
             </div>
           </div>
 
@@ -186,7 +179,9 @@
             name: "Name", contact: "Contact Method (At least 1)", submit: "Submit",
             sTitle: "Thank You!", sDesc: "Please click below to chat with our admin.", chatLine: "Chat via LINE", chatWa: "Chat via WhatsApp",
             plName: "Your Name", plPhone: "Phone Number", alertName: "Please enter your name.", alertContact: "Please provide LINE or WhatsApp.", lineErr: "Min 3 characters",
-            plSearch: "🔍 Search country or code..." // 🚨 เติมอันนี้
+            plSearch: "🔍 Search country or code...", // 🚨 เติมอันนี้
+            contract: "Contract", movein: "Move In Date", alertMoveIn: "Please select a Move In Date.",
+            months: "Months", month: "Month", plDate: "Select Date" // 🚨 เพิ่มบรรทัดนี้
         },
         TH: { 
             loading: "กำลังดึงข้อมูลห้อง..", match: "ดีลพิเศษ", petFriendly: "สัตว์เลี้ยง", map: "แผนที่", chat: "แชท", 
@@ -195,7 +190,9 @@
             name: "ชื่อ-นามสกุล", contact: "ช่องทางติดต่อ (อย่างน้อย 1 อย่าง)", submit: "ส่งข้อมูล",
             sTitle: "ขอบคุณค่ะ!", sDesc: "ทีมงานจะรีบเช็คห้องให้ค่ะ โปรดกดปุ่มเพื่อแชทกับแอดมิน", chatLine: "แชทผ่าน LINE", chatWa: "แชทผ่าน WhatsApp",
             plName: "ระบุชื่อของคุณ", plPhone: "เบอร์โทรศัพท์", alertName: "โปรดระบุชื่อด้วยค่ะ", alertContact: "โปรดระบุ LINE หรือ WhatsApp อย่างน้อย 1 ช่องทาง", lineErr: "ขั้นต่ำ 3 ตัวอักษร",
-            plSearch: "🔍 ค้นหาประเทศ หรือรหัส..."
+            plSearch: "🔍 ค้นหาประเทศ หรือรหัส...",
+            contract: "ระยะสัญญา", movein: "วันที่เข้าอยู่", alertMoveIn: "โปรดเลือกวันที่ต้องการเข้าอยู่ค่ะ",
+            months: "เดือน", month: "เดือน", plDate: "เลือกวันที่"
         },
         CN: {
             loading: "正在加载房源..", match: "特价房", petFriendly: "宠物", map: "地图", chat: "聊天", 
@@ -204,7 +201,9 @@
             name: "姓名", contact: "联系方式（至少提供1个）", submit: "提交",
             sTitle: "谢谢！", sDesc: "请点击下方与管理员聊天。", chatLine: "通过 LINE 聊天", chatWa: "通过 WhatsApp 聊天",
             plName: "你的名字", plPhone: "电话号码", alertName: "请输入您的姓名。", alertContact: "请提供 LINE 或 WhatsApp。", lineErr: "至少3个字符",
-            plSearch: "🔍 搜索国家或代码..."
+            plSearch: "🔍 搜索国家或代码...",
+            contract: "合同期", movein: "入住日期", alertMoveIn: "请选择入住日期。",
+            months: "个月", month: "个月", plDate: "选择日期"
         }
     };
 
@@ -289,6 +288,19 @@
         document.getElementById('campCusName').placeholder = t.plName;
         document.getElementById('campCusWaNum').placeholder = t.plPhone;
         document.getElementById('searchWaCode').placeholder = t.plSearch;
+        document.getElementById('lbl-contract').innerText = t.contract;
+        document.getElementById('lbl-movein').innerText = t.movein;
+        document.getElementById('campMoveIn').placeholder = t.plDate;
+        // 🚨 เสก Dropdown สัญญา 1-12 เดือน ตามภาษาที่เลือก
+        const contractSelect = document.getElementById('campContract');
+        const currentVal = contractSelect.value || "12"; // จำค่าเดิมที่ลูกค้าเลือกไว้ (Default 12)
+        let optionsHtml = '';
+        for (let i = 12; i >= 1; i--) {
+            let label = i === 1 ? t.month : t.months;
+            // สังเกตว่า value="${i}" ส่งแค่ตัวเลขเพียวๆ!
+            optionsHtml += `<option value="${i}" ${i == currentVal ? 'selected' : ''}>${i} ${label}</option>`;
+        }
+        contractSelect.innerHTML = optionsHtml;
         if (loadedProperties.length > 0) renderProperties();
     }
 
