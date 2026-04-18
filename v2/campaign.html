@@ -287,7 +287,6 @@
         document.getElementById('loading-container').innerHTML = "<h4>Invalid Link</h4>";
         return;
     }
-    trackEvent('open'); // 🚨 ยิงนับแต้ม Open ทันที!
 
         fetchExchangeRates();
 
@@ -311,6 +310,7 @@
 
             loadedProperties = result.data;
             campaignName = result.campTitle || "Special Collection"; // เก็บชื่อแคมเปญไว้ใช้ส่งเข้า Sheet
+            trackEvent('open');
             
             // 🚨 ดึง Title กับ Desc มาโชว์เป็นหัวเว็บ!
             document.getElementById('page-title').innerText = result.campTitle || "Special Offers";
@@ -345,7 +345,9 @@
             }
             let carouselControls = (prop.imageIds && prop.imageIds.length > 1) ? `<button class="carousel-control-prev" type="button" data-bs-target="#carousel-${i}" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button><button class="carousel-control-next" type="button" data-bs-target="#carousel-${i}" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>` : '';
 
-            let mapUrl = (prop.placeId && prop.placeId !== "") ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(prop.project)}&query_place_id=${prop.placeId}` : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(prop.project)}`;
+            let mapUrl = (prop.placeId && prop.placeId !== "") 
+                ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(prop.project)}&query_place_id=${prop.placeId}` 
+                : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(prop.project)}`;
             let mapBtn = `<a href="${mapUrl}" target="_blank" class="btn-action-sm"><i class="bi bi-map"></i> ${t.map}</a>`;
             let chatBtn = `<button onclick="openLeadModal(${i})" class="btn-action-sm"><i class="bi bi-chat-dots"></i> ${t.chat}</button>`;
 
@@ -409,6 +411,7 @@
 
     let leadModalObj;
     function openLeadModal(index) {
+        trackEvent('interest');
         if(!leadModalObj) leadModalObj = new bootstrap.Modal(document.getElementById('campaignLeadModal'));
         document.getElementById('campLeadStep1').style.display = 'block';
         document.getElementById('campLeadStep2').style.display = 'none';
@@ -426,6 +429,12 @@
         
         if (!name) return alert(t.alertName);
         if (!line && !waNum) return alert(t.alertContact);
+        if (line && line.length < 3) {
+            document.getElementById('campLineErr').classList.remove('d-none');
+            return; // หยุดการทำงานถ้าสั้นไป
+        } else {
+            document.getElementById('campLineErr').classList.add('d-none');
+        }
 
         const btn = document.getElementById('btnSubmitCamp');
         const orgText = btn.innerHTML;
