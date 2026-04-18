@@ -19,7 +19,6 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   
   <style>
-    /* ซ่อน scrollbar และจัดระเบียบ */
     body { background-color: #ffffff; font-family: 'Inter', sans-serif; color: #222222; padding-bottom: 90px; }
     .container { max-width: 540px; position: relative; min-height: 100vh; display: flex; flex-direction: column; padding-left: 24px; padding-right: 24px; }
     .header-logo { position: absolute; top: 15px; right: 24px; height: 70px; width: auto; z-index: 100; }
@@ -52,11 +51,11 @@
 <body>
 
   <div class="container py-3">
-    <img src="https://nebles.needhome.co/_next/image?url=%2Fimages%2Flogo.png&w=256&q=75" class="header-logo" alt="Nebles">
+    <img src="https://nebles.needhome.co/_next/image?url=%2Fimages%2Flogo.png&w=256&q=75" class="header-logo" alt="Nebles" fetchpriority="high">
     
     <div class="header-section">
-      <h2 class="req-title" id="page-title">Special Offers</h2>
-      <p class="req-subtitle" id="page-subtitle">Nebles is selecting the best units for you</p>
+      <h2 class="req-title" id="page-title">Loading Campaign...</h2>
+      <p class="req-subtitle" id="page-subtitle"></p>
     </div>
 
     <div id="loading-container" class="text-center" style="padding: 40px 0;">
@@ -85,7 +84,6 @@
         <div class="modal-body text-start pt-0 pb-4 px-4" id="campLeadStep1">
           <h4 class="fw-bold" style="color: #222;" id="modal-title">Interested</h4>
           <p class="text-muted small mb-4" id="modal-desc">Please provide details so our admin can contact you.</p>
-
           <input type="hidden" id="campTargetRoom">
 
           <div class="mb-3">
@@ -94,21 +92,18 @@
           </div>
 
           <label class="form-label fw-bold small text-dark mb-2"><span id="lbl-contact">Contact Method (At least 1)</span> <span class="text-danger">*</span></label>
-          
           <div class="mb-3">
             <div class="input-group" style="border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb;">
               <span class="input-group-text bg-white border-0 text-success fw-bold"><i class="bi bi-line"></i></span>
               <input type="text" class="form-control border-0 bg-white" id="campCusLine" placeholder="LINE ID">
             </div>
+            <div class="text-danger small fw-bold mt-1 d-none" id="campLineErr"><i class="bi bi-exclamation-circle"></i> <span id="lbl-line-err">Minimum 3 characters</span></div>
           </div>
 
           <div class="mb-4">
             <div class="input-group" style="border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb;">
               <span class="input-group-text bg-white border-0" style="color: #25D366; font-weight: bold;"><i class="bi bi-whatsapp"></i></span>
-              
-              <select class="form-select border-0 bg-white" id="campWaCode" style="max-width: 105px; font-weight: 600; font-size:0.85rem;">
-                </select>
-              
+              <select class="form-select border-0 bg-white" id="campWaCode" style="max-width: 95px; font-weight: 600; font-size:0.85rem;"></select>
               <input type="tel" class="form-control border-0 bg-white" id="campCusWaNum" placeholder="Phone Number">
             </div>
           </div>
@@ -152,7 +147,7 @@
             modalTitle: "Interested", modalDesc: "Please provide details so our admin can contact you.",
             name: "Name", contact: "Contact Method (At least 1)", submit: "Submit",
             sTitle: "Thank You!", sDesc: "Please click below to chat with our admin.", chatLine: "Chat via LINE", chatWa: "Chat via WhatsApp",
-            plName: "Your Name", plPhone: "Phone Number", alertName: "Please enter your name.", alertContact: "Please provide LINE or WhatsApp."
+            plName: "Your Name", plPhone: "Phone Number", alertName: "Please enter your name.", alertContact: "Please provide LINE or WhatsApp.", lineErr: "Min 3 characters"
         },
         TH: { 
             loading: "กำลังดึงข้อมูลห้อง..", match: "ดีลพิเศษ", petFriendly: "สัตว์เลี้ยง", map: "แผนที่", chat: "แชท", 
@@ -160,7 +155,7 @@
             modalTitle: "สนใจห้องพัก", modalDesc: "กรุณากรอกข้อมูลเพื่อให้แอดมินเช็คคิวและติดต่อกลับค่ะ",
             name: "ชื่อ-นามสกุล", contact: "ช่องทางติดต่อ (อย่างน้อย 1 อย่าง)", submit: "ส่งข้อมูล",
             sTitle: "ขอบคุณค่ะ!", sDesc: "ทีมงานจะรีบเช็คห้องให้ค่ะ โปรดกดปุ่มเพื่อแชทกับแอดมิน", chatLine: "แชทผ่าน LINE", chatWa: "แชทผ่าน WhatsApp",
-            plName: "ระบุชื่อของคุณ", plPhone: "เบอร์โทรศัพท์", alertName: "โปรดระบุชื่อด้วยค่ะ", alertContact: "โปรดระบุ LINE หรือ WhatsApp อย่างน้อย 1 ช่องทาง"
+            plName: "ระบุชื่อของคุณ", plPhone: "เบอร์โทรศัพท์", alertName: "โปรดระบุชื่อด้วยค่ะ", alertContact: "โปรดระบุ LINE หรือ WhatsApp อย่างน้อย 1 ช่องทาง", lineErr: "ขั้นต่ำ 3 ตัวอักษร"
         },
         CN: {
             loading: "正在加载房源..", match: "特价房", petFriendly: "宠物", map: "地图", chat: "聊天", 
@@ -168,24 +163,20 @@
             modalTitle: "感兴趣", modalDesc: "请提供您的详细信息，以便管理员与您联系。",
             name: "姓名", contact: "联系方式（至少提供1个）", submit: "提交",
             sTitle: "谢谢！", sDesc: "请点击下方与管理员聊天。", chatLine: "通过 LINE 聊天", chatWa: "通过 WhatsApp 聊天",
-            plName: "你的名字", plPhone: "电话号码", alertName: "请输入您的姓名。", alertContact: "请提供 LINE 或 WhatsApp。"
+            plName: "你的名字", plPhone: "电话号码", alertName: "请输入您的姓名。", alertContact: "请提供 LINE 或 WhatsApp。", lineErr: "至少3个字符"
         }
     };
 
-    // 🚨 ท่ายัดรหัสประเทศทั่วโลก
     const countryCodes = [
       {c: "TH", d: "+66"}, {c: "CN", d: "+86"}, {c: "HK", d: "+852"}, {c: "TW", d: "+886"}, {c: "SG", d: "+65"}, 
-      {c: "US", d: "+1"}, {c: "UK", d: "+44"}, {c: "JP", d: "+81"}, {c: "KR", d: "+81"}, {c: "MY", d: "+60"},
-      {c: "ID", d: "+62"}, {c: "PH", d: "+62"}, {c: "VN", d: "+63"}, {c: "IN", d: "+91"}, {c: "AE", d: "+971"},
-      {c: "AU", d: "+61"}, {c: "NZ", d: "+61"}, {c: "FR", d: "+33"}, {c: "DE", d: "+49"}, {c: "IT", d: "+49"}
-    ]; // ลิสต์หลักๆ เพื่อความไว
+      {c: "US", d: "+1"}, {c: "UK", d: "+44"}, {c: "JP", d: "+81"}, {c: "MY", d: "+60"}, {c: "ID", d: "+62"}, 
+      {c: "VN", d: "+84"}, {c: "IN", d: "+91"}, {c: "AE", d: "+971"}, {c: "AU", d: "+61"}, {c: "FR", d: "+33"}
+    ];
 
     function populateCountryCodes() {
       const select = document.getElementById('campWaCode');
       let html = '';
-      countryCodes.forEach(cc => {
-        html += `<option value="${cc.d}">${cc.c} ${cc.d}</option>`;
-      });
+      countryCodes.forEach(cc => { html += `<option value="${cc.d}">${cc.c} ${cc.d}</option>`; });
       select.innerHTML = html;
     }
 
@@ -210,15 +201,27 @@
         document.getElementById('btn-submit-txt').innerText = t.submit;
         document.getElementById('success-title').innerText = t.sTitle;
         document.getElementById('success-desc').innerText = t.sDesc;
+        document.getElementById('lbl-line-err').innerText = t.lineErr;
         document.getElementById('campCusName').placeholder = t.plName;
         document.getElementById('campCusWaNum').placeholder = t.plPhone;
 
         if (loadedProperties.length > 0) renderProperties();
     }
 
+    // ==========================================
+    // 🎨 UI Reveal
+    // ==========================================
+    function revealContent() {
+        document.getElementById('loading-container').style.display = 'none';
+        document.getElementById('property-container').style.display = 'block';
+        renderProperties();
+    }
+
+    // ==========================================
+    // 📥 Fetch Data
+    // ==========================================
     document.addEventListener('DOMContentLoaded', () => {
-        populateCountryCodes(); // ใส่รหัสประเทศ
-        
+        populateCountryCodes(); 
         if(!campId) {
             document.getElementById('loading-container').innerHTML = "<h4>Invalid Link</h4>";
             return;
@@ -245,23 +248,25 @@
             }
 
             loadedProperties = result.data;
-            campaignName = result.campName || "Special Collection";
+            campaignName = result.campTitle || "Special Collection"; // เก็บชื่อแคมเปญไว้ใช้ส่งเข้า Sheet
             
-            // 🚨 ดึง Title กับ Desc มาโชว์เป็นหัวเว็บ (เอามาจาก Admin กรอก)
+            // 🚨 ดึง Title กับ Desc มาโชว์เป็นหัวเว็บ!
             document.getElementById('page-title').innerText = result.campTitle || "Special Offers";
-            document.getElementById('page-subtitle').innerText = result.campDesc || "Nebles is selecting the best units for you";
+            document.getElementById('page-subtitle').innerText = result.campDesc || "";
             
             changeLanguageAndCurrency(currentLang); 
-            document.getElementById('property-container').style.display = 'block'; // โชว์ทันที
+            revealContent(); 
         }).catch(err => {
             document.getElementById('loading-container').innerHTML = "<h4>Error connecting to server</h4>";
         });
     });
 
+    // ==========================================
+    // 🏘️ Render
+    // ==========================================
     function renderProperties() {
         let html = '';
         const t = i18n[currentLang]; 
-        
         let curRate = 1;
         let curSymbol = "฿";
         if (currentLang === "EN") { curRate = exchangeRates.USD; curSymbol = "$"; }
