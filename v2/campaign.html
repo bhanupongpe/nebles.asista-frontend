@@ -480,6 +480,7 @@
     // ==========================================
     document.addEventListener('DOMContentLoaded', () => {
     populateCountryCodes(); 
+    changeLanguageAndCurrency(currentLang);
     if(!campId) {
         document.getElementById('loading-container').innerHTML = "<h4>Invalid Link</h4>";
         return;
