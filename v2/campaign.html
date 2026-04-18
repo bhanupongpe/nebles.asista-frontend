@@ -52,7 +52,12 @@
     .btn-card-booking:hover { background-color: #E31C5F; color: #ffffff; }
 
     /* 🚨 NEW CSS: AI Banner Style */
+    /* 🚨 อัปเดต CSS: AI Banner Style (ทำให้มันลอยตามจอ) */
     .ai-promo-banner {
+        position: sticky;  /* 👈 หัวใจหลัก! สั่งให้แปะติดขอบจอเวลาเลื่อนผ่าน */
+        top: 20px;         /* 👈 ระยะห่างจากขอบจอด้านบนตอนลอย */
+        z-index: 1050;     /* 👈 ดัน Layer ให้อยู่หน้าสุด จะได้ไม่โดนรูปห้องบัง */
+        
         background: linear-gradient(90deg, #f8faff 0%, #ffffff 100%);
         border: 1px solid #e2e8f0;
         border-radius: 16px;
@@ -64,6 +69,7 @@
         gap: 12px;
         text-decoration: none;
         transition: all 0.3s ease;
+        box-shadow: 0 10px 25px rgba(255, 56, 92, 0.15); /* 👈 เพิ่มเงาสีชมพูอ่อนๆ ให้มันดูเด้งออกมาจากพื้นเว็บ */
     }
     .ai-promo-banner:hover {
         border-color: #FF385C;
