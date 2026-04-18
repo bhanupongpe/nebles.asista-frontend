@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   
   <style>
-    /* CSS ออริจินัลของลูกพี่ (Skeleton, Fade, Card Premium) อยู่ครบ! */
+    /* CSS เอาพวก Fade/Animation ทิ้งหมด เน้นเร็ว! */
     body { background-color: #ffffff; font-family: 'Inter', sans-serif; color: #222222; padding-bottom: 90px; }
     .container { max-width: 540px; position: relative; min-height: 100vh; display: flex; flex-direction: column; padding-left: 24px; padding-right: 24px; }
     .header-logo { position: absolute; top: 15px; right: 24px; height: 70px; width: auto; z-index: 100; }
@@ -28,7 +28,7 @@
     .req-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; color: #222; }
     .req-subtitle { font-size: 0.95rem; color: #717171; line-height: 1.5; margin-bottom: 0 !important; }
 
-    .property-card { background: #fff; border-radius: 16px; overflow: hidden; margin-bottom: 32px; box-shadow: 0 6px 20px rgba(0,0,0,0.06); border: 1px solid #f0f0f0; transition: all 0.2s; position: relative; }
+    .property-card { background: #fff; border-radius: 16px; overflow: hidden; margin-bottom: 32px; box-shadow: 0 6px 20px rgba(0,0,0,0.06); border: 1px solid #f0f0f0; position: relative; }
     .card-img-wrapper { height: 280px; position: relative; }
     .carousel-item img { width: 100%; height: 280px; object-fit: cover; }
     
@@ -36,19 +36,17 @@
     .match-badge i { color: #FF385C; text-shadow: 0 2px 4px rgba(0,0,0,0.4); }
     .pet-badge { position: absolute; top: 44px; left: 16px; z-index: 10; background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.4); color: #222222; padding: 4px 12px; border-radius: 50px; font-weight: 600; font-size: 0.8rem; display: flex; align-items: center; gap: 4px; }
     
-    .btn-booking { background-color: #FF385C !important; color: #ffffff !important; border: none; padding: 10px 24px; border-radius: 30px; font-weight: 600; font-size: 0.95rem; transition: background-color 0.2s ease; cursor: pointer; }
     .action-btn-group { display: flex; gap: 6px; }
-    .btn-action-sm { font-size: 0.75rem; text-decoration: none; color: #4b5563; background: #f3f4f6; padding: 6px 12px; border-radius: 20px; border: none; display: flex; align-items: center; gap: 4px; font-weight: 600; transition: 0.2s; cursor: pointer; }
+    .btn-action-sm { font-size: 0.75rem; text-decoration: none; color: #4b5563; background: #f3f4f6; padding: 6px 12px; border-radius: 20px; border: none; display: flex; align-items: center; gap: 4px; font-weight: 600; cursor: pointer; }
     
     .card-body-premium { padding: 20px; }
-    .project-name { font-size: 1.2rem; font-weight: 600; margin-bottom: 6px; color: #222; }
     .location-text { font-size: 0.95rem; color: #717171; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
     .price-wrap { display: flex; align-items:baseline; gap: 6px; margin-bottom: 12px; }
     .price-amt { font-size: 1.35rem; font-weight: 700; color: #222; }
     .price-label { font-size: 0.95rem; color: #717171; }
     .specs-inline { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; color: #717171; margin-bottom: 16px; flex-wrap: wrap; }
     .spec-dot { font-size: 10px; color: #d1d5db; }
-    .amenities-row { display: flex; gap: 16px; font-size: 0.85rem; color: #717171; border-top: 1px solid #ebebeb; padding-top: 16px; }
+    .amenities-row { display: flex; gap: 16px; font-size: 0.85rem; color: #717171; border-top: 1px solid #ebebeb; padding-top: 16px; margin-bottom: 16px;}
 
     .lang-switcher { position: absolute; top: 25px; left: 24px; z-index: 100; }
     .lang-switcher select { background: rgba(255,255,255,0.9); border: 1px solid #ebebeb; border-radius: 20px; padding: 4px 12px; font-size: 0.85rem; font-weight: 600; outline: none; box-shadow: 0 2px 10px rgba(0,0,0,0.05); cursor: pointer; }
@@ -56,17 +54,9 @@
     .footer-text { text-align: center; font-size: 0.85rem; color: #6c757d; margin-top: auto; padding-top: 40px; }
     #final-req-text { font-size: 0.95rem; font-weight: 500; color: #4b5563; word-spacing: 2px; letter-spacing: 0.3px; margin-top: 4px; margin-bottom: 24px; }
     
-    .typing-cursor::after { content: '█'; font-size: 0.9rem; margin-left: 6px; color: #222; animation: blink-cursor 0.8s step-end infinite; }
-    @keyframes blink-cursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-
     .modal-content { border-radius: 20px; border: none; }
-    .btn-card-booking { background-color: #FF385C; color: #ffffff; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: 600; font-size: 0.95rem; margin-top: 16px; transition: 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-card-booking { background-color: #FF385C; color: #ffffff; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: 600; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;}
     .btn-card-booking:hover { background-color: #E31C5F; color: #ffffff; }
-
-    .fade-element { opacity: 1; transition: opacity 0.5s ease-in-out, transform 0.5s ease-out; }
-    .fade-out { opacity: 0; transform: translateY(-10px); pointer-events: none; }
-    .fade-in { animation: smoothReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-    @keyframes smoothReveal { 0% { opacity: 0; transform: translateY(15px); } 100% { opacity: 1; transform: translateY(0); } }
 
     .skeleton { background: linear-gradient(110deg, #f3f4f6 8%, #f9fafb 18%, #f3f4f6 33%); background-size: 200% 100%; animation: 2s shine linear infinite; border-radius: 8px; }
     @keyframes shine { to { background-position-x: -200%; } }
@@ -87,18 +77,13 @@
     </div>
 
     <div id="loading-container" class="text-center" style="padding: 40px 0;">
-      <p id="loading-msg-state" style="font-size: 1.1rem; color: #222; font-weight: 600; margin-bottom: 24px;" class="typing-cursor">Loading properties..</p>
+      <p id="loading-msg-state" style="font-size: 1.1rem; color: #222; font-weight: 600; margin-bottom: 24px;">Loading properties..</p>
       
       <div id="skeleton-loader" style="text-align: left;">
           <div class="skeleton-card">
               <div class="skeleton skeleton-img"></div>
               <div class="skeleton skeleton-text"></div>
               <div class="skeleton skeleton-text-sm"></div>
-          </div>
-          <div class="skeleton-card">
-              <div class="skeleton skeleton-img"></div>
-              <div class="skeleton skeleton-text" style="width: 60%;"></div>
-              <div class="skeleton skeleton-text-sm" style="width: 40%;"></div>
           </div>
       </div>
     </div>
@@ -135,7 +120,7 @@
 
           <div class="mb-3">
             <label class="form-label fw-bold small text-dark"><span id="lbl-name">Name</span> <span class="text-danger">*</span></label>
-            <input type="text" class="form-control bg-light border-0" id="campCusName" style="border-radius: 12px; padding: 12px;">
+            <input type="text" class="form-control bg-light border-0" id="campCusName" style="border-radius: 12px; padding: 12px;" placeholder="Your Name">
           </div>
 
           <label class="form-label fw-bold small text-dark mb-2"><span id="lbl-contact">Contact Method (At least 1)</span> <span class="text-danger">*</span></label>
@@ -183,9 +168,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
   <script>
-    // 🚨 ใส่ URL GAS ของมึง
     const gasApiUrl = "https://script.google.com/macros/s/AKfycbya2rWPhgYN7e9rmBuLffXjrJnRnFdmkRkL84Dib8NilKQAfXxmEmGwFfaq5aVkPW4q/exec";
-    
     const urlParams = new URLSearchParams(window.location.search);
     const campId = urlParams.get('campId');
     const utmSource = urlParams.get('utm_source') || "";
@@ -201,30 +184,34 @@
     let exchangeRates = { THB: 1, USD: 0.028, CNY: 0.20 }; 
     const currencySymbols = { TH: "฿", EN: "$", CN: "¥" };
 
+    // Dictionary แปลภาษาแบบจัดเต็มยัน Placeholder
     const i18n = {
         EN: { 
             subtitle: "Nebles is selecting the best units for you", loading: "Loading properties..", 
-            match: "HOT DEAL", rented: "RENTED OUT", petFriendly: "Pet Friendly", map: "Map", chat: "Chat", 
-            size: "Size", floor: "Fl", sqm: "sqm", month: "month", requestBooking: "I'm Interested", priceFor: "For",
+            match: "HOT DEAL", petFriendly: "Pet Friendly", map: "Map", chat: "Chat", 
+            size: "Size", floor: "Fl", sqm: "sqm", month: "month", requestBooking: "I'm Interested",
             modalTitle: "Interested", modalDesc: "Please provide details so our admin can contact you.",
-            name: "Name", contact: "Contact Method (At least 1)", lineErr: "Min 3 chars", submit: "Submit",
-            sTitle: "Thank You!", sDesc: "Please click below to chat with our admin.", chatLine: "Chat via LINE", chatWa: "Chat via WhatsApp"
+            name: "Name", contact: "Contact Method (At least 1)", lineErr: "Min 3 characters", submit: "Submit",
+            sTitle: "Thank You!", sDesc: "Please click below to chat with our admin.", chatLine: "Chat via LINE", chatWa: "Chat via WhatsApp",
+            plName: "Your Name", plPhone: "Phone Number", alertName: "Please enter your name.", alertContact: "Please provide LINE or WhatsApp."
         },
         TH: { 
             subtitle: "Nebles กำลังคัดเลือกห้องที่ดีที่สุดให้คุณ", loading: "กำลังดึงข้อมูลห้อง..", 
-            match: "ดีลพิเศษ", rented: "ปล่อยเช่าแล้ว", petFriendly: "รับสัตว์เลี้ยง", map: "แผนที่", chat: "แชท", 
-            size: "ขนาด", floor: "ชั้น", sqm: "ตร.ม.", month: "เดือน", requestBooking: "สนใจห้องนี้", priceFor: "สำหรับสัญญา",
+            match: "ดีลพิเศษ", petFriendly: "รับสัตว์เลี้ยง", map: "แผนที่", chat: "แชท", 
+            size: "ขนาด", floor: "ชั้น", sqm: "ตร.ม.", month: "เดือน", requestBooking: "สนใจห้องนี้",
             modalTitle: "สนใจห้องพัก", modalDesc: "กรุณากรอกข้อมูลเพื่อให้แอดมินเช็คคิวและติดต่อกลับค่ะ",
             name: "ชื่อ-นามสกุล", contact: "ช่องทางติดต่อ (อย่างน้อย 1 อย่าง)", lineErr: "ขั้นต่ำ 3 ตัวอักษร", submit: "ส่งข้อมูล",
-            sTitle: "ขอบคุณค่ะ!", sDesc: "ทีมงานจะรีบเช็คห้องให้ค่ะ โปรดกดปุ่มเพื่อแชทกับแอดมิน", chatLine: "แชทผ่าน LINE", chatWa: "แชทผ่าน WhatsApp"
+            sTitle: "ขอบคุณค่ะ!", sDesc: "ทีมงานจะรีบเช็คห้องให้ค่ะ โปรดกดปุ่มเพื่อแชทกับแอดมิน", chatLine: "แชทผ่าน LINE", chatWa: "แชทผ่าน WhatsApp",
+            plName: "ระบุชื่อของคุณ", plPhone: "เบอร์โทรศัพท์", alertName: "โปรดระบุชื่อด้วยค่ะ", alertContact: "โปรดระบุ LINE หรือ WhatsApp อย่างน้อย 1 ช่องทาง"
         },
         CN: {
             subtitle: "Nebles 正在为您挑选最佳房源", loading: "正在加载房源..", 
-            match: "特价房", rented: "已出租", petFriendly: "允许宠物", map: "地图", chat: "聊天", 
-            size: "面积", floor: "楼层", sqm: "平方米", month: "月", requestBooking: "我感兴趣", priceFor: "租期为",
+            match: "特价房", petFriendly: "允许宠物", map: "地图", chat: "聊天", 
+            size: "面积", floor: "楼层", sqm: "平方米", month: "月", requestBooking: "我感兴趣",
             modalTitle: "感兴趣", modalDesc: "请提供您的详细信息，以便管理员与您联系。",
             name: "姓名", contact: "联系方式（至少提供1个）", lineErr: "至少3个字符", submit: "提交",
-            sTitle: "谢谢！", sDesc: "请点击下方与管理员聊天。", chatLine: "通过 LINE 聊天", chatWa: "通过 WhatsApp 聊天"
+            sTitle: "谢谢！", sDesc: "请点击下方与管理员聊天。", chatLine: "通过 LINE 聊天", chatWa: "通过 WhatsApp 聊天",
+            plName: "你的名字", plPhone: "电话号码", alertName: "请输入您的姓名。", alertContact: "请提供 LINE 或 WhatsApp。"
         }
     };
 
@@ -242,9 +229,9 @@
         const t = i18n[currentLang];
         
         document.getElementById('page-subtitle').innerText = t.subtitle;
-        document.querySelector('.typing-cursor').innerText = t.loading;
+        document.getElementById('loading-msg-state').innerText = t.loading;
         
-        // แปลภาษาใน Modal ท่าที่ 3
+        // อัปเดตภาษาใน Pop-up Modal
         document.getElementById('modal-title').innerText = t.modalTitle;
         document.getElementById('modal-desc').innerText = t.modalDesc;
         document.getElementById('lbl-name').innerText = t.name;
@@ -253,33 +240,22 @@
         document.getElementById('btn-submit-txt').innerText = t.submit;
         document.getElementById('success-title').innerText = t.sTitle;
         document.getElementById('success-desc').innerText = t.sDesc;
+        document.getElementById('campCusName').placeholder = t.plName;
+        document.getElementById('campCusWaNum').placeholder = t.plPhone;
 
         if (loadedProperties.length > 0) renderProperties();
     }
 
     // ==========================================
-    // 🎨 2. ระบบ UI Reveal
+    // 🎨 2. ระบบ UI Reveal (ตัดเวลาหน่วงทิ้ง โชว์ทันที!)
     // ==========================================
     function revealContent(textToType) {
-        const loadingContainer = document.getElementById('loading-container');
-        const propertyContainer = document.getElementById('property-container');
-        const summaryContainer = document.getElementById('req-summary');
-        const typeArea = document.getElementById('loading-msg-state');
-
-        typeArea.innerHTML = textToType; 
-        typeArea.classList.remove('typing-cursor');
-        loadingContainer.classList.add('fade-element', 'fade-out');
-
-        setTimeout(() => {
-            loadingContainer.style.display = 'none';
-            summaryContainer.style.display = 'block';
-            propertyContainer.style.display = 'block';
-            
-            summaryContainer.classList.add('fade-in');
-            propertyContainer.classList.add('fade-in');
-            
-            renderProperties();
-        }, 500); 
+        document.getElementById('loading-container').style.display = 'none';
+        document.getElementById('req-summary').style.display = 'block';
+        document.getElementById('property-container').style.display = 'block';
+        
+        document.getElementById('final-req-text').innerText = textToType;
+        renderProperties();
     }
 
     // ==========================================
@@ -315,10 +291,9 @@
             campaignName = result.campName || "Special Collection";
             
             document.getElementById('page-title').innerText = campaignName;
-            document.getElementById('final-req-text').innerText = "📌 " + campaignName;
             
-            changeLanguageAndCurrency(currentLang); // เซ็ต EN เป็นค่าเริ่มต้น
-            revealContent(document.getElementById('final-req-text').innerText);
+            changeLanguageAndCurrency(currentLang); 
+            revealContent("📌 " + campaignName);
         }).catch(err => {
             console.error(err);
             document.getElementById('loading-container').innerHTML = "<h4>Error connecting to server</h4>";
@@ -326,7 +301,7 @@
     });
 
     // ==========================================
-    // 🏘️ 4. Render Properties (แบบ Premium)
+    // 🏘️ 4. Render Properties (เพิ่ม Map ใหม่ + ดึงระยะรถไฟฟ้า)
     // ==========================================
     function renderProperties() {
         let html = '';
@@ -348,7 +323,11 @@
             }
             let carouselControls = (prop.imageIds && prop.imageIds.length > 1) ? `<button class="carousel-control-prev" type="button" data-bs-target="#carousel-${i}" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button><button class="carousel-control-next" type="button" data-bs-target="#carousel-${i}" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>` : '';
 
-            let mapUrl = (prop.placeId && prop.placeId !== "") ? `http://googleusercontent.com/maps.google.com/?q=${encodeURIComponent(prop.project)}&query_place_id=${prop.placeId}` : `http://googleusercontent.com/maps.google.com/?q=${encodeURIComponent(prop.project)}`;
+            // 🚨 อัปเดตลิ้งก์ Map ให้เป็น API มาตรฐาน (แก้ 404)
+            let mapUrl = (prop.placeId && prop.placeId !== "") 
+                ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(prop.project)}&query_place_id=${prop.placeId}` 
+                : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(prop.project)}`;
+                
             let mapBtn = `<a href="${mapUrl}" target="_blank" class="btn-action-sm"><i class="bi bi-map"></i> ${t.map}</a>`;
             let chatBtn = `<button onclick="openLeadModal(${i})" class="btn-action-sm"><i class="bi bi-chat-dots"></i> ${t.chat}</button>`;
 
@@ -364,6 +343,14 @@
                 let convertedPrice = Math.round(finalPriceTHB * curRate);
                 convertedPriceHtml = `<span style="font-size: 0.85rem; color: #717171; font-weight: 500; margin-left: 6px;">(~ ${curSymbol}${convertedPrice.toLocaleString()})</span>`;
             }
+
+            // 🚨 ดึงข้อมูลสถานีรถไฟฟ้า + ระยะทาง
+            let stationName = "N/A";
+            if (prop.bts1 && prop.bts1 !== "No Rail Nearby" && prop.bts1 !== "-" && prop.bts1 !== "WAITING...") {
+                stationName = prop.bts1.includes('-') ? prop.bts1.substring(prop.bts1.indexOf('-') + 1).trim() : prop.bts1;
+            }
+            
+            let stationHtml = (stationName !== "N/A") ? `<div class="amenities-row"><span><i class="bi bi-train-front"></i> ${stationName} (${prop.dist1}m)</span></div>` : '';
 
             html += `
               <div class="property-card">
@@ -394,6 +381,8 @@
                     <span>${t.floor}: ${prop.floor}</span>
                   </div>
                   
+                  ${stationHtml}
+                  
                   <button class="btn-card-booking" onclick="openLeadModal(${i})"><i class="bi bi-check2-circle"></i> ${t.requestBooking}</button>
                 </div>
             </div>`;
@@ -420,9 +409,10 @@
         const name = document.getElementById('campCusName').value.trim();
         const line = document.getElementById('campCusLine').value.trim();
         const waNum = document.getElementById('campCusWaNum').value.trim();
+        const t = i18n[currentLang];
         
-        if (!name) return alert(currentLang === "TH" ? "โปรดระบุชื่อ" : "Please enter your name");
-        if (!line && !waNum) return alert(currentLang === "TH" ? "ระบุ LINE หรือ WhatsApp" : "Provide LINE or WhatsApp");
+        if (!name) return alert(t.alertName);
+        if (!line && !waNum) return alert(t.alertContact);
 
         const btn = document.getElementById('btnSubmitCamp');
         const orgText = btn.innerHTML;
@@ -464,10 +454,10 @@
         let btns = "";
         
         if (hasLine) {
-            btns += `<a href="https://line.me/R/oaMessage/@needhome_th/?${msg}" target="_blank" class="btn btn-lg w-100 mb-3 fw-bold" style="background-color:#00c300; color:white; border-radius:12px;"><i class="bi bi-line"></i> ${t.chatLine}</a>`;
+            btns += `<a href="https://line.me/R/oaMessage/@needhome_th/?${msg}" target="_blank" class="btn btn-lg w-100 mb-3 fw-bold shadow-sm" style="background-color:#00c300; color:white; border-radius:12px;"><i class="bi bi-line"></i> ${t.chatLine}</a>`;
         }
         if (hasWa) {
-            btns += `<a href="https://wa.me/66962435566?text=${msg}" target="_blank" class="btn btn-lg w-100 fw-bold" style="background-color:#25D366; color:white; border-radius:12px;"><i class="bi bi-whatsapp"></i> ${t.chatWa}</a>`;
+            btns += `<a href="https://wa.me/66962435566?text=${msg}" target="_blank" class="btn btn-lg w-100 fw-bold shadow-sm" style="background-color:#25D366; color:white; border-radius:12px;"><i class="bi bi-whatsapp"></i> ${t.chatWa}</a>`;
         }
         document.getElementById('dynamicAppButtons').innerHTML = btns;
     }
