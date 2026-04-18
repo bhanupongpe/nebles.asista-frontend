@@ -534,6 +534,7 @@
         })
         .catch(err => { 
             console.error("Submission failed:", err);
+            alert("🔥 Error หลังบ้าน: " + err.message);
             btn.innerHTML = orgText; btn.disabled = false;
             
             // 🚨 สำรองข้อมูลไว้ใน LocalStorage เผื่อตามเก็บทีหลัง (Data Recovery)
