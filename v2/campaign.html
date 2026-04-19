@@ -628,16 +628,49 @@
 
             let petBadgeHtml = (prop.petPolicy && String(prop.petPolicy).trim() === "Pet Friendly") ? `<div class="pet-badge"><i class="bi bi-suit-heart-fill"></i> ${t.petFriendly}</div>` : '';
 
-            let pShort = prop.prices && prop.prices.short ? parseFloat(prop.prices.short) : 0;
-            let pMid = prop.prices && prop.prices.mid ? parseFloat(prop.prices.mid) : 0;
-            let pLong = prop.prices && prop.prices.long ? parseFloat(prop.prices.long) : 0;
-            let finalPriceTHB = pLong > 0 ? pLong : (pMid > 0 ? pMid : pShort);
+            // 1. ดึงราคามาเตรียมไว้ (โค้ดเดิมมึง)
+let pShort = prop.prices && prop.prices.short ? parseFloat(prop.prices.short) : 0;
+let pMid = prop.prices && prop.prices.mid ? parseFloat(prop.prices.mid) : 0;
+let pLong = prop.prices && prop.prices.long ? parseFloat(prop.prices.long) : 0;
 
-            let convertedPriceHtml = "";
-            if (currentLang !== "TH") {
-                let convertedPrice = Math.round(finalPriceTHB * curRate);
-                convertedPriceHtml = `<span style="font-size: 0.85rem; color: #717171; font-weight: 500; margin-left: 6px;">(~ ${curSymbol}${convertedPrice.toLocaleString()})</span>`;
-            }
+let activePrice = 0;
+let prefixText = "";
+
+// 2. ลอจิกเลือกราคาที่สั้นที่สุด (Short -> Mid -> Long) พร้อมแปล 3 ภาษา
+if (pShort > 0) {
+    activePrice = pShort;
+    if (currentLang === "EN") prefixText = "Start 1 month";
+    else if (currentLang === "CN") prefixText = "1个月起租";
+    else prefixText = "เริ่มต้น 1 เดือน"; // Default ภาษาไทย
+} else if (pMid > 0) {
+    activePrice = pMid;
+    if (currentLang === "EN") prefixText = "Start 6 months";
+    else if (currentLang === "CN") prefixText = "6个月起租";
+    else prefixText = "เริ่มต้น 6 เดือน";
+} else if (pLong > 0) {
+    activePrice = pLong;
+    if (currentLang === "EN") prefixText = "Start 1 year";
+    else if (currentLang === "CN") prefixText = "1年起租";
+    else prefixText = "เริ่มต้น 1 ปี";
+}
+
+let convertedPriceHtml = "";
+
+// 3. ปั้น HTML โชว์ราคาและค่าเงิน
+if (activePrice > 0) {
+    // โชว์ราคาฐาน (THB) พร้อมข้อความ Start...
+    convertedPriceHtml = `<span style="font-weight: 600; color: #0d6efd;">${prefixText}: ฿${activePrice.toLocaleString()}</span>`;
+    
+    // ถ้าไม่ใช่ภาษาไทย ให้เอาไปคูณเรทเงินและโชว์กำกับด้านหลัง
+    if (currentLang !== "TH") {
+        let convertedPrice = Math.round(activePrice * curRate);
+        convertedPriceHtml += `<span style="font-size: 0.8rem; color: #717171; font-weight: 500; margin-left: 6px;">(~${curSymbol}${convertedPrice.toLocaleString()})</span>`;
+    }
+} else {
+    // กันเหนียว กรณีห้องนี้ไม่มีใส่ราคามาเลย
+    let noPriceText = currentLang === "EN" ? "Price on request" : (currentLang === "CN" ? "价格请咨询" : "ไม่ระบุราคา");
+    convertedPriceHtml = `<span style="font-size: 0.85rem; color: #717171;">${noPriceText}</span>`;
+}
 
             let stationName = "N/A";
             if (prop.bts1 && prop.bts1 !== "No Rail Nearby" && prop.bts1 !== "-" && prop.bts1 !== "WAITING...") {
