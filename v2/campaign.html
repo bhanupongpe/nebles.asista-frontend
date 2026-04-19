@@ -620,57 +620,53 @@
             }
             let carouselControls = (prop.imageIds && prop.imageIds.length > 1) ? `<button class="carousel-control-prev" type="button" data-bs-target="#carousel-${i}" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button><button class="carousel-control-next" type="button" data-bs-target="#carousel-${i}" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>` : '';
 
+            // 🚨 แก้ลิงก์แผนที่ (เติม $ ที่หายไป)
             let mapUrl = (prop.placeId && prop.placeId !== "") 
-                ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(prop.project)}&query_place_id=${prop.placeId}` 
-                : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(prop.project)}`;
+                ? `https://www.google.com/maps/search/?api=1&query=$?q=${encodeURIComponent(prop.project)}&query_place_id=${prop.placeId}` 
+                : `https://www.google.com/maps/search/?api=1&query=$?q=${encodeURIComponent(prop.project)}`;
             let mapBtn = `<a href="${mapUrl}" target="_blank" class="btn-action-sm"><i class="bi bi-map"></i> ${t.map}</a>`;
             let chatBtn = `<button onclick="openLeadModal(${i})" class="btn-action-sm"><i class="bi bi-chat-dots"></i> ${t.chat}</button>`;
 
             let petBadgeHtml = (prop.petPolicy && String(prop.petPolicy).trim() === "Pet Friendly") ? `<div class="pet-badge"><i class="bi bi-suit-heart-fill"></i> ${t.petFriendly}</div>` : '';
 
-            // 1. ดึงราคามาเตรียมไว้ (โค้ดเดิมมึง)
-let pShort = prop.prices && prop.prices.short ? parseFloat(prop.prices.short) : 0;
-let pMid = prop.prices && prop.prices.mid ? parseFloat(prop.prices.mid) : 0;
-let pLong = prop.prices && prop.prices.long ? parseFloat(prop.prices.long) : 0;
+            // 1. ดึงราคา
+            let pShort = prop.prices && prop.prices.short ? parseFloat(prop.prices.short) : 0;
+            let pMid = prop.prices && prop.prices.mid ? parseFloat(prop.prices.mid) : 0;
+            let pLong = prop.prices && prop.prices.long ? parseFloat(prop.prices.long) : 0;
 
-let activePrice = 0;
-let prefixText = "";
+            let activePrice = 0;
+            let prefixText = "";
 
-// 2. ลอจิกเลือกราคาที่สั้นที่สุด (Short -> Mid -> Long) พร้อมแปล 3 ภาษา
-if (pShort > 0) {
-    activePrice = pShort;
-    if (currentLang === "EN") prefixText = "Start 1 month";
-    else if (currentLang === "CN") prefixText = "1个月起租";
-    else prefixText = "เริ่มต้น 1 เดือน"; // Default ภาษาไทย
-} else if (pMid > 0) {
-    activePrice = pMid;
-    if (currentLang === "EN") prefixText = "Start 6 months";
-    else if (currentLang === "CN") prefixText = "6个月起租";
-    else prefixText = "เริ่มต้น 6 เดือน";
-} else if (pLong > 0) {
-    activePrice = pLong;
-    if (currentLang === "EN") prefixText = "Start 1 year";
-    else if (currentLang === "CN") prefixText = "1年起租";
-    else prefixText = "เริ่มต้น 1 ปี";
-}
+            // 2. เลือกระยะสั้นสุด
+            if (pShort > 0) {
+                activePrice = pShort;
+                prefixText = currentLang === "EN" ? "1 month" : (currentLang === "CN" ? "1个月" : "1 เดือน");
+            } else if (pMid > 0) {
+                activePrice = pMid;
+                prefixText = currentLang === "EN" ? "6 months" : (currentLang === "CN" ? "6个月" : "6 เดือน");
+            } else if (pLong > 0) {
+                activePrice = pLong;
+                prefixText = currentLang === "EN" ? "1 year" : (currentLang === "CN" ? "1年" : "1 ปี");
+            }
 
-let convertedPriceHtml = "";
+            let convertedPriceHtml = "";
 
-// 3. ปั้น HTML โชว์ราคาและค่าเงิน
-if (activePrice > 0) {
-    // โชว์ราคาฐาน (THB) พร้อมข้อความ Start...
-    convertedPriceHtml = `<span style="font-weight: 600; color: #0d6efd;">${prefixText}: ฿${activePrice.toLocaleString()}</span>`;
-    
-    // ถ้าไม่ใช่ภาษาไทย ให้เอาไปคูณเรทเงินและโชว์กำกับด้านหลัง
-    if (currentLang !== "TH") {
-        let convertedPrice = Math.round(activePrice * curRate);
-        convertedPriceHtml += `<span style="font-size: 0.8rem; color: #717171; font-weight: 500; margin-left: 6px;">(~${curSymbol}${convertedPrice.toLocaleString()})</span>`;
-    }
-} else {
-    // กันเหนียว กรณีห้องนี้ไม่มีใส่ราคามาเลย
-    let noPriceText = currentLang === "EN" ? "Price on request" : (currentLang === "CN" ? "价格请咨询" : "ไม่ระบุราคา");
-    convertedPriceHtml = `<span style="font-size: 0.85rem; color: #717171;">${noPriceText}</span>`;
-}
+            // 3. ปั้น HTML ราคาแบบตัวใหญ่ๆ เหมือนเดิม
+            if (activePrice > 0) {
+                // ราคาฐาน 
+                convertedPriceHtml = `
+                    <span class="price-amt">฿${activePrice.toLocaleString()}</span>
+                    <span class="price-label">/ Start ${prefixText}</span>
+                `;
+                // แปลงเงิน
+                if (currentLang !== "TH") {
+                    let convertedPrice = Math.round(activePrice * curRate);
+                    convertedPriceHtml += `<span style="font-size: 0.85rem; color: #717171; font-weight: 500; margin-left: 6px;">(~${curSymbol}${convertedPrice.toLocaleString()})</span>`;
+                }
+            } else {
+                let noPriceText = currentLang === "EN" ? "Price on request" : (currentLang === "CN" ? "价格请咨询" : "ไม่ระบุราคา");
+                convertedPriceHtml = `<span class="price-amt text-muted" style="font-size: 1.1rem;">${noPriceText}</span>`;
+            }
 
             let stationName = "N/A";
             if (prop.bts1 && prop.bts1 !== "No Rail Nearby" && prop.bts1 !== "-" && prop.bts1 !== "WAITING...") {
@@ -678,6 +674,7 @@ if (activePrice > 0) {
             }
             let stationHtml = (stationName !== "N/A") ? `<div class="amenities-row"><span><i class="bi bi-train-front"></i> ${stationName} (${prop.dist1}m)</span></div>` : '';
 
+            // 🚨 ประกอบร่างการ์ด (เอาตัวแปรผี finalPriceTHB ออกแล้ว!)
             html += `
               <div class="property-card">
                 <div class="card-img-wrapper">
@@ -696,8 +693,6 @@ if (activePrice > 0) {
                   <div class="location-text"><i class="bi bi-geo-alt"></i> ${prop.zone || "-"}</div>
                   
                   <div class="price-wrap" style="display: flex; align-items: baseline; gap: 6px; margin-bottom: 16px;">
-                    <span class="price-amt">฿${parseInt(finalPriceTHB).toLocaleString()}</span>
-                    <span class="price-label">/ ${t.month}</span>
                     ${convertedPriceHtml}
                   </div>
                   
