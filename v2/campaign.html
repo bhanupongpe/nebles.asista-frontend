@@ -637,26 +637,28 @@
             let activePrice = 0;
             let prefixText = "";
 
-            // 2. เลือกระยะสั้นสุด
+            // 2. เลือกระยะสั้นสุด + คำโฆษณา (MKT Copywriting)
             if (pShort > 0) {
                 activePrice = pShort;
-                prefixText = currentLang === "EN" ? "1 month" : (currentLang === "CN" ? "1个月" : "1 เดือน");
+                // เน้นดึงดูดคนหาห้องระยะสั้น
+                prefixText = currentLang === "EN" ? "/ Starts from 1 month" : (currentLang === "CN" ? "/ 支持短租 (1个月起)" : "/ เช่าเริ่มต้น 1 เดือน");
             } else if (pMid > 0) {
                 activePrice = pMid;
-                prefixText = currentLang === "EN" ? "6 months" : (currentLang === "CN" ? "6个月" : "6 เดือน");
+                prefixText = currentLang === "EN" ? "/ Starts from 6 months" : (currentLang === "CN" ? "/ 半年起租" : "/ เช่าเริ่มต้น 6 เดือน");
             } else if (pLong > 0) {
                 activePrice = pLong;
-                prefixText = currentLang === "EN" ? "1 year" : (currentLang === "CN" ? "1年" : "1 ปี");
+                // ถ้ารายปี ใช้คำว่าสัญญารายปีไปเลยดูโปรฯ กว่า
+                prefixText = currentLang === "EN" ? "/ 1-Year Lease" : (currentLang === "CN" ? "/ 1年起租" : "/ สัญญารายปี");
             }
 
             let convertedPriceHtml = "";
 
-            // 3. ปั้น HTML ราคาแบบตัวใหญ่ๆ เหมือนเดิม
+            // 3. ปั้น HTML ราคาแบบตัวใหญ่ๆ (ลบคำว่า / Start แบบทื่อๆ ออกไปแล้ว)
             if (activePrice > 0) {
                 // ราคาฐาน 
                 convertedPriceHtml = `
                     <span class="price-amt">฿${activePrice.toLocaleString()}</span>
-                    <span class="price-label">/ Start ${prefixText}</span>
+                    <span class="price-label">${prefixText}</span>
                 `;
                 // แปลงเงิน
                 if (currentLang !== "TH") {
