@@ -716,25 +716,15 @@
 
     let leadModalObj;
     function openLeadModal(index) {
-    // 1. ดึงข้อมูลห้องจาก Array ตามลำดับ index ที่กดมาก่อน
-    const room = loadedProperties[index];
-
-    // 2. ยิง Log ทันที โดยส่ง 'interest' พ่วงรหัสห้อง (room.id) ไปด้วย
-    // (ย้ำ: ฟังก์ชัน trackEvent มึงต้องแก้ให้รับค่าที่สองตามที่คุยกันไว้ด้วยนะ)
-    trackEvent('interest', room.id);
-
-    // 3. จัดการเรื่อง Modal UI ตามปกติของมึง
-    if(!leadModalObj) leadModalObj = new bootstrap.Modal(document.getElementById('campaignLeadModal'));
-    
-    document.getElementById('campLeadStep1').style.display = 'block';
-    document.getElementById('campLeadStep2').style.display = 'none';
-    
-    // ใส่รหัสห้องลงใน input hidden เพื่อเอาไว้ใช้ตอนส่งฟอร์ม (Submit)
-    document.getElementById('campTargetRoom').value = room.id;
-    
-    // สั่งเปิดหน้าต่าง Modal
-    leadModalObj.show();
-}
+        trackEvent('interest');
+        if(!leadModalObj) leadModalObj = new bootstrap.Modal(document.getElementById('campaignLeadModal'));
+        document.getElementById('campLeadStep1').style.display = 'block';
+        document.getElementById('campLeadStep2').style.display = 'none';
+        
+        const room = loadedProperties[index];
+        document.getElementById('campTargetRoom').value = room.id;
+        leadModalObj.show();
+    }
 
     function submitCampaignLead() {
         // 🚨 1. ดึงค่าทั้งหมด (เพิ่ม Move In กับ PDPA ให้ครบ)
@@ -859,35 +849,24 @@
     }
 
     // 🚀 ฟังก์ชันยิง Log เบื้องหลัง (Fire & Forget)
-    function trackEvent(type, roomId = null) {
+    function trackEvent(type) {
         if (!campId) return;
-
-        let eventValue = type;
-        if (roomId) {
-            eventValue = type + ":" + roomId;
-        }
-
+        
         const payload = {
-            action: "trackEventLog",
+            action: "trackEventLog", // เปลี่ยนชื่อ Action ให้ชัดเจน
             campaignId: campId,
-            eventType: eventValue,
-            sessionId: getSessionId(),
+            eventType: type, // 'open' หรือ 'interest'
+            sessionId: getSessionId(), // 🚨 ส่งรหัสเครื่องไปด้วย!
             deviceOS: getDeviceOS(),
             utm_source: utmSource,
             utm_medium: utmMedium,
             utm_campaign: urlParams.get('utm_campaign') || campaignName
         };
 
-        // ยิงผ่าน google.script.run (ถ้าอยู่ในระบบ GAS)
-        if (typeof google !== 'undefined' && google.script && google.script.run) {
-            google.script.run.trackEventLog(payload);
-        }
-
-        // ยิงผ่าน fetch (สำรองไว้ หรือใช้คู่กันตามสะดวก)
         fetch(gasApiUrl, {
             method: 'POST',
             body: JSON.stringify(payload)
-        }).catch(err => console.log("Log error"));
+        }).catch(err => console.log("Log error")); // พังก็ไม่เป็นไร ไม่กวนหน้าเว็บ
     }
 
     function getDeviceOS() {
