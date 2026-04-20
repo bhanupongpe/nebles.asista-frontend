@@ -859,20 +859,27 @@
     }
 
     // 🚀 ฟังก์ชันยิง Log เบื้องหลัง (Fire & Forget)
-    function trackEvent(type, roomId = null) { // 🚨 เพิ่ม roomId เป็น optional
+    function trackEvent(type, roomId = null) {
     if (!campId) return;
-    const eventValue = roomId ? `${type}:${roomId}` : type;
+
+    let eventValue = type;
+    if (roomId) {
+        eventValue = type + ":" + roomId;
+    }
 
     const payload = {
         action: "trackEventLog",
         campaignId: campId,
-        eventType: eventValue, // 🚨 ใช้ค่าที่ต่อรหัสห้องแล้ว
+        eventType: eventValue,
         sessionId: getSessionId(),
         deviceOS: getDeviceOS(),
         utm_source: utmSource,
         utm_medium: utmMedium,
         utm_campaign: urlParams.get('utm_campaign') || campaignName
     };
+
+    google.script.run.trackEventLog(payload);
+}
 
     // ... ส่วนของ fetch หรือการส่งข้อมูลไปที่ Google Apps Script ตามเดิม ...
     console.log("Tracking:", eventValue); // เอาไว้เช็คใน Console
