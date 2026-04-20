@@ -860,35 +860,34 @@
 
     // 🚀 ฟังก์ชันยิง Log เบื้องหลัง (Fire & Forget)
     function trackEvent(type, roomId = null) {
-    if (!campId) return;
+        if (!campId) return;
 
-    let eventValue = type;
-    if (roomId) {
-        eventValue = type + ":" + roomId;
-    }
+        let eventValue = type;
+        if (roomId) {
+            eventValue = type + ":" + roomId;
+        }
 
-    const payload = {
-        action: "trackEventLog",
-        campaignId: campId,
-        eventType: eventValue,
-        sessionId: getSessionId(),
-        deviceOS: getDeviceOS(),
-        utm_source: utmSource,
-        utm_medium: utmMedium,
-        utm_campaign: urlParams.get('utm_campaign') || campaignName
-    };
+        const payload = {
+            action: "trackEventLog",
+            campaignId: campId,
+            eventType: eventValue,
+            sessionId: getSessionId(),
+            deviceOS: getDeviceOS(),
+            utm_source: utmSource,
+            utm_medium: utmMedium,
+            utm_campaign: urlParams.get('utm_campaign') || campaignName
+        };
 
-    google.script.run.trackEventLog(payload);
-}
+        // ยิงผ่าน google.script.run (ถ้าอยู่ในระบบ GAS)
+        if (typeof google !== 'undefined' && google.script && google.script.run) {
+            google.script.run.trackEventLog(payload);
+        }
 
-    // ... ส่วนของ fetch หรือการส่งข้อมูลไปที่ Google Apps Script ตามเดิม ...
-    console.log("Tracking:", eventValue); // เอาไว้เช็คใน Console
-}
-
+        // ยิงผ่าน fetch (สำรองไว้ หรือใช้คู่กันตามสะดวก)
         fetch(gasApiUrl, {
             method: 'POST',
             body: JSON.stringify(payload)
-        }).catch(err => console.log("Log error")); // พังก็ไม่เป็นไร ไม่กวนหน้าเว็บ
+        }).catch(err => console.log("Log error"));
     }
 
     function getDeviceOS() {
