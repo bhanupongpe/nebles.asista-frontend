@@ -716,15 +716,16 @@
 
     let leadModalObj;
     function openLeadModal(index) {
-        trackEvent('interest');
-        if(!leadModalObj) leadModalObj = new bootstrap.Modal(document.getElementById('campaignLeadModal'));
-        document.getElementById('campLeadStep1').style.display = 'block';
-        document.getElementById('campLeadStep2').style.display = 'none';
-        
-        const room = loadedProperties[index];
-        document.getElementById('campTargetRoom').value = room.id;
-        leadModalObj.show();
-    }
+    const room = loadedProperties[index];
+    trackEvent('interest', room.id);
+    
+    if(!leadModalObj) leadModalObj = new bootstrap.Modal(document.getElementById('campaignLeadModal'));
+    document.getElementById('campLeadStep1').style.display = 'block';
+    document.getElementById('campLeadStep2').style.display = 'none';
+    
+    document.getElementById('campTargetRoom').value = room.id;
+    leadModalObj.show();
+}
 
     function submitCampaignLead() {
         // 🚨 1. ดึงค่าทั้งหมด (เพิ่ม Move In กับ PDPA ให้ครบ)
@@ -785,7 +786,8 @@
         .then(data => { 
             btn.innerHTML = orgText; btn.disabled = false;
             if(data.status === "success") {
-                showSuccess(line, fullWa, targetRoom, false); // 🟢 สำเร็จปกติ (false = ไม่พัง)
+                trackEvent('submit', targetRoom);
+                showSuccess(line, fullWa, targetRoom, false);
             } else {
                 throw new Error(data.message || "Server Error");
             }
@@ -849,13 +851,14 @@
     }
 
     // 🚀 ฟังก์ชันยิง Log เบื้องหลัง (Fire & Forget)
-    function trackEvent(type) {
-        if (!campId) return;
-        
+    function trackEvent(type, roomId = null) {
+    if (!campId) return;
+    
+        const eventValue = roomId ? type + ":" + roomId : type;
         const payload = {
-            action: "trackEventLog", // เปลี่ยนชื่อ Action ให้ชัดเจน
+            action: "trackEventLog",
             campaignId: campId,
-            eventType: type, // 'open' หรือ 'interest'
+            eventType: eventValue,
             sessionId: getSessionId(), // 🚨 ส่งรหัสเครื่องไปด้วย!
             deviceOS: getDeviceOS(),
             utm_source: utmSource,
