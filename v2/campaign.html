@@ -716,15 +716,25 @@
 
     let leadModalObj;
     function openLeadModal(index) {
-        trackEvent('interest');
-        if(!leadModalObj) leadModalObj = new bootstrap.Modal(document.getElementById('campaignLeadModal'));
-        document.getElementById('campLeadStep1').style.display = 'block';
-        document.getElementById('campLeadStep2').style.display = 'none';
-        
-        const room = loadedProperties[index];
-        document.getElementById('campTargetRoom').value = room.id;
-        leadModalObj.show();
-    }
+    // 1. ดึงข้อมูลห้องจาก Array ตามลำดับ index ที่กดมาก่อน
+    const room = loadedProperties[index];
+
+    // 2. ยิง Log ทันที โดยส่ง 'interest' พ่วงรหัสห้อง (room.id) ไปด้วย
+    // (ย้ำ: ฟังก์ชัน trackEvent มึงต้องแก้ให้รับค่าที่สองตามที่คุยกันไว้ด้วยนะ)
+    trackEvent('interest', room.id);
+
+    // 3. จัดการเรื่อง Modal UI ตามปกติของมึง
+    if(!leadModalObj) leadModalObj = new bootstrap.Modal(document.getElementById('campaignLeadModal'));
+    
+    document.getElementById('campLeadStep1').style.display = 'block';
+    document.getElementById('campLeadStep2').style.display = 'none';
+    
+    // ใส่รหัสห้องลงใน input hidden เพื่อเอาไว้ใช้ตอนส่งฟอร์ม (Submit)
+    document.getElementById('campTargetRoom').value = room.id;
+    
+    // สั่งเปิดหน้าต่าง Modal
+    leadModalObj.show();
+}
 
     function submitCampaignLead() {
         // 🚨 1. ดึงค่าทั้งหมด (เพิ่ม Move In กับ PDPA ให้ครบ)
@@ -849,19 +859,24 @@
     }
 
     // 🚀 ฟังก์ชันยิง Log เบื้องหลัง (Fire & Forget)
-    function trackEvent(type) {
-        if (!campId) return;
-        
-        const payload = {
-            action: "trackEventLog", // เปลี่ยนชื่อ Action ให้ชัดเจน
-            campaignId: campId,
-            eventType: type, // 'open' หรือ 'interest'
-            sessionId: getSessionId(), // 🚨 ส่งรหัสเครื่องไปด้วย!
-            deviceOS: getDeviceOS(),
-            utm_source: utmSource,
-            utm_medium: utmMedium,
-            utm_campaign: urlParams.get('utm_campaign') || campaignName
-        };
+    function trackEvent(type, roomId = null) { // 🚨 เพิ่ม roomId เป็น optional
+    if (!campId) return;
+    const eventValue = roomId ? `${type}:${roomId}` : type;
+
+    const payload = {
+        action: "trackEventLog",
+        campaignId: campId,
+        eventType: eventValue, // 🚨 ใช้ค่าที่ต่อรหัสห้องแล้ว
+        sessionId: getSessionId(),
+        deviceOS: getDeviceOS(),
+        utm_source: utmSource,
+        utm_medium: utmMedium,
+        utm_campaign: urlParams.get('utm_campaign') || campaignName
+    };
+
+    // ... ส่วนของ fetch หรือการส่งข้อมูลไปที่ Google Apps Script ตามเดิม ...
+    console.log("Tracking:", eventValue); // เอาไว้เช็คใน Console
+}
 
         fetch(gasApiUrl, {
             method: 'POST',
